@@ -1,0 +1,72 @@
+@import 'base';
+
+html {
+  overflow: hidden auto;
+}
+
+body {
+  padding: 5vh 10vw 0;
+  line-height: 1.2;
+}
+
+b,
+h2 {
+  color: #fff;
+  margin-top: 1em;
+  margin-left: 1vw;
+}
+
+b {
+  display: block;
+  transition: 1s .5s color ease, 3s 1s letter-spacing ease;
+}
+
+::marker,
+b {
+  color: $accent1;
+}
+
+div:hover b {
+  color: $accent2;
+  letter-spacing: .1ch;
+}
+
+h2 {
+  font-size: 2rem;
+  text-transform: uppercase;
+  display: block;
+  margin-left: -1vw;
+  margin-top: 1em;
+  height: 1.5em;
+
+  &::after {
+    content: '';
+    width: 100%;
+    border-bottom: .1vh $color6 solid;
+    margin-top: .3em;
+    display: block;
+  }
+}
+
+p,
+ul {
+  font-size: 1.2rem;
+  margin-top: .5em;
+  white-space: pre-line;
+  letter-spacing: .075;
+}
+
+ul {
+  margin-left: 2vw;
+  line-height: 1.4;
+}
+
+body > div,
+h2 {
+  animation: fadeIn .2s ease-in forwards;
+}
+@media only screen and (max-aspect-ratio:2/3) {
+  html {
+    font-size: 3rem;
+  }
+}
