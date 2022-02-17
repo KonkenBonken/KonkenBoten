@@ -1,0 +1,8 @@
+node_modules/**
+testmapp/**
+test.js
+version.js
+transfer.ps1
+transfer.js
+scriptv12.js
+DataBase.json
