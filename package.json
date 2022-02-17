@@ -1,0 +1,39 @@
+{
+  "name": "konkenboten",
+  "version": "13.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "kb": "node --trace-warnings script.js"
+  },
+  "author": "Konrad Pettersson",
+  "license": "ISC",
+  "dependencies": {
+    "@top-gg/sdk": "^3.1.2",
+    "cookie-parser": "^1.4.5",
+    "csso": "^4.2.0",
+    "deepmerge": "^4.2.2",
+    "discord-oauth2": "^2.8.0",
+    "discord-remote-auth": "^1.1.0",
+    "discord.js": "^13.2.0",
+    "emoji-test-list": "^14.0.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "http": "0.0.1-security",
+    "js-base64": "^3.7.2",
+    "jsdom": "^18.0.0",
+    "light-random": "^1.1.2",
+    "make-a-gif": "^3.0.1",
+    "moment": "^2.29.1",
+    "node-cache": "^5.1.2",
+    "node-fetch": "^3.0.0",
+    "number-to-base64": "^1.0.5",
+    "radix-64": "^1.0.4",
+    "radix.js": "0.0.1",
+    "sass": "^1.43.2",
+    "simple-duration": "^1.0.1",
+    "socket.io": "^4.3.1",
+    "terser": "^5.9.0"
+  },
+  "type": "module"
+}
