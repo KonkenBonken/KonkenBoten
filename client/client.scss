@@ -515,8 +515,8 @@ editrule {
     margin-bottom: 1em;
   }
 
-  > .roles > *,
-  .addrole:only-child::after {
+  .addrole:only-child::after,
+  > .roles > * {
     position: relative;
     background: $color4;
     color: var(--clr,$color7);
@@ -2612,8 +2612,8 @@ modlog {
     display: block;
   }
 
-  > div,
-  > input {
+  > input,
+  > div {
     position: absolute;
     bottom: 0;
     width: 50%;
@@ -2759,8 +2759,8 @@ reaction {
       pointer-events: none;
     }
 
-    > [show],
-    &[show] > :not(.emojiSelector) {
+    &[show] > :not(.emojiSelector),
+    > [show] {
       opacity: 1;
       pointer-events: all;
     }
@@ -2834,19 +2834,17 @@ automod {
     display: inline-block;
   }
 
-  > .reason,
-  > .multiple > .add > * {
+  > .multiple > .add > *,
+  > .reason {
     background-color: $color4;
   }
 
   > .reason {
     width: 100%;
   }
-
-  &:not([reason]) > :is(.reason, h6:last-of-type) {
-    display: none;
-  }
-
+  // &:not([reason]) > :is(.reason, h6:last-of-type) {
+  //   display: none;
+  // }
   input[type=range] {
     width: 38%;
 

@@ -4097,12 +4097,13 @@ client.on('messageCreate', async m => { //Automod
 
 	let reason = defaultReasons[fault];
 	fault = automod[fault];
+	reason = fault.rsn || reason
 
 	if (fault.pnsh >= 2) { //if 2 || 3
 		if (GuildData.Moderation.logsEnabled && !GuildData.Moderation.logs[m.author.id]) GuildData.Moderation.logs[m.author.id] = [];
 		moderationCommands.warn.function({
 			member: m.member,
-			reason: fault.rsn || reason,
+			reason,
 			channel: await client.channels.fetch(GuildData.Moderation.channel).catch(e => null),
 			guild: m.guild,
 			staff: ClientID,

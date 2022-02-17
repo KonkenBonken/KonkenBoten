@@ -1457,12 +1457,12 @@ let DebugTest; {
 	awaitLoad.then(() => awaitDatalists.then(() => {
 		qa('.multiple').forEach(MultipleSetup);
 		if (!q('automod')) return;
-		qa('automod .action').forEach(
-			el => {
-				el.closest('automod').toggleAttribute('reason', +el.value >= 2);
-				el.On('input',
-					() => el.closest('automod').toggleAttribute('reason', +el.value >= 2))
-			});
+		// qa('automod .action').forEach(
+		// 	el => {
+		// 		el.closest('automod').toggleAttribute('reason', +el.value >= 2);
+		// 		el.On('input',
+		// 			() => el.closest('automod').toggleAttribute('reason', +el.value >= 2))
+		// 	});
 
 		q('automodsettings').append(newDiv('div', 'set').On(() => {
 			const stopLoad = logLoad(),
