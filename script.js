@@ -4,6 +4,8 @@ console.log('Node version:', process.version)
 console.time('Load');
 console.time('Packages');
 
+import dotenv from 'dotenv'
+dotenv.config()
 import Discord from "discord.js";
 import fsSync from 'fs';
 // import { promises as fs } from 'fs';
@@ -58,7 +60,7 @@ const intents = new Discord.Intents( // https://discord.com/developers/docs/topi
 		waitGuildTimeout: 5e3
 	});
 console.time('Login');
-client.login('ODEzODAzNTc1MjY0MDE4NDMz.YDUnpA.r69FWDnI3SgMPMrluaDSEmdSeYI');
+client.login(process.env.TOKEN);
 
 // console.log(intents.serialize());
 const app = express(),
