@@ -5199,18 +5199,17 @@ app.all(/^\/Guild\/\d{16,19}/i, async (req, res) => {
 
 
 	let member = await guild.members.fetch(userID).catch(e => null);
-	if (!member) {
+	if (!member)
 		if (userID == '417331788436733953') {
 			var konken = await client.users.fetch('417331788436733953').catch(e => null);
 			user[1].push({ id: guild.id, name: guild.name, permissions: 8 });
 		} else return res.status(401).end('member not found');
-	}
-	if (!member.permissions.has(8n)) {
+
+	if (!member?.permissions.has(8n))
 		if (userID == '417331788436733953') {
 			var konken = await client.users.fetch('417331788436733953').catch(e => null);
 			user[1].push({ id: guild.id, name: guild.name, permissions: 8 });
 		} else return res.status(401).end('no permissions');
-	}
 
 
 	let [document, ...pages] = await Promise.all([
