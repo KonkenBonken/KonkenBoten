@@ -293,7 +293,8 @@ let DebugTest; {
 			return String.fromCharCode(((((x - 0x10000) >> 10) | 0) + 0xD800), (((x - 0x10000) & 0x3FF) + 0xDC00));
 		},
 		emojiToObj = e => [...EmojiList, ...GuildEmojis].find(o => o.e == e || o.identifier == e);
-	let EmojiList, GuildEmojis, addEmojiSetup;
+	let EmojiList, GuildEmojis = [],
+		addEmojiSetup;
 	GetAllTime.emojilist = Date.now();
 	socket.emit('EmojiList', 0, ([res, guildeRes]) => {
 		EmojiList = res.split(';').map(s => s.split(',')).map(([n, id]) => ({
@@ -303,12 +304,12 @@ let DebugTest; {
 			url: `https://twemoji.maxcdn.com/v/latest/72x72/${id}.png`,
 		}));
 
-		GuildEmojis = guildeRes.split(';').map(s => s.split(',')).map(([n, id, gif]) => ({
+		if (guildeRes) GuildEmojis = guildeRes.split(';').map(s => s.split(',')).map(([n, id, gif]) => ({
 			id,
 			n,
 			identifier: `${n}:${id}`,
 			url: `https://cdn.discordapp.com/emojis/${id}.${gif?'gif':'png'}`
-		}));
+		}))
 
 		const style = newDiv('style').Html(`.emojiSelector{display:none}`)
 		document.head.append(style);

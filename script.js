@@ -3017,6 +3017,7 @@ io.on('connection', async socket => {
 				// e: e.identifier, // name:id
 				// url: e.url, // https://cdn.discordapp.com/emojis/${id}.png
 			].join()).join(';');
+			if (!guildEmojis) guildEmojis = undefined;
 			fun([EmojiList, guildEmojis]);
 		});
 		socket.on('ToggleTickets', (data, fun) => {
@@ -4132,7 +4133,7 @@ client.on('messageCreate', async m => { //Prefixed
 		error = () => { // error = (...emojis) => {	m.delete({ timeout: 1e4, reason: 'Invalid Command' });emojis.map(e => e && m.react(e));}
 			setTimeout(() => m.delete(), 20e3);
 			m.react('❌');
-			// console.trace('❌');
+			console.trace('❌');
 		};
 
 	// if (!GuildData.Suggestions) GuildData.Suggestions = {};
