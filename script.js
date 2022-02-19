@@ -2466,7 +2466,7 @@ const moderationEmbed = (action, member, Reason, { reason, hasBeen, duration, co
 	moderationDmEmbed = async (action, { text, reason, member, tellWho, staff, guild, banMessage, dmInvite }, ftrTxt, timestamp) => ({
 		content: dmInvite,
 		embeds: [{
-				author: { name: `${(member.user?.tag||member.tag)||member} ${text.hasBeen} ${text.txt} ${tellWho? `${text.by} ${((await guild.members.fetch(staff))?.user?.tag||staff)}`:''}` },
+				author: { name: `${(member.user?.tag||member.tag)||member} ${text.hasBeen} ${text.txt} ${tellWho? `${text.by} ${staff?.user?.tag}`:''}` },
 				description: reason,
 				// fields: banMessage && { name: text.messageFrom, value: banMessage },
 				color: parseInt(text.color, 16) || 14396689,
@@ -4105,14 +4105,14 @@ client.on('messageCreate', async m => { //Automod
 	reason = fault.rsn || reason
 
 	if (fault.pnsh >= 2) { //if 2 || 3
-		if (GuildData.Moderation.logsEnabled && !GuildData.Moderation.logs[m.author.id]) GuildData.Moderation.logs[m.author.id] = [];
+		if (GuildData.Moderation.logsEnabled && !GuildData.Moderation.logs[ClientID]) GuildData.Moderation.logs[ClientID] = [];
 		moderationCommands.warn.function({
 			member: m.member,
 			reason,
 			channel: await client.channels.fetch(GuildData.Moderation.channel).catch(e => null),
 			guild: m.guild,
-			staff: ClientID,
-			logs: GuildData.Moderation.logsEnabled ? GuildData.Moderation.logs[m.author.id] : [],
+			staff: m.guild.me,
+			logs: GuildData.Moderation.logsEnabled ? GuildData.Moderation.logs[ClientID] : [],
 			tellWho: true,
 			text: {
 				...ObjectMerge({ reason: 'Reason:', hasBeen: 'has been', by: 'by', duration: 'Duration:', messageFrom: `Message from ${m.guild.name}:`, until: 'until', color: 'dbad11' }, GuildData.Moderation.text || {}),
@@ -4288,8 +4288,8 @@ client.on('messageCreate', async m => { //Prefixed
 			member, //Member  if unban: id
 			channel, //Channel
 			reason: reason.trim().substr(0, 512) || undefined, //string
-			guild: m.guild,
-			staff: m.author.id, //id
+			guild: m.guild, //Guild
+			staff: m.member, //Member
 			logs: GuildData.Moderation.logsEnabled ? GuildData.Moderation.logs[m.author.id] : [], //array
 			muted: GuildData.Moderation.muted, //id
 			duration, //seconds
