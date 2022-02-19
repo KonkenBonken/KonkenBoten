@@ -1482,7 +1482,7 @@ let DebugTest; {
 					...obj,
 					// pnsh: pnsh(labelToChecked(automod.q('.del')), labelToChecked(automod.q('.warn'))), // 0/undef:none, 1:delete, 2:warn, 3:warn&delete
 					pnsh: +automod.q('.action').value, // 0/undef:none, 1:delete, 2:warn, 3:warn&delete
-					rsn: +automod.q('.action').value >= 2 && automod.q('.reason').value,
+					rsn: automod.q('.reason').value,
 					ignRls: automod.q('.role').values.filterX,
 					ignChn: automod.q('.channel').values.filterX
 				},
