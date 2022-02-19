@@ -3529,7 +3529,7 @@ io.on('connection', async socket => {
 
 							pageLength = 10,
 							guild = socket.Guild,
-							unsliced = await ParseModLogs(Moderation.logs, guild, ...filterFunction),
+							unsliced = ParseModLogs(Moderation.logs, guild, ...filterFunction),
 							logs = unsliced.slice(pageLength * page, pageLength * (page + 1));
 						// lastPage = unsliced.length == logs.length;
 						// console.log(logs.length);
@@ -4283,7 +4283,7 @@ client.on('messageCreate', async m => { //Prefixed
 		const args = {
 			member, //Member  if unban: id
 			channel, //Channel
-			reason: reason.trim() || undefined, //string
+			reason: reason.trim().substr(0, 512) || undefined, //string
 			guild: m.guild,
 			staff: m.author.id, //id
 			logs: GuildData.Moderation.logsEnabled ? GuildData.Moderation.logs[m.author.id] : [], //array
@@ -4333,7 +4333,7 @@ client.on('messageCreate', async m => { //Prefixed
 		// console.log(member);
 		if (!member) return error();
 		//member = Member | User | id
-		logs = await ParseModLogs(logs, guild, member);
+		logs = ParseModLogs(logs, guild, member);
 		let sliced = logs.slice(0, 10),
 			user = member.user || member.tag && member, // User | undefined
 			displayTag = user?.tag || member, // tag | id
@@ -4346,11 +4346,13 @@ client.on('messageCreate', async m => { //Prefixed
 		if (sliced[0]) {
 			embed.author.name = `${displayTag}'s' infractions`;
 			// let fields = sliced.map(log => ({/*let action = log.dur ? 'temporarily ' : '';action += log.t;action = capital(action);if (log.dur) action += ' - ' + CleanDate(log.dur);*/name: capital(`${log.dur?'temporarily':''} ${log.t} ${log.dur?('- '+CleanDate(log.dur)):''}`),value: `${(log.r||'*No reason specified*').replace(/\n/g,' ')} - *${moment(log.d).fromNow()}*`.substr(0, 1024)})).map(log => `**${capital(log.name.trim())}:**\n⠀${log.value.trim()}`.trim()),
-			let fields = sliced.map(log =>
+			let fieldsLength = 0,
+				fields = sliced.map(log =>
 					`**${capital(`${log.dur?'temporarily':''} ${log.t} ${log.dur?('- '+CleanDate(log.dur)):''}`.trim())}:**\n` +
-					`⠀${(log.r||'*No reason specified*').replace(/\n/g,' ')} - *${moment(log.d).fromNow()}*`),
+					`⠀${(log.r||'*No reason specified*').replace(/\n/g,' ')} - *${moment(log.d).fromNow()}*`)
+				.filter(log => (fieldsLength += log.length) <= 1024)
 
-				last24 = logs.findIndex(log => log.d < Date.now() - 864e5),
+			let last24 = logs.findIndex(log => log.d < Date.now() - 864e5),
 				last7 = logs.findIndex(log => log.d < Date.now() - 6048e5);
 			if (last24 == -1) last24 = logs.length;
 			if (last7 == -1) last7 = logs.length;
@@ -4453,28 +4455,29 @@ client.on('messageCreate', async m => { //Prefixed
 		if (!member || !member.user || !(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
 			return error();
 
-		let embed = {
-			footer: { text: `Requested by: ${m.author.tag} | ${m.author.id}`, iconURL: m.member.displayAvatarURL() },
-			author: { name: `Info about ${member.displayName}` },
-			color: member.displayColor || 'dbad11',
-			thumbnail: { url: member.displayAvatarURL() },
-			fields: [
-					['Id:', member.id],
-					['Username:', member.user.tag],
-					['Bot:', member.user.bot ? 'Yes' : 'No'],
-					['Boosted:', member.premiumSince ? 'Since ' + moment(member.premiumSince).format('D/M-YYYY - HH:mm') : 'No'],
-					['Muted:', (GuildData.Moderation.timout ? member.isCommunicationDisabled() : member.roles.cache.has(GuildData.Moderation.muted)) ? 'Yes' : 'No'],
-					['Permissions', member.permissions.bitfield], // Object.entries(member.permissions.serialize()).filter(([, v]) => v).map(([k]) => k)
-					['Joined server at:', moment(member.joinedAt).format('D/M-YYYY - HH:mm')], // ['⠀', '⠀'],
-					['Joined Discord at:', moment(member.user.createdAt).format('D/M-YYYY - HH:mm')],
-					['Recent infractions:', ParseModLogs(GuildData.Moderation.logs, m.guild, member).slice(0, 3).map(log =>
-						`**${capital(`${log.dur?'temporarily':''} ${log.t} ${log.dur?('- '+CleanDate(log.dur)):''}`.trim())}:**\n⠀${(log.r||'*No reason specified*').replace(/\n/g,' ')} - *${moment(log.d).fromNow()}*`).join('\n') || undefined, true],
-				]
-				.filter(([, value]) => value != undefined /*&&value.toString()*/ )
-				.map(([name, value, inline]) => ({ name, value: value.toString(), inline: !inline }))
-			// .map(([name, value, inline]) =>
-			// (value != undefined && value.toString()) ? { name: name + ':', value: value.toString(), inline: !inline } : { name: '⠀', value: '⠀', inline: !inline })
-		};
+		let fieldsLength = 0,
+			embed = {
+				footer: { text: `Requested by: ${m.author.tag} | ${m.author.id}`, iconURL: m.member.displayAvatarURL() },
+				author: { name: `Info about ${member.displayName}` },
+				color: member.displayColor || 'dbad11',
+				thumbnail: { url: member.displayAvatarURL() },
+				fields: [
+						['Id:', member.id],
+						['Username:', member.user.tag],
+						['Bot:', member.user.bot ? 'Yes' : 'No'],
+						['Boosted:', member.premiumSince ? 'Since ' + moment(member.premiumSince).format('D/M-YYYY - HH:mm') : 'No'],
+						['Muted:', (GuildData.Moderation.timout ? member.isCommunicationDisabled() : member.roles.cache.has(GuildData.Moderation.muted)) ? 'Yes' : 'No'],
+						['Permissions', member.permissions.bitfield], // Object.entries(member.permissions.serialize()).filter(([, v]) => v).map(([k]) => k)
+						['Joined server at:', moment(member.joinedAt).format('D/M-YYYY - HH:mm')], // ['⠀', '⠀'],
+						['Joined Discord at:', moment(member.user.createdAt).format('D/M-YYYY - HH:mm')],
+						['Recent infractions:', ParseModLogs(GuildData.Moderation.logs, m.guild, member).slice(0, 3).map(log =>
+							`**${capital(`${log.dur?'temporarily':''} ${log.t} ${log.dur?('- '+CleanDate(log.dur)):''}`.trim())}:**\n⠀${(log.r||'*No reason specified*').replace(/\n/g,' ')} - *${moment(log.d).fromNow()}*`).filter(log => (fieldsLength += log.length) <= 1024).join('\n') || undefined, true],
+					]
+					.filter(([, value]) => value != undefined /*&&value.toString()*/ )
+					.map(([name, value, inline]) => ({ name, value: value.toString(), inline: !inline }))
+				// .map(([name, value, inline]) =>
+				// (value != undefined && value.toString()) ? { name: name + ':', value: value.toString(), inline: !inline } : { name: '⠀', value: '⠀', inline: !inline })
+			};
 
 		// m.delete();
 		m.channel.send({
