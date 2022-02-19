@@ -2679,6 +2679,8 @@ const moderationCommands = { // logs.push -> { type, reason, staff, member, date
 						channel = await client.channels.fetch(Rule.channels.suggest)
 					// .catch(e => null);	if (!channel) throw 2;
 
+					suggestion = suggestion.substr(0, 4096);
+
 					let msg = await channel.send({
 						embeds: [{
 							color: parseInt(Rule.embed.colors.pending, 16),
@@ -2722,6 +2724,8 @@ const moderationCommands = { // logs.push -> { type, reason, staff, member, date
 						member = await guild.members.fetch(suggestion.user).catch(() => false);
 
 					if (!(channel && member)) return reject(536342);
+
+					reason = reason.substr(0, 1024);
 
 					// console.log(13);
 					let [msg, suggestChannel] = await Promise.all([channel.send({
