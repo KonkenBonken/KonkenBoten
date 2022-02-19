@@ -440,7 +440,8 @@ let DebugTest; {
 		// querySelectorAll('#voice existingrule>.edit').forEach(btn => btn.remove());
 
 		{
-			let logOptionsDivs = qa('.logList>div');
+			let logToggle = querySelector('logsettings>.toggle>input'),
+				logOptionsDivs = qa('.logList>div');
 			logOptionsDivs.forEach(item => {
 				let checkbox = item.q('[type="checkbox"]'),
 					rule = item.q('h3').innerText,
@@ -453,12 +454,13 @@ let DebugTest; {
 						if (err) console.debug(err);
 						else checkbox.checked = checked;
 						stopLoad(name + (checked ? ' enabled' : ' disabled'));
+						if (!checkbox.checked && checkbox.checked) logToggle.click();
 					})
 				});
 			});
 			//  IF Logs colorSelector is back \/
 			// [...querySelectorAll('logsettings>.set')].forEach((set, i) =>		set.addEventListener('click', () => {			let stopLoad = logLoad(),				color = !!i,				value = color ? set.previousSibling.firstChild.value : set.previousSibling.value;			socket.emit('SetLog' + (color ? 'Color' : 'Channel'), value, err => {				if (err) {					alert('Error');					console.error(err);				}				stopLoad();			})		}));
-			(set = querySelector('logsettings>.set')).addEventListener('click', () => {
+			(set = q('logsettings>.set')).addEventListener('click', () => {
 				let stopLoad = logLoad(),
 					select = set.previousSibling,
 					value = select.value;
@@ -471,14 +473,13 @@ let DebugTest; {
 				})
 			});
 
-			let checkbox = querySelector('logsettings>.toggle>input');
-			checkbox.addEventListener('input', () => {
+			logToggle.addEventListener('input', () => {
 				let stopLoad = logLoad();
 				socket.emit('ToggleLog', 0, (checked, err) => {
 					if (err) {
 						alert('An error occurred');
 						console.debug(err);
-					} else checkbox.checked = checked;
+					} else logToggle.checked = checked;
 					stopLoad('Logging ' + (checked ? 'enabled' : 'disabled'));
 				})
 			});
