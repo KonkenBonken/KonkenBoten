@@ -233,7 +233,7 @@ const RandomUser = () => 'User#' + Math.floor(Math.random() * 8999 + 1000),
 	};
 let prefetchs = [...[
 		...['logo', 'commands', 'voice', 'moderation', 'suggestions', 'support', 'sort', 'reply', 'arrow', 'discord'].map(x => `src/icon/${x}`),
-		'src/client.js', 'src/client.css', 'src/background' //, 'socket.io/socket.io.js',    // ,...["1cbd08c76f8af6dddce02c5138971129","6debd47ed13483642cf09e832ed0bc1b","dd4dbc0016779df1378e7812eabaa04d","322c936a8c8be1b803cd94861bdfa868"].map(x=>`https://discordapp.com/assets/${x}.png`)
+		'src/client.js', 'src/client.css', 'src/error.css', 'src/background' //, 'socket.io/socket.io.js',    // ,...["1cbd08c76f8af6dddce02c5138971129","6debd47ed13483642cf09e832ed0bc1b","dd4dbc0016779df1378e7812eabaa04d","322c936a8c8be1b803cd94861bdfa868"].map(x=>`https://discordapp.com/assets/${x}.png`)
 		, ...EmojiList.split(';').map(s => s.split(',')).slice(0, 40).map(([n, id]) => `https://twemoji.maxcdn.com/v/latest/72x72/${id}.png`)
 	].map(url => `<${url}>; rel="prefetch"`),
 	'<oauth>; rel="prerender"', '<https://discord.com>; rel="preconnect"',
@@ -258,40 +258,40 @@ const ParseModLogs = (logs, guild, targetMember, targetStaff) => Object.entries(
 		let document = Cache.get(JSON.stringify(options));
 
 		if (document)
-			document = new JSDOM(document).window.document;
-		else {
-			let obj = {
-				css: false,
-				js: false,
-				html: false,
-				title: PageTitle,
-				socket: false,
-				// jsbefore: '',
-				// jsafter: '',
-				// adsense: false,
-				// hotjar: false,
-				// gtag: true,
-				...options
-			}
-
-			if (obj.html) document = new JSDOM((await fs.readFile(`client/${obj.html}.html`, 'utf8')).replace(/(\n|\s\s+)/g, ' ')).window.document
-			else document = new JSDOM().window.document;
-
-			document.documentElement.setAttribute('lang', 'en');
-			if (obj.css) document.head.innerHTML = `<link href="/src/${obj.css}.css" type="text/css" rel="stylesheet">`;
-			if (obj.socket) document.head.innerHTML += '<script src="/socket.io/socket.io.min.js"></script>';
-			if (obj.js) document.head.innerHTML += `<script src="/src/${obj.js}.js"></script>`;
-			document.head.innerHTML += `<title>${obj.title}</title>`;
-			document.head.innerHTML += '<meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="UTF-8">';
-			// if (obj.hotjar) document.head.innerHTML += '<script defer>{let t,h,e=window,j=document,s="https://static.hotjar.com/c/hotjar-",c=".js?sv=";e.hj=e.hj||(()=>(e.hj.q=e.hj.q||[]).push(arguments)),e._hjSettings={hjid:2308481,hjsv:6},t=j.querySelector("head"),(h=j.createElement("script")).async=1,h.src=s+e._hjSettings.hjid+c+e._hjSettings.hjsv,t.appendChild(h)}</script>';
-			// if (obj.adsense) document.head.innerHTML += '<script data-ad-client="ca-pub-2422033382456580" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>';
-			// if (obj.gtag) document.head.innerHTML += '<script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0FM35V66"></script>';
-
-			// if (js) document.head.innerHTML += `<script src="data:text/js;base64,${js}" defer></script>`;
-			// if (css) document.head.innerHTML += `<link rel="stylesheet" href="data:text/css;base64,${css}">`;
-
-			Cache.set(JSON.stringify(options), document.documentElement.outerHTML);
+			return resolver(new JSDOM(document).window.document);
+		let obj = {
+			css: false,
+			js: false,
+			html: false,
+			htmlString: false,
+			title: PageTitle,
+			socket: false,
+			// jsbefore: '',
+			// jsafter: '',
+			// adsense: false,
+			// hotjar: false,
+			// gtag: true,
+			...options
 		}
+
+		if (obj.html) document = new JSDOM((await fs.readFile(`client/${obj.html}.html`, 'utf8')).replace(/(\n|\s\s+)/g, ' ')).window.document
+		else if (obj.htmlString) document = new JSDOM(obj.htmlString).window.document
+		else document = new JSDOM().window.document;
+
+		document.documentElement.setAttribute('lang', 'en');
+		if (obj.css) document.head.innerHTML = `<link href="/src/${obj.css}.css" type="text/css" rel="stylesheet">`;
+		if (obj.socket) document.head.innerHTML += '<script src="/socket.io/socket.io.min.js"></script>';
+		if (obj.js) document.head.innerHTML += `<script src="/src/${obj.js}.js"></script>`;
+		document.head.innerHTML += `<title>${obj.title}</title>`;
+		document.head.innerHTML += '<meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="UTF-8">';
+		// if (obj.hotjar) document.head.innerHTML += '<script defer>{let t,h,e=window,j=document,s="https://static.hotjar.com/c/hotjar-",c=".js?sv=";e.hj=e.hj||(()=>(e.hj.q=e.hj.q||[]).push(arguments)),e._hjSettings={hjid:2308481,hjsv:6},t=j.querySelector("head"),(h=j.createElement("script")).async=1,h.src=s+e._hjSettings.hjid+c+e._hjSettings.hjsv,t.appendChild(h)}</script>';
+		// if (obj.adsense) document.head.innerHTML += '<script data-ad-client="ca-pub-2422033382456580" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>';
+		// if (obj.gtag) document.head.innerHTML += '<script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0FM35V66"></script>';
+
+		// if (js) document.head.innerHTML += `<script src="data:text/js;base64,${js}" defer></script>`;
+		// if (css) document.head.innerHTML += `<link rel="stylesheet" href="data:text/css;base64,${css}">`;
+
+		Cache.set(JSON.stringify(options), document.documentElement.outerHTML);
 
 		resolver(document);
 	}),
@@ -2941,6 +2941,14 @@ Object.entries(DataBase.loggedIn).forEach(([id, data]) => {
 
 })
 
+app.response.error = async function (code, message) { // wont return response | not chainable
+	const document = await baseDoc({
+		css: 'error',
+		htmlString: `<header><a href="/" class="logo"><div> <img src="/src/icon/logo" alt="KonkenBoten's Logo"></div></a></header><h1>${code}</h1><h2>${message}</h2>`,
+		title: `KonkenBoten - ${code}: ${message}`
+	});
+	this.status(code).end(document.documentElement.outerHTML);
+}
 
 // Socket.io - socket
 
@@ -5113,15 +5121,15 @@ app.all(/^\/Guild\/\d{16,19}\/transcript\/\d{11,12}/i, async (req, res) => {
 	// unlisted==ture => alla kan se
 
 	if (!user[0] && !unlisted) return res.redirect(302, URLs.oauth);
-	if (!guild) return res.status(404).end('guild not found');
-	if (!Transcript) return res.status(404).end('transcript not found');
+	if (!guild) return res.error(404, 'guild not found');
+	if (!Transcript) return res.error(404, 'transcript not found');
 
 	if (!unlisted) {
 		let member = await guild.members.fetch(user[0].id).catch(e => null);
 		if (!member) {
 			if (user[0].id == '417331788436733953') user[1].push({ id: guild.id, name: guild.name, permissions: 8 });
-			else return res.status(401).end('member not found');
-		} else if (!member.permissions.has(8n)) return res.status(401).end('no permissions');
+			else return res.error(401, 'member not found');
+		} else if (!member.permissions.has(8n)) return res.error(401, 'no permissions');
 	}
 
 	let { channelName, closedBy, msgs, closeAt, fromto } = Transcript;
@@ -5201,7 +5209,7 @@ app.all(/^\/Guild\/\d{16,19}/i, async (req, res) => {
 	}
 	// console.log(req.cookies.LoginId, user[0].id);
 	let userID = user[0].id;
-	if (!guild) return res.status(404).end('guild not found')
+	if (!guild) return res.error(404, 'guild not found')
 
 	// console.log(userID);
 
@@ -5211,13 +5219,13 @@ app.all(/^\/Guild\/\d{16,19}/i, async (req, res) => {
 		if (userID == '417331788436733953') {
 			var konken = await client.users.fetch('417331788436733953').catch(e => null);
 			user[1].push({ id: guild.id, name: guild.name, permissions: 8 });
-		} else return res.status(401).end('member not found');
+		} else return res.error(401, 'member not found');
 
 	if (!member?.permissions.has(8n))
 		if (userID == '417331788436733953') {
 			var konken = await client.users.fetch('417331788436733953').catch(e => null);
 			user[1].push({ id: guild.id, name: guild.name, permissions: 8 });
-		} else return res.status(401).end('no permissions');
+		} else return res.error(401, 'no permissions');
 
 
 	let [document, ...pages] = await Promise.all([
@@ -5440,8 +5448,8 @@ app.get('/top.gg', async (req, res) => res.redirect('https://top.gg/bot/81380357
 
 app.get('/favicon.ico', (req, res) => res.append('Cache-Control', 'public, max-age=2419200').redirect(301, '/src/icon/logo')); //4w
 
-app.all(/\/src\/(client|terms|home)\.css/i, async (req, res) => {
-	let file = req.path.match(/\/src\/(client|terms|home)\.css/i)[1];
+app.all(/\/src\/(client|terms|home|error)\.css/i, async (req, res) => {
+	let file = req.path.match(/\/src\/(client|terms|home|error)\.css/i)[1];
 	res.append('Cache-Control', 'public, max-age=10800') //3h
 		.append('Content-Disposition', 'render')
 		.download(`${__dirname}/client/${file}.scss`);
@@ -5541,7 +5549,7 @@ app.get('/src/database', async (req, res) => {
 		Access: userid == '417331788436733953'
 	});
 	if (userid == '417331788436733953') res.json(DataBase)
-	else res.status(401).end('no permissions');
+	else res.error(401, 'no permissions');
 });
 
 app.get('/robots.txt', (req, res) => res.send('User-agent:Googlebot\nDisallow:/Guild/\nDisallow:/guild/'));
@@ -5549,8 +5557,8 @@ app.get('/googleef57faccce66a13b.html', (req, res) => res.send('google-site-veri
 
 // app.get('/KonkenBoten', (req, res) => res.redirect(301, '/oauth'));
 app.get('/KonkenBoten', (req, res) => res.redirect(301, '/'));
-app.all(/(weather|news)/, (req, res) => res.status(410).end('410 - ' + req.url));
-app.use((req, res) => res.status(404).end('404 - ' + req.url));
+app.all(/(weather|news)/, (req, res) => res.error(410, 'page gone'));
+app.use((req, res) => res.error(404, 'page not found'));
 
 // setInterval(WriteDataBase, 3e5);
 // client.login('ODEzODAzNTc1MjY0MDE4NDMz.YDUnpA.r69FWDnI3SgMPMrluaDSEmdSeYI');
