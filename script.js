@@ -5128,8 +5128,8 @@ app.all(/^\/Guild\/\d{16,19}\/transcript\/\d{11,12}/i, async (req, res) => {
 		let member = await guild.members.fetch(user[0].id).catch(e => null);
 		if (!member) {
 			if (user[0].id == '417331788436733953') user[1].push({ id: guild.id, name: guild.name, permissions: 8 });
-			else return res.error(401, 'member not found');
-		} else if (!member.permissions.has(8n)) return res.error(401, 'no permissions');
+			else return res.error(403, 'member not found');
+		} else if (!member.permissions.has(8n)) return res.error(403, 'no permissions');
 	}
 
 	let { channelName, closedBy, msgs, closeAt, fromto } = Transcript;
@@ -5219,13 +5219,13 @@ app.all(/^\/Guild\/\d{16,19}/i, async (req, res) => {
 		if (userID == '417331788436733953') {
 			var konken = await client.users.fetch('417331788436733953').catch(e => null);
 			user[1].push({ id: guild.id, name: guild.name, permissions: 8 });
-		} else return res.error(401, 'member not found');
+		} else return res.error(403, 'member not found');
 
 	if (!member?.permissions.has(8n))
 		if (userID == '417331788436733953') {
 			var konken = await client.users.fetch('417331788436733953').catch(e => null);
 			user[1].push({ id: guild.id, name: guild.name, permissions: 8 });
-		} else return res.error(401, 'no permissions');
+		} else return res.error(403, 'no permissions');
 
 
 	let [document, ...pages] = await Promise.all([
@@ -5549,7 +5549,7 @@ app.get('/src/database', async (req, res) => {
 		Access: userid == '417331788436733953'
 	});
 	if (userid == '417331788436733953') res.json(DataBase)
-	else res.error(401, 'no permissions');
+	else res.error(403, 'no permissions');
 });
 
 app.get('/robots.txt', (req, res) => res.send('User-agent:Googlebot\nDisallow:/Guild/\nDisallow:/guild/'));
