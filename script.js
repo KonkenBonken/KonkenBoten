@@ -3503,6 +3503,7 @@ io.on('connection', async socket => {
 						].forEach(([key, value]) => {
 							/* if text default: delete*/
 							if (data.text[key] == value) data.text[key] = undefined;
+							else data.text[key] = data.text[key].trim()
 						});
 						[
 							['warn', 'warned'],
@@ -3517,11 +3518,12 @@ io.on('connection', async socket => {
 							/* if coms default: delete*/
 							// data.coms[key] = data.coms[key] || {};
 							if (data.coms[key].txt == value) data.coms[key].txt = undefined;
+							else data.coms[key].txt = data.coms[key].txt.trim();
 							if (!+data.coms[key].role) data.coms[key].role = undefined;
 							if (!Object.values(data.coms[key]).filter(x => x).length) data.coms[key] = undefined;
 						});
 						['enabled', 'dmInvite', 'dmAll', 'tellWho', 'logsEnabled', 'banMessage', 'timeout'].forEach(key => {
-							if (!data[key]) data[key] = undefined; /* if falsy: delete*/
+							data[key] = data[key] ? 1 : undefined; /* if falsy: delete*/
 						});
 
 						fun(true);
@@ -3736,6 +3738,7 @@ io.on('connection', async socket => {
 
 							if (!+rule.pnsh) rule.pnsh = undefined;
 							if (!rule.rsn || rule.rsn == defaultReasons[key]) rule.rsn = undefined;
+							else rule.rsn = rule.rsn.trim();
 
 							if (rule.ignRls[0]) rule.ignRls = rule.ignRls.map(Snowflake.encode)
 							else rule.ignRls = undefined;
