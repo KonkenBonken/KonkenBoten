@@ -5360,7 +5360,7 @@ app.get('/oauth', async (req, res) => {
 
 		if (!access_token) return fail();
 
-		var [user, guilds] = await Promise.all([oauth.getUser(access_token), oauth.getUserGuilds(access_token)]).catch(console.error);
+		var [user, guilds] = await Promise.all([oauth.getUser(access_token), oauth.getUserGuilds(access_token)]).catch(e => [console.error(e)]);
 
 		// if (user.id == '212334413760036864')
 		// 	oauth.addMember({
