@@ -2965,6 +2965,15 @@ io.on('connection', async socket => {
 		DataBase.guilds[socket.GuildID] = socket.GuildData || {};
 		console.log('\x1b[34m%s\x1b[0m', 'connected: ' + socket.discord.tag);
 
+		if (!(socket.discord && socket.Guild && socket.GuildData)) {
+			console.error({
+				discord: socket.discord,
+				Guild: socket.Guild,
+				GuildData: socket.GuildData
+			}, 9256)
+			return socket.disconnect();
+		}
+
 		socket.join(socket.GuildID)
 
 		const sendLogLoad = (edit, type) =>
@@ -3129,7 +3138,7 @@ io.on('connection', async socket => {
 			socket.GuildData.logs.channel = data;
 			fun();
 			sendLogLoad('Log Channel set to ' + data)
-			if (dataBaseGuild.logs.isEmpty()) dataBaseGuild.logs = undefined;
+			if (socket.GuildData.logs.isEmpty()) socket.GuildData.logs = undefined;
 			WriteDataBase();
 		});
 		socket.on('ToggleLog', (x, fun) => {
@@ -3137,7 +3146,7 @@ io.on('connection', async socket => {
 			socket.GuildData.logs.on = !socket.GuildData.logs.on;
 			fun(socket.GuildData.logs.on);
 			sendLogLoad('Logging ' + (socket.GuildData.logs.on ? 'enabled' : 'disabled'));
-			if (dataBaseGuild.logs.isEmpty()) dataBaseGuild.logs = undefined;
+			if (socket.GuildData.logs.isEmpty()) socket.GuildData.logs = undefined;
 			WriteDataBase();
 		});
 		socket.on('ToggleAuditLog', (x, fun) => {
@@ -3146,7 +3155,7 @@ io.on('connection', async socket => {
 
 			fun(socket.GuildData.logs.audit);
 			sendLogLoad('Audit Logs ' + (socket.GuildData.logs.audit ? 'enabled' : 'disabled'))
-			if (dataBaseGuild.logs.isEmpty()) dataBaseGuild.logs = undefined;
+			if (socket.GuildData.logs.isEmpty()) socket.GuildData.logs = undefined;
 			WriteDataBase();
 		});
 		socket.on('SetCommand', (data, fun) => {
@@ -3156,7 +3165,7 @@ io.on('connection', async socket => {
 
 				fun(socket.GuildData.commands[data.ori]);
 				sendLogLoad(socket.GuildData.prefix + data.ori + ' command set to ' + socket.GuildData.prefix + data.new)
-				if (dataBaseGuild.commands.isEmpty()) dataBaseGuild.commands = undefined;
+				if (socket.GuildData.commands.isEmpty()) socket.GuildData.commands = undefined;
 				WriteDataBase();
 			} else throw 'Invalid Command'
 		});
