@@ -4364,7 +4364,8 @@ client.on('messageCreate', async m => { //Prefixed
 			displayIcon = user && user.displayAvatarURL(),
 			embed = {
 				color: member.displayColor || parseInt(GuildData.Moderation.text?.color || 'dbad11', 16),
-				author: { name: `${displayTag} has no infractions`, iconURL: displayIcon }
+				author: { name: `${displayTag} has no infractions`, iconURL: displayIcon },
+				footer: { text: `Requested by: ${m.author.tag} | ${m.author.id}`, iconURL: m.member.displayAvatarURL() }
 			};
 
 		if (sliced[0]) {
