@@ -75,7 +75,7 @@ const app = express(),
 	PageTitle = 'KonkenBoten - The Ultimate Discord Bot',
 	// ES5 = require('es6-arrow-function').compile,
 	// MinifyCSS = require('clean-css'),
-	DataBase = JSON.parse(fsSync.readFileSync('DataBase.json', 'utf8').trim()), //.replace(/Ã¤/g, 'ä').replace(/Ã¥/g, 'å').replace(/Ã¶/g, 'ö')
+	DataBase = JSON.parse(fsSync.readFileSync('DataBase.json', 'utf8').trim().replace(/Ã¤/g, 'ä').replace(/Ã¥/g, 'å').replace(/Ã¶/g, 'ö')),
 	// topggSdk = require('@top-gg/sdk'),
 	topggApi = new(Import_topGgSdk.Api)('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMzgwMzU3NTI2NDAxODQzMyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4NjYzNDU4fQ.gqGp-wnvzaFk69HGOohqYPlJ2J4bEjL7RRAvWFCroMQ'),
 	TopggSend = () => topggApi.postStats({ serverCount: client.guilds.cache.size }),
