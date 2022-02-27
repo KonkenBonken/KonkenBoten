@@ -5365,7 +5365,7 @@ app.get('/oauth', async (req, res) => {
 			code: req.query.code,
 			scope,
 			grantType: "authorization_code",
-		}).catch(fail);
+		}).catch(e => fail() && {});
 
 		if (!access_token) return fail();
 
