@@ -4016,7 +4016,7 @@ client.on("guildCreate", async guild => {
 				title: `Thank you for adding **KonkenBoten** to ${guild.name}`,
 				color: 14396689,
 				thumbnail: { url: "https://bot.konkenbonken.se/src/icon/logo" },
-				description: "**Go ahead and customize and set the bot up at *[bot.konkenbonken.se](https://bot.konkenbonken.se)***\n\nJoin our official [Discord Server](https://discord.gg/bMesu8z7n9)! There, you will find the bot's changelog and status updates and you will be able to ask questions and give suggestions to future updates.\n*See you there!*"
+				description: `**Go ahead and customize and set the bot up at *[bot.konkenbonken.se](https://bot.konkenbonken.se/Guild/${guild.id})***\n\nJoin our official [Discord Server](https://discord.gg/bMesu8z7n9)! There, you will find the bot's changelog and status updates and you will be able to ask questions and give suggestions to future updates.\n*See you there!*`
 			}]
 		})).catch(() => null);
 
