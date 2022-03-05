@@ -80,6 +80,9 @@ let DebugTest; {
 	elProto.Attribute = function (key, value = '', ignIfEpty = false) { if (!ignIfEpty && value) this.setAttribute(key, value); return this };
 	elProto.On = function (a, b) { this.addEventListener(b ? a : 'click', b || a); return this };
 
+	let ShiftKeyPressed = false;
+	document.addEventListener('keydown', ({ shiftKey }) => ShiftKeyPressed = shiftKey);
+	document.addEventListener('keyup', ({ shiftKey }) => ShiftKeyPressed = shiftKey);
 
 	awaitLoad.then(() => {
 		if (location.hash) querySelector(location.hash)?.scrollIntoView();
@@ -358,8 +361,16 @@ let DebugTest; {
 			parent.append(grid);
 			grid.append(input, gridInner);
 			parent.addEventListener('click', e => {
-				if (!e.target.matches('.emojiSelector>*'))
-					grid.toggleAttribute('show')
+				if (!e.target.matches('.emojiSelector>*') && (!ShiftKeyPressed || !grid.hasAttribute('show'))) {
+					if (grid.toggleAttribute('show'))
+						input.focus();
+					input.value = '';
+					parent.qa('[hide]').forEach(el => el.removeAttribute('hide'));
+				}
+			});
+			document.body.addEventListener("click", e => {
+				if (!parent.contains(e.target))
+					grid.removeAttribute('show');
 			});
 			parent.addEventListener('click', e => style.remove(), { once: true });
 
@@ -1302,7 +1313,7 @@ let DebugTest; {
 			emojis.append(addEmoji);
 
 			addEmojiSetup(addEmoji, emoji => {
-				if (emojis.children.length < 21)
+				if (emojis.children.length < 21 && !selectedEmojis().includes(emoji.e))
 					emojis.append(emojiDiv(emoji), addEmoji)
 			}, true)
 
