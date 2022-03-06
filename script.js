@@ -2649,7 +2649,7 @@ const moderationCommands = { // logs.push -> { type, reason, staff, member, date
 				// reactFilter = e => ({ filter: (r, u) => !u.bot && [...e].includes(r.emoji.name) }),
 				reactMessageObj = {
 					embeds: [{
-						color: parseInt(Rule.color.slice(1), 16),
+						color: parseInt(Rule.color?.slice(1), 16) || 14396689,
 						author: { name: Rule.author || 'Support' },
 						description: Rule.content || 'By clicking 💬 you can open a private text channel with only you and the staff team,\nyou can do this to report an error or a person or if you just want to ask a question'
 					}],
@@ -4784,7 +4784,7 @@ client.on('interactionCreate', async interaction => {
 			Rule = DataBaseGuild?.Tickets;
 		if (!Rule) return;
 		const embedTemplate = {
-				color: parseInt(Rule.color.slice(1), 16),
+				color: parseInt(Rule.color?.slice(1), 16) || 14396689,
 				author: { name: Rule.author }
 			},
 			staffRole = await guild.roles.fetch(Rule.staff).catch(e => null);
