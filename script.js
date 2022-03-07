@@ -5552,8 +5552,9 @@ const iconLookup = {
 	suggestions: 'mailbox-opened-flag-down',
 	sort: 'generic-sorting',
 	reply: 'forward-arrow',
-	open: 'external-link-squared'
-	// ,arrow: 'arrow' //same -> defaults
+	open: 'external-link-squared',
+	arrow: 'arrow',
+	levels: 'prize',
 };
 app.all(/\/src\/icon\/[a-z]+$/i, async (req, res) => {
 	let name = req.path.match(/\/src\/icon\/(\w+)/i)[1],
