@@ -3784,7 +3784,7 @@ io.on('connection', async socket => {
 								['links', 'ignDom']
 							].forEach(([ruleKey, prop]) => {
 								if (key != ruleKey) return;
-								if (isArray(rule[prop]) && rule[prop][0]) rule[prop] = rule[prop].filterX
+								if (isArray(rule[prop]) && rule[prop][0]) rule[prop] = rule[prop].filterX.map(s => s.toLowerCase())
 								else rule[prop] = undefined;
 							});
 
@@ -4115,7 +4115,7 @@ client.on('messageCreate', async m => { //Automod
 			if (!links.inv) ignore.push('https://discord.gg/', 'https://discord.com/invite/');
 			return !ignore.some(url => word.startsWith(url));
 		})) fault = 'links';
-	else if (words && m.content.split(/\s/).some(word => words.words?.includes(word))) fault = 'words';
+	else if (words && m.content.split(/\s/).some(word => words.words?.includes(word.toLowerCase()))) fault = 'words';
 	else if (caps && m.content.length > 4 && (m.content.match(/[A-ZÅÄÖ]/g)?.length / m.content.length * 100) >= (caps.num || 70)) fault = 'caps';
 	// else if (mentions && m.mentions.users.size >= (mentions.num || 4)) fault = 'mentions';
 	else if (mentions && m.content.match(/<@[&!]?(\d{17,19})>/g)?.length >= (mentions.num || 4)) fault = 'mentions';
