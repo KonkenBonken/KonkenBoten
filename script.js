@@ -2868,6 +2868,10 @@ const defaultReasons = {
 	mentions: 'Sent too many mentions',
 	zalgo: 'Used zalgo',
 };
+const isTicket = channel =>
+	c.topic?.startWith('Support Channel created by');
+// c.messages.fetch().then(messages => !!messages.values().find(m => m.author.id == ClientID && m.components[0]?.components[0]?.customId == 'ticket-close'));
+
 const Snowflake = {
 	_alphabet: '0123456789!#$%&()*+,-./:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz|{}~¡¢£¤¥¦§¨©«°±´µ¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿĀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƞƟƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǁǂǃǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǴǵǶǷǸǹǺǻǼǽǾǿȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗșȚțȝȞȟȠȡȢȣȤȥȦȧȨȩȫȬȭȮȯȰȱȲȳȵȺȻȼȽȾȿɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏḂḃḊḋḞḟṀṁṖṗṠṡṪṫẀẁẂẃẄẅẛỲỳ',
 	encode: id => {
@@ -2881,7 +2885,7 @@ const Snowflake = {
 		}
 		hex = hex.map(x => Snowflake._alphabet[x]).join('');
 		hex = hex.padEnd(8, '0');
-		return hex;
+		return hex; //encoded: always 8 length
 	},
 	decode: encoded => {
 		if (Snowflake.getState(encoded)) return encoded;
@@ -2889,9 +2893,9 @@ const Snowflake = {
 			.map((c, i) => BigInt(Snowflake._alphabet.indexOf(c)))
 			.map((c, i) => c * Snowflake.base ** BigInt(i))
 			.reduce((a, b) => a + b)
-			.toString()
+			.toString() //decoded: always 16-19 length
 	},
-	getState: (x, getFunc = false) =>
+	getState: (x, getFunc = false) => // isDecoded
 		//decoded: always 16-19 length
 		//encoded: always 8 length
 		getFunc ? (x.length > 9 ? Snowflake.encode : Snowflake.decode) : (x.length > 9)
