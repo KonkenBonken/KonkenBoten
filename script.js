@@ -4332,8 +4332,8 @@ client.on('messageCreate', async m => { //Prefixed
 		// console.log(args.text);
 		// if (!(member && channel)) return error();
 		await moderationCommands[modCommand].function(args).catch(e => e);
-		if (duration && m.guild.id == '785416126033035264') m.guild.channels.fetch('933099574866886706').then(c => c.send(`${member} borde un${modCommand.includes('ban')?'bannas':'mutas'} <t:${Math.floor(until/1e3)}:R>`))
-		if (duration && m.guild.id == '702933462209790013') m.guild.channels.fetch('933101963074232320').then(c => c.send(`${member} borde un${modCommand.includes('ban')?'bannas':'mutas'} <t:${Math.floor(until/1e3)}:R>`))
+		// if (duration && m.guild.id == '785416126033035264') m.guild.channels.fetch('933099574866886706').then(c => c.send(`${member} borde un${modCommand.includes('ban')?'bannas':'mutas'} <t:${Math.floor(until/1e3)}:R>`))
+		// if (duration && m.guild.id == '702933462209790013') m.guild.channels.fetch('933101963074232320').then(c => c.send(`${member} borde un${modCommand.includes('ban')?'bannas':'mutas'} <t:${Math.floor(until/1e3)}:R>`))
 		m.delete();
 		WriteDataBase();
 		setTimeout(WriteDataBase, 4e3);
