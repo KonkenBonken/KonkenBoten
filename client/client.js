@@ -48,7 +48,7 @@ let DebugTest; {
 			}
 		},
 		labelToChecked = label => !!label?.firstChild?.checked,
-		RangeInputLabelSetup = (input, labels) => {
+		RangeInputLabelSetup = (input, ...labels) => {
 			let update = () => input.setAttribute('shw', labels[+input.value] || '');
 			input.addEventListener('input', update);
 			update();
@@ -397,7 +397,7 @@ let DebugTest; {
 
 	awaitLoad.then(() => {
 		let saveOption = querySelector('input.saveOption');
-		RangeInputLabelSetup(saveOption, ['Always', 'Ask', 'Never']);
+		RangeInputLabelSetup(saveOption, 'Always', 'Ask', 'Never');
 
 		querySelector('ticketsettings .set').addEventListener('click', e => {
 			let stopLoad = logLoad();
@@ -1534,8 +1534,8 @@ let DebugTest; {
 			input.On('input', update);
 			update();
 		});
-		RangeInputLabelSetup(q('automod.links [type=range]'), ['Ignore Invites', 'Catch Invites', 'Only Catch Invites']);
-		qa('automod>.action').forEach(input => RangeInputLabelSetup(input, ['', 'Delete Message', 'Warn Member', 'Delete Message and Warn Member']))
+		RangeInputLabelSetup(q('automod.links [type=range]'), 'Ignore Invites', 'Catch Invites', 'Only Catch Invites');
+		qa('automod>.action').forEach(input => RangeInputLabelSetup(input, '', 'Delete Message', 'Warn Member', 'Delete Message and Warn Member'))
 	}));
 	//Allt borde funka nu, bara o testa alla möjliga inputs. Data kommer i console
 }
