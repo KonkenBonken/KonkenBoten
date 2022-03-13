@@ -156,6 +156,9 @@ const NewGuildSubrcibers = [],
 		if (on) checkbox.setAttribute('checked', '');
 		return toggle;
 	},
+	newRange = (min, max, value, ...classList) =>
+	newDiv('input', ...classList).Type('range').Attribute('min', min).Attribute('max', max).Value(value),
+
 	Select = {
 		Channel: ({ cls = 'channelSelect', voice = false, set, hint, guild }) => {
 			let channelSelect = newDiv('select', cls),
@@ -2105,7 +2108,7 @@ const Page = {
 							h6('Ignored Roles', 'Word use by users with one or more of these roles will be ignored'),
 							Multiple.Role({ set: ignRls?.map(Snowflake.decode), guild }),
 							h6('Action', 'What the bot should do when finding a message containing a foul'),
-							newDiv('input', 'action').Type('range').Attribute('min', 1).Attribute('max', 3).Value(+pnsh),
+							newRange(1, 3, +pnsh, 'action'),
 							// h6('Delete Message', 'Whether the bot should delete the message containing the foul'),
 							// newToggle(pnsh % 2, 'del'), //if 1||3
 							// h6('Warn Member', 'Whether the bot warn the member'),
@@ -2130,28 +2133,28 @@ const Page = {
 						Multiple.String({ set: Rule.links?.ignDom, guild }).Attribute('url'),
 						// h6('Ignore Discord Links', 'Ignore links starting with <code>https://discord.com/</code>'),// newToggle(Rule.links?.ignDis, 'igndis'),// newToggle(Rule.links?.onlInv, 'onlinv'),
 						h6('Invites', 'How the bot should handle links starting with <code>https://discord.gg/</code> or <code>https://discord.com/invite/</code>'),
-						newDiv('input').Type('range').Attribute('min', 0).Attribute('max', 2).Value(Rule.links?.inv || 0),
+						newRange(0, 2, Rule.links?.inv || 0),
 						...lastOptions(Rule.links, 'links')
 					),
 					newDiv('automod', 'spam').Append(
 						h6('Spam Filter', 'Detect repeating of identical messages in a row by the same user'),
 						newToggle(Rule.spam),
 						h6('Amount', 'The amount of messages needed'),
-						newDiv('input').Type('range').Attribute('min', 2).Attribute('max', 10).Value(Rule.spam?.num || 4),
+						newRange(2, 10, Rule.spam?.num || 4),
 						...lastOptions(Rule.spam, 'spam')
 					),
 					newDiv('automod', 'caps').Append(
 						h6('Caps Filter', 'Detect usage of capital letters; only for messages longer than 4 letters'),
 						newToggle(Rule.caps),
 						h6('Amount', 'The percentage of messege that needs to be in upper case'),
-						newDiv('input', 'percent').Type('range').Attribute('min', 20).Attribute('max', 100).Value(Rule.caps?.num || 70),
+						newRange(20, 100, Rule.caps?.num || 70, 'percent'),
 						...lastOptions(Rule.caps, 'caps')
 					),
 					newDiv('automod', 'mentions').Append(
 						h6('Mentions Filter', 'Detect repeating of user mentions in one message'),
 						newToggle(Rule.mentions),
 						h6('Amount', 'The amount of mentions needed'),
-						newDiv('input').Type('range').Attribute('min', 2).Attribute('max', 20).Value(Rule.mentions?.num || 4),
+						newRange(2, 20, Rule.mentions?.num || 4),
 						...lastOptions(Rule.mentions, 'mentions')
 					),
 					newDiv('automod', 'zalgo').Append(
