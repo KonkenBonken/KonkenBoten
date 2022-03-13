@@ -1313,7 +1313,7 @@ let DebugTest; {
 			emojis.append(addEmoji);
 
 			addEmojiSetup(addEmoji, emoji => {
-				if (emojis.children.length < 21 && !selectedEmojis().includes(emoji.e))
+				if (emojis.children.length < 21 && !selectedEmojis().includes(emoji.e || emoji.identifier))
 					emojis.append(emojiDiv(emoji), addEmoji)
 			}, true)
 
