@@ -343,7 +343,7 @@ let DebugTest; {
 						newDiv('div', 'title').Html(emoji.n)
 					);
 				if (clickedFunction) emojiDiv.addEventListener('click', () => clickedFunction(emoji))
-				emojiArray.push([emojiDiv, emoji.n]);
+				emojiArray.push([emojiDiv, emoji.n.toLowerCase()]);
 				return emojiDiv;
 			}));
 
@@ -354,7 +354,7 @@ let DebugTest; {
 						newDiv('div', 'title').Html(emoji.n)
 					);
 				if (clickedFunction) emojiDiv.addEventListener('click', () => clickedFunction(emoji))
-				emojiArray.push([emojiDiv, emoji.n]);
+				emojiArray.push([emojiDiv, emoji.n.toLowerCase()]);
 				return emojiDiv;
 			}));
 
@@ -376,7 +376,7 @@ let DebugTest; {
 
 			input.placeholder = 'Search';
 			input.addEventListener('keyup', () => emojiArray.forEach(([el, name]) =>
-				el.toggleAttribute('hide', input.value && !name.includes(input.value))
+				el.toggleAttribute('hide', input.value && !name.includes(input.value.toLowerCase()))
 			));
 		}
 
