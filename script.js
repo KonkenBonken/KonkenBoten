@@ -2115,7 +2115,7 @@ const Page = {
 							// newToggle(pnsh % 2, 'del'), //if 1||3
 							// h6('Warn Member', 'Whether the bot warn the member'),
 							// newToggle(pnsh >= 2, 'warn'), //if 2||3
-							h6('Reason', 'The reason to be provided when warning the member'),
+							h6('Reason', 'The reason to be provided when warning the member and to be sent in the current channel'),
 							newDiv('input', 'reason').Value(rsn || defaultReasons[type])
 						]
 					};
