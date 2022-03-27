@@ -129,6 +129,7 @@ const NewGuildSubrcibers = [],
 		div.Append = (...el) => { if (el[0]) div.append(...el); return div };
 		div.Prepend = (...el) => { if (el[0]) div.prepend(...el); return div };
 		div.Attribute = (key, value = '', ignIfEpty = false) => { if (!ignIfEpty || value) div.setAttribute(key, value); return div };
+		div.ToggleAttribute = (key, force) => { div.ToggleAttribute(key, force); return div };
 		return div;
 	},
 	h6 = (txt, i) => {
@@ -203,10 +204,11 @@ const NewGuildSubrcibers = [],
 		}
 	},
 	Multiple = {
-		String: ({ cls, set }) =>
+		String: ({ cls, set, csv = false }) =>
 			newDiv('div', 'multiple', 'string', cls)
 			.Append(set && newDiv().Attribute('list', set))
-			.Append(newDiv('input')),
+			.Append(newDiv('input'))
+			.ToggleAttribute('csv', csv),
 		Channel: ({ cls, set, guild }) =>
 			newDiv('div', 'multiple', 'channel', cls)
 			.Append(set && newDiv().Attribute('list', set))
@@ -2122,7 +2124,7 @@ const Page = {
 					newDiv('automod', 'words').Append(
 						h6('Word Filter', 'Detect blacklisted words'),
 						newToggle(Rule.words),
-						h6('Words', 'The words that will be blacklisted'),
+						h6('Words', 'The words that will be blacklisted, You can add multiple words at a time by seperating them by a comma(<code>,</code>)'),
 						Multiple.String({ set: Rule.words?.words, guild }),
 						...lastOptions(Rule.words, 'words')
 					),

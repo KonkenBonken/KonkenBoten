@@ -1411,6 +1411,7 @@ let DebugTest; {
 		const listEl = multiple.q('[list]'),
 			list = listEl?.getAttribute('list')?.split(',').filterX || [],
 			input = multiple.lastChild,
+			commaSeperated = multiple.hasAttribute('csv'),
 			add = newDiv('div', 'add').Append(input),
 			values = list,
 			type = multiple.classList[1],
@@ -1433,14 +1434,16 @@ let DebugTest; {
 			},
 			submit = () => {
 				add.removeAttribute('show');
-				let value = input.value?.replace(/,/g, '');
-				if (!value.length || value.length > 20 || values.includes(value)) return;
-				// if (oneWord && /\s/.test(value)) return;
-				// if (url) { try { new URL(url) } catch { return; } }
+				let values = [input.value?.replace(/,/g, '')];
+				if (commaSeperated) values = input.value?.split(',');
+				values.forEach(value => {
+					if (!value.length || value.length > 20 || values.includes(value)) return;
+					// if (oneWord && /\s/.test(value)) return;
+					// if (url) { try { new URL(url) } catch { return; } }
 
-				multiple.append(newEl(value), add);
-				values.push(value)
-
+					multiple.append(newEl(value), add);
+					values.push(value)
+				})
 				if (select) {
 					let selected = input.selectedOptions[0];
 					removedOptions[selected.value] = selected;
