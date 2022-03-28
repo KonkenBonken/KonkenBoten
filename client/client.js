@@ -1540,5 +1540,4 @@ let DebugTest; {
 		RangeInputLabelSetup(q('automod.links [type=range]'), 'Ignore Invites', 'Catch Invites', 'Only Catch Invites');
 		qa('automod>.action').forEach(input => RangeInputLabelSetup(input, '', 'Delete Message', 'Warn Member', 'Delete Message and Warn Member'))
 	}));
-	//Allt borde funka nu, bara o testa alla möjliga inputs. Data kommer i console
 }
