@@ -2853,6 +2853,12 @@ automod {
       white-space: nowrap;
     }
   }
+
+  &.filler {
+    background: none;
+    margin-top: 0;
+    padding: 0 .3ch;
+  }
 }
 // .tempautomod,
 // automodsettings {

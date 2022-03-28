@@ -1487,6 +1487,7 @@ let DebugTest; {
 				automod = {
 					w: q('automod.words'),
 					l: q('automod.links'),
+					i: q('automod.invites'),
 					s: q('automod.spam'),
 					c: q('automod.caps'),
 					m: q('automod.mentions'),
@@ -1507,10 +1508,10 @@ let DebugTest; {
 					}),
 					links: ifToggled(automod.l, {
 						ignDom: automod.l.q('.string').values.filterX,
-						inv: +automod.l.q('[type=range]').value
-						// ignDis: labelToChecked(automod.l.q('.igndis')),
-						// onlInv: labelToChecked(automod.l.q('.onlinv'))
+						inv: +automod.l.q('[type=range]').value,
+						ignMsg: labelToChecked(automod.l.q('.ignmsg')),
 					}),
+					invites: ifToggled(automod.i),
 					spam: ifToggled(automod.s, {
 						num: +automod.s.q('[type=range]').value,
 					}),
@@ -1531,13 +1532,12 @@ let DebugTest; {
 
 		}));
 
-		qa('automod:not(.links) [type=range]').forEach(input => {
+		qa('automod [type=range]').forEach(input => {
 			let suffix = input.classList.contains('percent') ? '%' : '',
 				update = () => input.Attribute('shw', input.value + suffix);
 			input.On('input', update);
 			update();
 		});
-		RangeInputLabelSetup(q('automod.links [type=range]'), 'Ignore Invites', 'Catch Invites', 'Only Catch Invites');
 		qa('automod>.action').forEach(input => RangeInputLabelSetup(input, '', 'Delete Message', 'Warn Member', 'Delete Message and Warn Member'))
 	}));
 }

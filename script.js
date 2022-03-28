@@ -2133,10 +2133,14 @@ const Page = {
 						newToggle(Rule.links),
 						h6('Ignore Url', 'Ignore any link that starts with any of these urls. Example: <code>https://discord.com/</code> or <code>bot.konkenbonken.com/Guild/</code>'),
 						Multiple.String({ set: Rule.links?.ignDom, guild }).Attribute('url'),
-						// h6('Ignore Discord Links', 'Ignore links starting with <code>https://discord.com/</code>'),// newToggle(Rule.links?.ignDis, 'igndis'),// newToggle(Rule.links?.onlInv, 'onlinv'),
-						h6('Invites', 'How the bot should handle links starting with <code>https://discord.gg/</code> or <code>https://discord.com/invite/</code>'),
-						newRange(0, 2, Rule.links?.inv || 0),
+						h6('Ignore Message Links', 'Ignore links starting with <code>https://discord.com/channels/</code>'),
+						newToggle(Rule.links?.ignMsg, 'ignmsg'),
 						...lastOptions(Rule.links, 'links')
+					),
+					newDiv('automod', 'invites').Append(
+						h6('Invite Filter', 'Detect links starting with <code>https://discord.gg/</code> or <code>https://discord.com/invite/</code>'),
+						newToggle(Rule.invites),
+						...lastOptions(Rule.invites, 'invites')
 					),
 					newDiv('automod', 'spam').Append(
 						h6('Spam Filter', 'Detect repeating of identical messages in a row by the same user'),
@@ -2867,6 +2871,7 @@ const TranscriptMsgsToHtml = (msgs, guild) => Promise.all(msgs.map(async ({ a, c
 const defaultReasons = {
 	words: 'Used a bad word',
 	links: 'Sent a link',
+	invites: 'Sent an invite',
 	spam: 'Sent too many indentical messages',
 	caps: 'Sent too many capital letters',
 	// emojis: 'Sent too many emojis',
@@ -3749,7 +3754,7 @@ io.on('connection', async socket => {
 				let functions = {
 					set: data => {
 
-						['words', 'links', 'spam', 'caps', 'mentions', 'zalgo'].forEach(key => {
+						['words', 'links', 'invites', 'spam', 'caps', 'mentions', 'zalgo'].forEach(key => {
 							const rule = data[key];
 
 							if (!rule) return Rules[key] = undefined;
@@ -3773,14 +3778,13 @@ io.on('connection', async socket => {
 								if (rule[prop] == def) rule[prop] = undefined;
 							});
 
-							// [ // boolean values
-							// ].forEach(([ruleKey, prop]) => {
-							// 	if (key == ruleKey)
-							// 		rule[prop] = rule[prop] ? 1 : undefined;
-							// });
+							[ // boolean values
+								['links', 'ignMsg']
+							].forEach(([ruleKey, prop]) => {
+								if (key == ruleKey)
+									rule[prop] = rule[prop] ? 1 : undefined;
+							});
 
-
-							if (key == 'links' && !+rule.inv) rule.inv = undefined;
 							if (key == 'links' && rule.ignDom.filterX[0])
 								rule.ignDom = rule.ignDom.filterX.map(u => isValidUrl('https://' + u.replace(/(^\w+:|^)\/\//, ''))?.replace(/(^\w+:|^)\/\//, ''));
 
@@ -4100,26 +4104,28 @@ client.on('messageCreate', async m => { //Automod
 	if (!GuildData?.Moderation?.automod) return;
 	const { automod } = GuildData.Moderation,
 		checkIgnore = obj => obj && (obj.ignChn?.map(Snowflake.decode).includes(m.channel.id) || obj.ignRls?.map(Snowflake.decode).some(id => m.member.roles.cache.has(id)));
-	let { words, links, spam, caps, mentions, zalgo } = automod, fault;
+	let { words, links, invites, spam, caps, mentions, zalgo } = automod, fault;
 
 	if (checkIgnore(words)) words = false;
 	if (checkIgnore(links)) links = false;
+	if (checkIgnore(invites)) invites = false;
 	if (checkIgnore(spam)) spam = false;
 	if (checkIgnore(caps)) caps = false;
 	if (checkIgnore(mentions)) mentions = false;
 	if (checkIgnore(zalgo)) zalgo = false;
 
-	if (links && m.content.split(/\s/).some(word => {
-			if (m.content.length <= 10 || !isValidUrl(word)) return false;
-			if (word.startsWith('http://')) word = 'https://' + word.substr(7);
+	if ((links || invites)) m.content.split(/\s/).some(word => {
+		if (m.content.length <= 10 || !isValidUrl(word)) return false;
+		if (word.startsWith('http://')) word = word.substr(6);
+		else word = word.substr(7);
 
-			if (links.inv == 2) return word.startsWith('https://discord.gg/') || word.startsWith('https://discord.com/invite/');
+		if (invites && ['discord.gg/', 'discord.com/invite/'].some(url => word.startsWith(url)))
+			return fault = 'invites';
 
-			let ignore = links.ignDom || [];
-			ignore = ignore.map(x => `https://${x}`);
-			if (!links.inv) ignore.push('https://discord.gg/', 'https://discord.com/invite/');
-			return !ignore.some(url => word.startsWith(url));
-		})) fault = 'links';
+		if (links && ![links.ignDom, (links.ignMsg && 'https://discord.com/channels/'), 'discord.gg/', 'discord.com/invite/'].flat().some(url => url && word.startsWith(url)))
+			return fault = 'links';
+	});
+	if (fault);
 	else if (words && m.content.split(/\s/).some(word => words.words?.includes(word.toLowerCase()))) fault = 'words';
 	else if (caps && m.content.length > 4 && (m.content.match(/[A-ZÅÄÖ]/g)?.length / m.content.length * 100) >= (caps.num || 70)) fault = 'caps';
 	// else if (mentions && m.mentions.users.size >= (mentions.num || 4)) fault = 'mentions';
