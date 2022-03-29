@@ -1434,9 +1434,9 @@ let DebugTest; {
 			},
 			submit = () => {
 				add.removeAttribute('show');
-				let values = [input.value?.replace(/,/g, '')];
-				if (commaSeperated) values = input.value?.split(',');
-				values.forEach(value => {
+				let newValues = [input.value?.replace(/,/g, '.')];
+				if (commaSeperated) newValues = input.value?.split(',');
+				newValues.forEach(value => {
 					if (!value.length || value.length > 128 || values.includes(value)) return;
 					// if (oneWord && /\s/.test(value)) return;
 					// if (url) { try { new URL(url) } catch { return; } }

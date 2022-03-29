@@ -2125,7 +2125,7 @@ const Page = {
 						h6('Word Filter', 'Detect blacklisted words'),
 						newToggle(Rule.words),
 						h6('Words', 'The words that will be blacklisted, You can add multiple words at a time by seperating them by a comma(<code>,</code>)'),
-						Multiple.String({ set: Rule.words?.words, guild }),
+						Multiple.String({ set: Rule.words?.words, guild, csv: true }),
 						...lastOptions(Rule.words, 'words')
 					),
 					newDiv('automod', 'links').Append(
