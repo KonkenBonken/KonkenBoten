@@ -129,7 +129,7 @@ const NewGuildSubrcibers = [],
 		div.Append = (...el) => { if (el[0]) div.append(...el); return div };
 		div.Prepend = (...el) => { if (el[0]) div.prepend(...el); return div };
 		div.Attribute = (key, value = '', ignIfEpty = false) => { if (!ignIfEpty || value) div.setAttribute(key, value); return div };
-		div.ToggleAttribute = (key, force) => { div.ToggleAttribute(key, force); return div };
+		div.ToggleAttribute = (key, force) => { div.toggleAttribute(key, force); return div };
 		return div;
 	},
 	h6 = (txt, i) => {
