@@ -1466,6 +1466,9 @@ let DebugTest; {
 		add.On(e => {
 			if (!e.target.matches('.add *')) add.toggleAttribute('show') // if turned off	// submit()
 		});
+		document.body.addEventListener("click", e => {
+			if (!add.contains(e.target)) add.removeAttribute('show');
+		});
 		if (select) input.addEventListener('input', submit);
 		else if (input.matches('input')) input.addEventListener('keydown', e => e.key == 'Enter' && submit());
 	}; //MultipleSetup
