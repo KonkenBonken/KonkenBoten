@@ -5622,31 +5622,3 @@ process.on('uncaughtException', async err => {
 
 })
 console.timeEnd('Load');
-
-
-// TODO:
-
-//		Has updated(needs to transfer):
-
-
-//		Direct link to Transcript (B64 encode transcript.id)
-//		TexCommands
-//					List
-//					Timer
-//		Moderation
-//					Caps
-//					Word Filter
-//					Spam Filter
-//					Emoji Spam Filter
-//		ServerStats
-//					MemberCount
-//					Members Online
-//					Minecraft
-//					Media stats
-//					  Youtube Twitter TikTok
-//					Countdown
-//		Custom Bot
-//		Level
-//		Paid premium version
-
-// discord.js fs terser csso js-base64 jsdom light-random node-fetch cookie-parser moment sass simple-duration deepmerge express socket.io http discord-oauth2 @top-gg/sdk node-cache emoji-test-list
