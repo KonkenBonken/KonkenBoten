@@ -4119,10 +4119,12 @@ client.on('messageCreate', async m => { //Automod
 		if (word.startsWith('http://')) word = word.substr(6);
 		else word = word.substr(7);
 
-		if (invites && ['discord.gg/', 'discord.com/invite/'].some(url => word.startsWith(url)))
+		const inviteStarts = ['discord.gg/', 'discord.com/invite/', 'discord.gg/invite/', 'discordapp.com/invite/', 'discord.media/invite/'];
+
+		if (invites && inviteStarts.some(url => word.startsWith(url)))
 			return fault = 'invites';
 
-		if (links && ![links.ignDom, (links.ignMsg && 'https://discord.com/channels/'), 'discord.gg/', 'discord.com/invite/'].flat().some(url => url && word.startsWith(url)))
+		if (links && ![links.ignDom, (links.ignMsg && 'https://discord.com/channels/'), ...inviteStarts].flat().some(url => url && word.startsWith(url)))
 			return fault = 'links';
 	});
 	if (fault);
