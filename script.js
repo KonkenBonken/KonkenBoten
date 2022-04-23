@@ -2370,6 +2370,7 @@ const Page = {
 		}),
 	},
 	argEl = (arg, des) => `<span class="argel" arg="${arg}"><span>${des}</span></span>`,
+	durationDescription = 'possible units are d, h, m, s; example: 2h30m = 2 hours and 30 minutes; max 21600 seconds',
 	commands = [
 		/*{
 			com: 'adduser',
@@ -2386,102 +2387,151 @@ const Page = {
 			com: 'suggest',
 			des: 'Used by members to submit a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
-			format: argEl('suggestion', 'text; max 4096 characters')
+			format: argEl('suggestion', 'text; max 4096 characters'),
+			options: {
+				index: { type: 'INTEGER', description: 'The index of the suggestion', minValue: 1, required: true },
+				suggestion: { type: 'STRING', description: 'Your suggestion', required: true }
+			}
 		}, {
 			com: 'approve',
 			des: 'Used by staff to approve a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
-			format: argEl('index', 'number') + argEl('reason', 'text; max 1024  characters')
+			format: argEl('index', 'number') + argEl('reason', 'text; max 1024 characters'),
+			options: {
+				index: { type: 'INTEGER', description: 'The index of the suggestion', minValue: 1, required: true },
+				reason: { type: 'STRING', description: 'Why you approve this suggestion', required: true }
+			}
 		}, {
 			com: 'deny',
 			des: 'Used by staff to deny a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
-			format: argEl('index', 'number') + argEl('reason', 'text; max 1024  characters')
+			format: argEl('index', 'number') + argEl('reason', 'text; max 1024 characters'),
+			options: {
+				index: { type: 'INTEGER', description: 'The index of the suggestion', minValue: 1, required: true },
+				reason: { type: 'STRING', description: 'Why you deny this suggestion', required: true }
+			}
 		}, {
 			com: 'consider',
 			des: 'Used by staff to consider a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
-			format: argEl('index', 'number') + argEl('reason', 'text; max 1024  characters')
+			format: argEl('index', 'number') + argEl('reason', 'text; max 1024 characters'),
+			options: {
+				index: { type: 'INTEGER', description: 'The index of the suggestion', minValue: 1, required: true },
+				reason: { type: 'STRING', description: 'Why you consider this suggestion', required: true }
+			}
 		}, {
 			com: 'echo',
 			des: 'Used by admin to send message through the bot; The bot copies what you say',
-			format: argEl('message', 'text; max 4000 characters')
+			format: argEl('message', 'text; max 4000 characters'),
+			options: {
+				message: { type: 'STRING', description: 'The message you want to send', required: true }
+			}
 		}, {
 			com: 'slowmode',
 			des: 'Used by moderator or admin to set the slowmode of the current channel; Use command without arguments to disable slowmode',
-			format: argEl('?duration', 'number of seconds or duration; possible units are d, h, m, s; example: 2h30m = 2 hours and 30 minutes; max 21600 seconds; optional')
+			format: argEl('?duration', `duration; ${durationDescription}; optional`),
+			options: {
+				duration: { type: 'STRING', description: `${durationDescription}; default: unlimited`, required: false }
+			}
 		}, {
 			com: 'clear',
 			des: 'Used by moderator or admin to remove an amount of messages from the current channel',
-			format: argEl('amount', 'number; max 499')
+			format: argEl('amount', 'number; max 499'),
+			options: {
+				amount: { type: 'INTEGER', description: 'Amount of messages to remove', minValue: 1, maxValue: 499, required: true }
+			}
 		},
 
 		{
-			com: 'userinfo',
+			com: 'info user',
 			des: 'Used by moderator or admin to get info about a member',
-			format: argEl('@user', 'user-tag or id')
+			format: argEl('@user', 'user-tag or id'),
+			options: {
+				user: { type: 'USER', description: 'The user you want the information of', required: true }
+			}
 		}, {
-			com: 'serverinfo',
+			com: 'info server',
 			des: 'Used by moderator or admin to get info about the current server',
 			// format:
 		}, {
-			com: 'roleinfo',
+			com: 'info role',
 			des: 'Used by moderator or admin to get info about a role',
-			format: argEl('@role', 'role-tag or id')
+			format: argEl('@role', 'role-tag or id'),
+			options: {
+				role: { type: 'ROLE', description: 'The role you want the information of', required: true }
+			}
 		},
 
 		{
 			com: 'infractions',
-			des: 'Used by Moderators to get a member\'s last 10 logged infractions',
-			format: argEl('@user', 'user-tag or id')
+			des: 'Used by Moderators to get a member\'s last logged infractions',
+			format: argEl('@user', 'user-tag or id'),
+			options: {
+				user: { type: 'USER', description: 'The user you want the infractions from; default: you', required: false },
+				amount: { type: 'INTEGER', description: 'The amount of infractions return; default: 10', required: false }
+			}
 		}, {
 			com: 'warn',
 			des: 'Used by command-specific role or admin to warn a member',
 			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'), //ban reason is limiting, otherwise 512
 			txt1: 'warn',
-			txt: 'warned'
+			txt: 'warned',
+			options: {
+				user: { type: 'USER', description: 'The user you want to warn', required: true },
+				reason: { type: 'INTEGER', description: 'The reason for the warning; max 512 characters', required: false }
+			}
 		}, {
 			com: 'kick',
 			des: 'Used by command-specific role or admin to kick a member',
 			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'),
 			txt1: 'kick',
-			txt: 'kicked'
+			txt: 'kicked',
+			options: {
+				user: { type: 'USER', description: 'The user you want to kick', required: true },
+				reason: { type: 'INTEGER', description: 'The reason for the kick; max 512 characters', required: false }
+			}
 		}, {
 			com: 'ban',
 			des: 'Used by command-specific role or admin to ban a member',
 			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'),
 			txt1: 'ban',
-			txt: 'banned'
+			txt: 'banned',
+			options: {
+				user: { type: 'USER', description: 'The user you want to ban', required: true },
+				reason: { type: 'INTEGER', description: 'The reason for the ban; max 512 characters', required: false },
+				duration: { type: 'STRING', description: `${durationDescription}; default: unlimited`, required: false }
+			}
 		}, {
 			com: 'unban',
 			des: 'Used by command-specific role or admin to unban a member',
 			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'),
 			txt1: 'unban',
-			txt: 'unbanned'
-		}, {
-			com: 'tempban',
-			des: 'Used by command-specific role or admin to temporarily ban a member',
-			format: argEl('@user', 'user-tag or id') + argEl('duration', 'duration; possible units are d, h, m, s; example: 2h30m = 2 hours and 30 minutes') + argEl('?reason', 'text; max 512 characters'),
-			txt1: 'temporarily ban',
-			txt: 'temporarily banned'
+			txt: 'unbanned',
+			options: {
+				user: { type: 'USER', description: 'The user you want to unban', required: true },
+				reason: { type: 'INTEGER', description: 'The reason for the unban; max 512 characters', required: false }
+			}
 		}, {
 			com: 'mute',
 			des: 'Used by command-specific role or admin to mute a member',
 			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'),
 			txt1: 'mute',
-			txt: 'muted'
+			txt: 'muted',
+			options: {
+				user: { type: 'USER', description: 'The user you want to mute', required: true },
+				reason: { type: 'INTEGER', description: 'The reason for the mute; max 512 characters', required: false },
+				duration: { type: 'STRING', description: `${durationDescription}; default: unlimited`, required: false }
+			}
 		}, {
 			com: 'unmute',
 			des: 'Used by command-specific role or admin to unmute a member',
 			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'),
 			txt1: 'unmute',
-			txt: 'unmuted'
-		}, {
-			com: 'tempmute',
-			des: 'Used by command-specific role or admin to temporarily mute a member',
-			format: argEl('@user', 'user-tag or id') + argEl('duration', 'duration; possible units are d, h, m, s; example: 2h30m = 2 hours and 30 minutes') + argEl('?reason', 'text; max 512 characters'),
-			txt1: 'temporarily mute',
-			txt: 'temporarily muted'
+			txt: 'unmuted',
+			options: {
+				user: { type: 'USER', description: 'The user you want to unmute', required: true },
+				reason: { type: 'INTEGER', description: 'The reason for the unmute; max 512 characters', required: false }
+			}
 		}
 	],
 	encodeT = n => Math.round((n || Date.now()) / 6e4 - 271e5), // Date ->  T
