@@ -4133,7 +4133,7 @@ client.on('messageCreate', async m => { //Automod
 	// else if (mentions && m.mentions.users.size >= (mentions.num || 4)) fault = 'mentions';
 	else if (mentions && m.content.match(/<@[&!]?(\d{17,19})>/g)?.length >= (mentions.num || 4)) fault = 'mentions';
 	else if (zalgo && /%CC%/g.test(encodeURIComponent(m.content))) fault = 'zalgo';
-	else if (spam && [...(await m.channel.messages.fetch({ limit: spam.num - 1 || 3, before: m.id })).values()].every(msg => msg.author.id == m.author.id && msg.content == m.content)) fault = 'spam';
+	else if (spam && m.content && [...(await m.channel.messages.fetch({ limit: spam.num - 1 || 3, before: m.id })).values()].every(msg => msg.author.id == m.author.id && msg.content == m.content)) fault = 'spam';
 
 	if (!fault) return;
 
