@@ -4119,7 +4119,7 @@ client.on('messageCreate', async m => { //Automod
 		if (word.startsWith('http://')) word = word.substr(6);
 		else word = word.substr(7);
 
-		const inviteStarts = ['discord.gg/', 'discord.com/invite/', 'discord.gg/invite/', 'discordapp.com/invite/', 'discord.media/invite/', 'watchanimeattheoffice.com/invite/'];
+		const inviteStarts = ['discord.gg/', 'discord.com/invite/', 'discordapp.com/invite/'];
 
 		if (invites && inviteStarts.some(url => word.startsWith(url)))
 			return fault = 'invites';
