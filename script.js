@@ -5690,6 +5690,14 @@ app.use((req, res) => res.error(404, 'page not found'));
 // }, 3000);
 
 // Error.stackTraceLimit = 1e5;
+const sendError = async (message = '') => {
+	let channel = await client.channels.fetch('927875941127045180').catch(e => false);
+	if (!channel) channel = await client.guilds.fetch('703665426747621467').then(guild => guild.channels.fetch('927875941127045180')).catch(e => false);
+
+	if (channel) return channel.send(
+		`${err}\n		${message}`
+	)
+};
 process.on('uncaughtException', async err => {
 	console.log(
 		'\n\nUncaught error:\n',
@@ -5699,13 +5707,7 @@ process.on('uncaughtException', async err => {
 	);
 	// console.log([err.stack]);
 	// client.users.fetch('417331788436733953').then(u => u.send('Error:\n' + err)); //.toString()
-	let channel = await client.channels.fetch('927875941127045180').catch(e => false);
-	if (!channel) channel = await client.guilds.fetch('703665426747621467').then(guild => guild.channels.fetch('927875941127045180')).catch(e => false);
-
-	if (channel) channel.send(
-		`${err}\n		${err.stack.split('\n').find(s => s.includes('KonkenBoten/script.js'))||''}`
-	)
-
+	await sendError(err.stack.split('\n').find(s => s.includes('KonkenBoten/script.js')));
 
 })
 console.timeEnd('Load');
