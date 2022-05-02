@@ -4250,6 +4250,38 @@ client.on('messageCreate', async m => { //Automod
 		}]
 	});
 });
+
+
+client.on('interactionCreate', async interaction => { // Slash-Commands
+	if (!(interaction.isCommand() && interaction.inCachedGuild())) return;
+
+	c = {
+		com: 'info role',
+		des: 'Used by moderator or admin to get info about a role',
+		format: argEl('@role', 'role-tag or id'),
+		options: {
+			role: { type: 'ROLE', description: 'The role you want the information of', required: true }
+		}
+	};
+
+
+	const subCommand = interaction.getSubcommand(false) || '',
+		command = GuildData.command(`${subCommand} ${interaction.commandName}`.trim()),
+		commandObj = commands.find(c => c.com == command);
+
+	if (!commandObj) return sendError(`Command not found: ${subCommand} ${interaction.commandName}`);
+
+	if (subCommand) var arguments = Object.keys(commandObj.options).map(name => {
+		const arg = interaction.options.get(name);
+		for (type in ['value', 'user', 'member', 'channel', 'role'])
+			if (arg[type])
+				return arg[type];
+	})
+
+
+}); // Slash-Commands
+
+
 client.on('messageCreate', async m => { //Prefixed
 	if (!m.guild) return;
 	// try {
