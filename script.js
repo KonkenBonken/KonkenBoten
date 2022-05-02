@@ -5482,7 +5482,7 @@ app.all(/\/src\/(client|terms|home|error)\.css/i, async (req, res) => {
 	let file = req.path.match(/\/src\/(client|terms|home|error)\.css/i)[1];
 	res.append('Cache-Control', 'public, max-age=10800') //3h
 		.append('Content-Disposition', 'render')
-		.download(`${__dirname}/client/${file}.scss`);
+		.download(`${__dirname}/client/${file}.css`);
 });
 
 app.all(/\/src\/(client|home|transcript)\.js/i, async (req, res) => {

@@ -16,6 +16,7 @@
     "discord-oauth2": "^2.8.0",
     "discord-remote-auth": "^1.1.0",
     "discord.js": "^13.2.0",
+    "dotenv": "^16.0.0",
     "emoji-test-list": "^14.0.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
@@ -33,7 +34,8 @@
     "sass": "^1.43.2",
     "simple-duration": "^1.0.1",
     "socket.io": "^4.3.1",
-    "terser": "^5.9.0"
+    "terser": "^5.9.0",
+    "valid-url": "^1.0.9"
   },
   "type": "module"
 }

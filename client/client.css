@@ -1,0 +1,2791 @@
+@charset "UTF-8";
+html {
+  font-size: 1.65vh;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  color: #ccd1da;
+  background-color: #36393f;
+  overflow-y: scroll;
+  --pfp: url("/src/icon/discord") center/70% no-repeat;
+}
+body::before {
+  content: "";
+  display: block;
+  background-image: url("/src/background");
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: saturate(0.5);
+  position: fixed;
+  top: 4.5vh;
+  height: 35vh;
+  left: 0;
+  right: 0;
+  z-index: -2;
+}
+body::after {
+  content: "";
+  display: block;
+  background: linear-gradient(180deg, rgba(52, 55, 60, 0.9333333333) 0%, #36393f) 95%;
+  position: fixed;
+  top: 4.5vh;
+  height: 35vh;
+  left: 0;
+  right: 0;
+  z-index: -1;
+}
+
+:active,
+:visited {
+  color: unset;
+}
+
+::selection {
+  background-color: rgba(219, 173, 17, 0.7);
+}
+
+img {
+  height: 100%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+header {
+  background-color: #202225;
+  height: 4.5vh;
+  /* max-height: 10vh; */
+  padding: 0.5vh 0.5vw;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  box-shadow: 0 -1vh 1vh 1vh #000;
+}
+header > * {
+  color: #ccd1da;
+}
+header > .logo {
+  height: inherit;
+  overflow: hidden;
+  display: block;
+  width: 4.5vh;
+  float: left;
+  cursor: pointer;
+}
+header > .logo > div {
+  position: absolute;
+  transform: scale(1.5);
+  /* filter: $fltr-acc1; */
+  height: inherit;
+  width: inherit;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 0% 0%, 0% 0%, 0% 0%);
+  transition: clip-path 0.2s ease-out;
+}
+header > .logo img {
+  position: absolute;
+}
+header > .user {
+  position: absolute;
+  overflow: visible;
+  /* height: 4.5vh;
+  width: 4.5vh; */
+  right: 3vw;
+  cursor: pointer;
+}
+header > .user > img {
+  float: right;
+  height: 4.5vh;
+  width: 4.5vh;
+  border-radius: 50%;
+  background-color: #2f3136;
+  transition: border-radius 0.25s ease;
+  /* margin: .2vh .2vh 0 0 */
+}
+header > .user > img:is(:focus, :hover) {
+  border-radius: 30%;
+}
+header img {
+  user-select: none;
+}
+header userpopup {
+  display: none;
+  padding: 0.6vh 0.6vw;
+  /* position: absolute; */
+  margin-right: 2.25vw;
+  margin-top: 5.5vh;
+  width: 8vw;
+  background-color: #2f3136;
+  border-radius: 0.6rem;
+  border-top-right-radius: 0;
+  cursor: pointer;
+}
+header userpopup[show] {
+  display: block;
+}
+header userpopup > a {
+  color: #ccd1da;
+  text-decoration: none;
+  display: block;
+  border-radius: 0.5ch;
+  padding-left: 1ch;
+}
+header userpopup > a:hover {
+  background-color: #36393f;
+}
+header userpopup > .logout {
+  color: #f04747;
+}
+header > .guildDropDown {
+  height: 4vh;
+  width: 25vh;
+  position: absolute;
+  right: 7vw;
+  cursor: pointer;
+  border-radius: 0.5vh;
+  background-color: #2f3136;
+  border: 0;
+  margin: 0.5vh 1vw;
+  font-size: 1em;
+}
+header > .guildDropDown > [value=AddNew] {
+  color: #dbad11;
+  background-color: #36393f;
+}
+
+@media only screen and (max-aspect-ratio: 4/5) {
+  header userpopup {
+    width: 40vw;
+    font-size: 2.5em;
+    text-align: center;
+  }
+}
+.fadeOut :is(icon, pages > *, navbar) {
+  animation: fadeIn 0.2s ease-in reverse forwards;
+}
+
+.fadeLogo a.logo > div {
+  clip-path: polygon(30% 9%, 31% 33%, 36% 47%, 48% 50%, 49% 66%, 50% 100%, 19% 99%, 20% 10%);
+}
+
+body[loading] * {
+  cursor: progress !important;
+}
+
+@keyframes loadingSpin {
+  from {
+    transform: rotate(50deg);
+    clip-path: polygon(50% 50%, 50% 0%, 0% 0%, 0% 100%);
+  }
+  50% {
+    clip-path: polygon(50% 50%, 50% 0%, 0% 0%, 0% 30%);
+  }
+  to {
+    transform: rotate(410deg);
+    clip-path: polygon(50% 50%, 50% 0%, 0% 0%, 0% 100%);
+  }
+}
+@keyframes loadingEnd {
+  50%, 70% {
+    opacity: 1;
+  }
+  from, to {
+    opacity: 0;
+  }
+}
+@keyframes CtD {
+  from {
+    color: var(--uclr, #ccd1da);
+  }
+}
+[ttl] {
+  position: relative;
+}
+[ttl]::before {
+  content: attr(ttl);
+  position: absolute;
+  font-size: 0.7rem;
+  padding: 0.5em;
+  border-radius: 0.2em 0.5em 0.5em 0.5em;
+  top: calc(100% + 1em);
+  left: 50%;
+  height: fit-content;
+  background: #202225;
+  color: #ccd1da;
+  pointer-events: none;
+  z-index: 3;
+  max-width: 100%;
+  width: fit-content;
+  white-space: pre-line;
+  opacity: 0;
+  transition: opacity 0.3s ease-in 0.3s;
+}
+[ttl]:hover::before {
+  opacity: 1;
+}
+
+y {
+  color: #fec;
+  margin: 0 0.8ch;
+  font-weight: 600;
+}
+
+navbar {
+  position: absolute;
+  right: calc(25vh + 12vw);
+  display: flex;
+  height: 4vh;
+  flex-grow: 1;
+  width: calc(86vw - 30vh);
+}
+navbar > a {
+  flex-grow: 1;
+  height: 4.5vh;
+  text-align: center;
+}
+navbar > a:is(:hover, :focus) {
+  background-color: #2f3136;
+  /* filter: unset */
+}
+navbar > a > img {
+  width: 4.5vh;
+  animation: fadeIn 0.5s ease-out;
+}
+
+header > .srvr {
+  position: fixed;
+  right: 2vw;
+  top: 7vh;
+  background-color: #202225;
+  color: #72767d;
+  padding: 1em 3ch;
+  border-radius: 1em 0 1em 1em;
+  box-shadow: #000 0.4vw 0.4vh 2vh -0.5em;
+  font-size: 0.7rem;
+  text-align: center;
+  transform: scale(0);
+  transform-origin: 150% 0;
+  animation: 1s slideIn 2s ease-out forwards;
+}
+header > .srvr > x {
+  position: absolute;
+  top: 0.4rem;
+  right: 1ch;
+  cursor: pointer;
+  width: 1rem;
+  height: 1rem;
+}
+header > .srvr > x::after {
+  content: "+";
+  transform: rotate(45deg);
+  transform-origin: bottom;
+  font-size: 2rem;
+  position: absolute;
+  bottom: 0.3em;
+  left: 0;
+  text-align: center;
+  height: 100%;
+  pointer-events: none;
+}
+header > .srvr > a {
+  background-color: #dbad11;
+  color: #202225;
+  font-size: 2em;
+  display: block;
+  padding: 0.1em 1ch;
+  border-radius: 0.5em;
+  margin-top: 0.2em;
+  text-decoration: none;
+}
+header > .srvr > a:hover {
+  color: #000;
+  background-color: #efc330;
+}
+
+@keyframes slideIn {
+  to {
+    transform: scale(1);
+  }
+}
+select {
+  font-size: 0.83rem;
+}
+
+pages {
+  width: 100vw;
+  height: 95vh;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 100vw);
+  grid-template-rows: 100vh;
+  scroll-snap-type: x mandatory;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  color: #fff;
+  /* display: block; */
+  animation: fadeIn 0.5s ease-out;
+  scroll-behavior: smooth;
+}
+
+page {
+  width: 80vw;
+  height: 95vh;
+  scroll-snap-stop: always;
+  scroll-snap-align: start;
+  scroll-snap-type: y mandatory;
+  padding: 0 10vw;
+  display: inline-block;
+  overflow-y: auto;
+}
+page > h1 {
+  font-size: 2em;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 1em;
+  margin-left: -1vw;
+  height: 1.5em;
+}
+page > h1::after {
+  content: "";
+  width: 100%;
+  border-bottom: 0.1vh #72767d solid;
+  margin-top: 0.3em;
+  display: block;
+}
+
+@keyframes logListEntry {
+  0% {
+    margin-bottom: -3em;
+  }
+  10% {
+    margin-bottom: 0;
+  }
+  80% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.loadlist {
+  display: flex;
+  flex-direction: column-reverse;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  height: 95vh;
+  position: fixed;
+  bottom: 0;
+  left: 0.3em;
+  width: 20vw;
+  z-index: 5;
+  pointer-events: none;
+}
+.loadlist .entry {
+  animation: logListEntry 3s forwards ease;
+  background: var(--clr, #7289da);
+  padding: 0.5em 1ch;
+  border-radius: 0.4em;
+  margin-top: 0.5em;
+  text-align: center;
+  width: fit-content;
+  height: fit-content;
+  box-shadow: 0.2ch 0.5em 1em 0 rgba(0, 0, 0, 0.2666666667);
+}
+.loadlist .entry > span {
+  display: block;
+  text-align: start;
+}
+
+:is(.displayPrefix, [prefix], #commands rule > h1)::before {
+  content: var(--prefix, "$");
+}
+
+newrule {
+  font-size: 2.5em;
+  background-color: #2f3136;
+  height: 6vh;
+  min-width: 21vw;
+  border-radius: 0.6rem;
+  display: inline-block;
+  padding: 2rem 0.5rem;
+  margin: 1rem;
+  cursor: pointer;
+}
+newrule > * {
+  text-transform: capitalize;
+}
+
+commandSettings,
+setprefix,
+ticketsettings {
+  background-color: #2f3136;
+  min-height: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  display: block;
+  font-size: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0.6rem 0;
+  /* cursor: pointer; */
+}
+
+empty {
+  font-weight: bolder;
+  font-size: 1.5rem;
+}
+empty:only-child::before {
+  content: "This guild doesn't have any ";
+}
+
+#commands empty:only-child::after {
+  content: "Custom Commands";
+}
+
+#voice empty:only-child::after {
+  content: "Voice Channels";
+}
+
+#moderation empty:not(modlog ~ *)::before {
+  content: "No Moderation Logs found";
+}
+
+create {
+  background-color: #2f3136;
+  min-height: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  display: block;
+  font-size: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0.6rem 0;
+  /* cursor: pointer; */
+  margin-bottom: 2rem;
+  cursor: pointer;
+  position: relative;
+  margin-bottom: calc(2rem + 1px * var(--height, 0));
+}
+create:hover {
+  background-color: #36393f;
+}
+create > editrule {
+  background-color: #2f3136;
+}
+
+rule {
+  background-color: #2f3136;
+  min-height: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  display: block;
+  font-size: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0.6rem 0;
+  /* cursor: pointer; */
+  box-sizing: content-box;
+  position: relative;
+  width: calc(100% - 1rem);
+  height: 2rem;
+  margin-bottom: calc(0.6rem + 1px * var(--height, 0));
+  transition: margin-bottom 0.1s ease-out;
+}
+rule > :is(h1, h2) {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  white-space: nowrap;
+}
+rule > h1 {
+  font-size: 0.7em;
+}
+rule > h2 {
+  margin-left: 2ch;
+  font-size: 0.5em;
+  color: #72767d;
+  position: absolute;
+  bottom: 0.8rem;
+  left: 1ch;
+  max-width: calc(100% - 65ch);
+}
+
+#commands editrule::before {
+  content: var(--prefix, "$");
+  position: absolute;
+  z-index: 1;
+  left: 1.2ch;
+}
+
+editrule {
+  width: inherit;
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  font-size: 1rem;
+  top: 3.5rem;
+  padding: 0.5rem 0 0 1ch;
+  left: 0;
+  background-color: inherit;
+  z-index: 1;
+  border-radius: 0 0 0.6rem 0.6rem;
+  border-top: 0.1vh #474b52 solid;
+}
+editrule > .command:first-child {
+  text-transform: lowercase;
+  height: 1.5em;
+  font-size: 1.05rem;
+  border-radius: 0.2em;
+  border: dashed rgba(0, 0, 0, 0) 0.2em;
+  margin: -0.2em 0;
+  padding-left: 1ch;
+  background: #3e4147;
+}
+editrule > .command:first-child:is(:hover, :focus) {
+  border-color: #3e4147;
+}
+editrule > h5 {
+  color: #fff;
+  font-weight: bolder;
+  font-size: 1rem;
+}
+editrule > .roles {
+  margin-bottom: 1em;
+}
+editrule > .roles > *,
+editrule .addrole:only-child::after {
+  position: relative;
+  background: #3e4147;
+  color: var(--clr, #ccd1da);
+  display: inline-block;
+  margin-right: 1ch;
+  padding: 0.1em 1ch;
+  white-space: nowrap;
+  border-radius: 0.2em;
+  cursor: pointer;
+}
+editrule .addrole {
+  margin-right: 2ch;
+}
+editrule .addrole:hover {
+  background: #3a4956;
+}
+editrule .addrole::before {
+  content: "Add Role";
+}
+editrule .addrole:only-child::after {
+  content: "@everyone";
+  position: absolute;
+  left: calc(100% + 2ch);
+}
+editrule .role {
+  padding: 0.1em 2ch 0.1em 1ch;
+}
+editrule .role:hover::after {
+  content: "+";
+  transform: rotate(45deg);
+  transform-origin: bottom;
+  font-size: 2em;
+  text-align: center;
+  position: absolute;
+  height: 50%;
+  bottom: 0.5em;
+  right: -0.3ch;
+  color: #db1212;
+}
+editrule .role:hover {
+  background: #4e3c42;
+}
+editrule > .set {
+  font-size: 1.5em;
+  margin: -2em 1em;
+}
+editrule > .embedtoggle {
+  font-size: 1rem;
+  display: block;
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  top: 2em;
+  right: 1.5em;
+  appearance: none;
+  background: #474b52;
+  border-radius: 0.1em;
+}
+editrule > .embedtoggle::after {
+  content: "";
+  display: block;
+  background: #dbad11;
+  border-radius: 0.2em;
+  width: 2em;
+  height: 2em;
+  transition: transform 0.3s cubic-bezier(0, 0.5, 0.7, 1.5);
+  transform: scale(0);
+}
+editrule > .embedtoggle:checked::after {
+  transform: scale(0.8);
+}
+editrule > .embedtoggle::before {
+  content: "Embed";
+  position: absolute;
+  top: -1em;
+  color: #fff;
+  font-weight: bolder;
+  text-align: center;
+  width: 4em;
+  left: -1em;
+}
+editrule .content {
+  font-size: 1rem;
+  margin: 1em 0;
+  resize: none;
+  width: calc(72vw - 4rem);
+  height: calc(1px * var(--height, 1));
+  line-height: 1.2;
+  background: #3e4147;
+  border-radius: 0.2em;
+  color: #ccd1da;
+  position: relative;
+}
+editrule:not([embed]) > .embed {
+  background: 0;
+  border: 0;
+  padding: 0;
+}
+editrule:not([embed]) > .embed > :not(.content, .image) {
+  display: none;
+}
+editrule:not([embed]) > .embed > .image {
+  position: relative;
+}
+editrule:not([embed]) > .embed > .image::after {
+  content: attr(counter);
+  position: absolute;
+  width: 0;
+  top: -2.1rem;
+  left: calc(72vw - 4.5rem);
+  color: #72767d;
+  direction: rtl;
+  white-space: nowrap;
+}
+editrule[embed] > .embed {
+  width: min(520px, 72vw - 4rem);
+  margin: 1em 1ch;
+  position: relative;
+  font-size: 1rem;
+}
+editrule[embed] > .embed > input {
+  height: 1.2em;
+}
+editrule[embed] > .embed > :is(.content, input) {
+  margin: 0.5em 0;
+  background: #3e4147;
+  border-radius: 0.2em;
+  color: #ccd1da;
+  width: 80%;
+}
+editrule[embed] .color {
+  position: absolute;
+  left: 105%;
+  top: 1.75rem;
+}
+editrule[embed] .color::before {
+  content: "Color";
+  display: block;
+  position: absolute;
+  color: #fff;
+  font-weight: bolder;
+  font-size: 1rem;
+  width: 5ch;
+  text-align: center;
+  top: -1em;
+  left: -0.625ch;
+}
+editrule[embed] .urlInput {
+  font-size: 1rem;
+  position: absolute;
+  top: calc(100% + 2em);
+  left: -10ch;
+  height: 2em;
+  width: 40ch;
+  z-index: 2;
+}
+editrule[embed] .urlInput > * {
+  display: inline-block;
+  border-radius: 0.2em;
+  height: 100%;
+}
+editrule[embed] .urlInput > input {
+  background: #72767d;
+  width: 100%;
+  color: #fff;
+  padding-left: 1ch;
+}
+editrule[embed] .urlInput > input:invalid {
+  background: #56454c;
+}
+editrule[embed] .urlInput > input::placeholder {
+  color: #ccd1da;
+}
+editrule[embed] .urlInput > .set {
+  width: 2.5em;
+  font-size: 1em;
+  padding-top: 0.5rem;
+  box-sizing: border-box;
+  position: absolute;
+  right: -3.6em;
+}
+editrule[embed] .urlInput > .remove {
+  text-align: center;
+  display: inline-block;
+  width: 2.5em;
+  font-size: 1em;
+  padding-top: 0.5rem;
+  box-sizing: border-box;
+  position: absolute;
+  left: -2.6em;
+  background: #db1212;
+}
+editrule[embed] .urlInput > .remove::before {
+  content: "×";
+}
+editrule[embed] .img {
+  position: absolute;
+  cursor: pointer;
+  background: var(--img, #474b52);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+editrule[embed] .authorimg {
+  width: 1.25rem;
+  height: 1.25rem;
+  top: 1vh;
+  border-radius: 50%;
+}
+editrule[embed] .thumbnail {
+  width: 5rem;
+  height: 5rem;
+  top: 1vh;
+  right: 2vh;
+}
+editrule[embed] .image {
+  max-width: 80%;
+  min-width: 6rem;
+  min-height: 6rem;
+  position: relative;
+}
+editrule[embed] .footerimg {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-bottom: -1.125rem;
+  border-radius: 0.15rem;
+  display: inline-block;
+  position: relative;
+  top: 0.8em;
+}
+editrule[embed] .footer {
+  left: 1.75em;
+  width: calc(80% - 1.75em) !important;
+}
+editrule[embed] .author {
+  left: 1.69em;
+  top: -0.375em;
+  width: calc(80% - 1.69em) !important;
+}
+editrule[embed] .title {
+  font-size: 0.875em;
+}
+
+:is(edit, remove) {
+  float: right;
+  height: 2rem;
+  width: 5rem;
+  display: inline-block;
+  margin: 0 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0 1ch;
+  width: fit-content;
+  text-align: center;
+  border: #1293db 0.1rem solid;
+}
+
+remove {
+  border-color: #db1212;
+  width: 8ch;
+}
+remove:hover {
+  border-color: #ec1a1a;
+  background: #47353b;
+}
+remove::before {
+  content: "REMOVE";
+}
+remove[sure]::before {
+  content: "SURE?";
+}
+
+edit:hover {
+  border-color: #1aa1ec;
+  background: #32424f;
+}
+edit::before {
+  content: "EDIT";
+}
+
+label {
+  float: right;
+  height: 2rem;
+  width: 5rem;
+  display: inline-block;
+  margin: 0 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  cursor: pointer;
+}
+label > input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+label > div {
+  cursor: pointer;
+  width: inherit;
+  height: 2rem;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+label > div:after, label > div:before {
+  background-color: #dbad11;
+  /* position: absolute; */
+  content: "ON";
+  color: #474b52;
+  text-align: center;
+  width: 0;
+  height: inherit;
+  transition: width 0.4s;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  float: left;
+  margin-top: -2rem;
+}
+label > div:before {
+  margin-left: 0;
+  margin-top: 0;
+  background-color: #474b52;
+  color: #dbad11;
+  content: "OFF";
+  width: inherit;
+}
+label > input:checked + div:after {
+  width: inherit;
+}
+
+form {
+  width: 80vw;
+  padding: 10vh 5vw 5vh;
+  left: 5vw;
+  min-height: 78vh;
+  border-radius: 2vh;
+  position: absolute;
+  top: 6vh;
+  background-color: #2f3136;
+  z-index: 11;
+  cursor: default;
+}
+form::after {
+  content: "";
+  position: fixed;
+  height: 5vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+}
+form.displayprefix::before {
+  background-color: #36393f;
+  height: 3.9vh;
+  display: inline-block;
+  border-radius: 0.5rem 0 0 0.5rem;
+  padding: 0 0.5rem;
+  line-height: 2.2;
+  border-right: 1px #474b52 solid;
+  cursor: text;
+}
+form > h1 {
+  position: absolute;
+  top: 4vh;
+}
+form.displayprefix > input:first-of-type {
+  border-radius: 0 0.5vh 0.5vh 0;
+}
+form > textarea {
+  background-color: #36393f;
+  border: 0;
+  height: 12vh;
+  width: 100%;
+  border-radius: 0.5vh;
+  color: #ccd1da;
+  padding: 0.5vw;
+  display: block;
+  min-height: 2em;
+  max-width: 100%;
+  min-width: 2.6rem;
+  margin-bottom: 3vh;
+}
+form > button {
+  position: absolute;
+  bottom: 2vh;
+  right: 5vw;
+  height: 3vh;
+  width: 6vw;
+  background-color: #dbad11;
+  cursor: pointer;
+  border-radius: 0.3vh;
+  text-transform: capitalize;
+}
+form > button.add:is(:focus, :hover) {
+  background-color: #efc330;
+}
+form > button.cancel {
+  color: #ccd1da;
+  right: 13vw;
+  background-color: #36393f;
+}
+form > button.cancel:is(:focus, :hover) {
+  background-color: #474b52;
+}
+form > h6 {
+  font-size: 1.2em;
+  /* margin-top: 1.2em; */
+}
+form > h6 > i code {
+  font-size: 1.2em;
+}
+
+:is(form, ticketsettings) h6 > i {
+  font-style: normal;
+  font-size: 0.7rem;
+  margin-left: 3ch;
+}
+
+input:not([type^=c], [type^=r], :is(suggestsettings, setprefix, modsettings) *),
+select {
+  background-color: #36393f;
+  height: 4vh;
+  width: max(20ch, 20%);
+  border-radius: 0.5vh;
+  color: #ccd1da;
+  padding-left: 2ch;
+  margin-bottom: 3vh;
+  cursor: pointer;
+}
+
+[type=text],
+input:not([type]) {
+  cursor: text;
+}
+
+input[type=range] {
+  appearance: none;
+  width: max(25ch, 60%);
+  background-color: #474b52;
+  height: 0.7em;
+  padding-left: 0;
+  margin: 0.5em 0 1.5rem;
+  cursor: pointer;
+  position: relative;
+  border-radius: 0.2em;
+}
+input[type=range]::before {
+  content: "";
+  width: 0.5%;
+  height: 1em;
+  left: 50.25%;
+  background-color: #474b52;
+  display: block;
+  position: absolute;
+  z-index: -1;
+}
+input[type=range]::after {
+  content: attr(shw);
+  left: 102%;
+  display: block;
+  position: absolute;
+  color: #ccd1da;
+  font-weight: bold;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+input[type=range]::-webkit-slider-thumb {
+  appearance: none;
+  background-color: #efc330;
+  width: 1.3ch;
+  height: 1.7em;
+}
+
+input.saveOption {
+  width: 23ch;
+  margin-top: 1.6em;
+}
+input.saveOption::before {
+  content: "Save transcript:";
+  color: #ccd1da;
+  font-size: 1rem;
+  width: fit-content;
+  height: 1em;
+  left: 0;
+  background-color: unset;
+  z-index: auto;
+  top: -1.4em;
+}
+input.saveOption::after {
+  left: 13ch;
+  top: -1.4em;
+}
+input.saveOption:is([shw^=Al], [shw^=N]) + .embed:not(:focus-within) {
+  filter: opacity(0.4);
+  transition: filter 1s ease-out 1s;
+}
+input.saveOption + .embed {
+  transition: filter 0.2s ease-out;
+}
+
+.datalistRoles {
+  border-radius: 0.5vh;
+  min-height: 4vh;
+  width: 100%;
+  background-color: #36393f;
+  padding: 0.1px;
+  color: #ccd1da;
+}
+
+.addedRole {
+  display: inline-block;
+  height: 3vh;
+  border-radius: 1.5vh;
+  margin: 0.5vh;
+  border: #474b52 0.1vh solid;
+  background-color: #36393f;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.addedRole > div {
+  margin-top: -0.8vh;
+  margin-left: 0.5ch;
+  font-size: 1rem;
+}
+.addedRole:hover .x {
+  opacity: 1;
+}
+
+.plus,
+.x {
+  width: 1.5vh;
+  height: 1.5vh;
+  border-radius: 50%;
+  margin: 1.25vh 0.5vh;
+  border: #474b52 0.1vh solid;
+  cursor: pointer;
+  line-height: 0.7;
+  font-size: 1.3rem;
+  text-align: center;
+  display: inline-block;
+}
+
+.x {
+  transform: translateY(0.2vh) rotate(45deg);
+  opacity: 0;
+  color: #f04747;
+}
+
+.listSelector {
+  position: absolute;
+  margin-top: 1vh;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  width: 20vw;
+  background-color: #474b52;
+  border-radius: 0.5vh;
+  max-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+.listSelector > div {
+  border-bottom: 0.1vh #72767d solid;
+  height: 2em;
+  line-height: 1.5;
+  text-align: left;
+  padding-left: 1ch;
+  position: relative;
+  color: var(--clr, #ccd1da);
+}
+.listSelector > div:hover {
+  background-color: #72767d;
+}
+
+setPrefix > input {
+  background-color: #36393f;
+  height: 2rem;
+  width: 10ch;
+  border-radius: 0.5rem;
+  color: #fff;
+  padding-left: 2ch;
+}
+
+.set {
+  background-color: #dbad11;
+  color: #474b52;
+  text-align: center;
+  cursor: pointer;
+  width: 5rem;
+  height: 2rem;
+  display: inline-block;
+  float: right;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
+}
+.set::before {
+  content: "SET";
+}
+
+body > .surePopup {
+  position: fixed;
+  width: 30vw;
+  height: 20vh;
+  line-height: 20vh;
+  top: 40vh;
+  left: 35vw;
+  background-color: #202225;
+  border-radius: 2vh;
+  text-align: center;
+  box-shadow: 1vh 1vh 2vh 0.1vh #000;
+}
+body > .surePopup > div {
+  position: absolute;
+  bottom: 1vh;
+  height: 2rem;
+  width: 5rem;
+  line-height: 1;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  background-color: #dbad11;
+  color: #474b52;
+  right: 2vw;
+  cursor: pointer;
+}
+body > .surePopup > div:first-of-type {
+  left: 2vw;
+  background-color: #36393f;
+}
+
+i.info {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  display: inline-block;
+  text-decoration: none;
+  border: 0.1vh #474b52 solid;
+  position: relative;
+  bottom: 0.4rem;
+  left: 0.3ch;
+  margin-left: 0;
+}
+i.info:hover {
+  border-color: #72767d;
+}
+i.info:hover > div {
+  display: block;
+}
+i.info:hover .embed {
+  width: max(min(60%, 10ch), 25%);
+  height: 1.5em;
+  margin-top: 1em;
+  border-color: #dbad11;
+  animation: 5s linear 1s infinite rainbowBorder;
+}
+i.info::before {
+  content: "i";
+  font-size: 0.6rem;
+  margin-left: 0.6ch;
+  color: #ccd1da;
+}
+i.info.t::before {
+  content: "t";
+}
+i.info > div {
+  display: none;
+  position: relative;
+  left: 0.6rem;
+  font-style: normal;
+  z-index: 3;
+}
+i.info > div > div {
+  padding: 1em 2ch;
+  border-radius: 2ch;
+  border-top-left-radius: 0;
+  background-color: #202225;
+  position: absolute;
+  width: intrinsic;
+  width: -moz-max-content;
+  width: max-content;
+  max-width: 25vw;
+  text-decoration: none;
+  font-size: 0.8rem;
+}
+
+@keyframes rainbowBorder {
+  0% {
+    border-color: hsl(46deg, 84%, 46%);
+  }
+  20% {
+    border-color: hsl(118deg, 84%, 35%);
+  }
+  40% {
+    border-color: hsl(190deg, 84%, 42%);
+  }
+  60% {
+    border-color: hsl(262deg, 84%, 64%);
+  }
+  80% {
+    border-color: hsl(334deg, 84%, 40%);
+  }
+}
+:is(ticketsettings, suggestsettings) > div {
+  display: none;
+  padding-bottom: 5rem;
+}
+:is(ticketsettings, suggestsettings) > div > :nth-last-child(2) {
+  margin-bottom: 0;
+}
+:is(ticketsettings, suggestsettings)[show] > div {
+  display: block;
+}
+:is(ticketsettings, suggestsettings) > h5 {
+  font-size: 1em;
+}
+:is(ticketsettings, suggestsettings) h6 {
+  font-size: 0.7em;
+}
+:is(ticketsettings, suggestsettings) :is(.advanced > h6, h6:first-of-type) {
+  margin-top: 3vh;
+}
+:is(ticketsettings, suggestsettings) .set {
+  margin-top: 3rem;
+}
+:is(ticketsettings, suggestsettings) .advanced {
+  width: 100%;
+  top: 5vh;
+  position: relative;
+}
+:is(ticketsettings, suggestsettings) .advanced > h5 {
+  display: none;
+}
+:is(ticketsettings, suggestsettings) .toggle {
+  float: none;
+  margin: 0.7vh 0 3vh;
+}
+
+.embed {
+  background-color: #36393f;
+  width: min(520px, 80%);
+  padding: 1vh 2vh 2vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.25rem;
+  border-left: 0.25rem #dbad11 solid;
+  font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+}
+.embed > .author {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+.embed > :is(.content, [type=text]) {
+  font-size: 0.875rem;
+  line-height: 1.125rem;
+  font-weight: 400;
+  white-space: pre-line;
+}
+.embed > .footer {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  position: relative;
+  top: 0.7em;
+}
+
+.color,
+.embed > .reaction {
+  position: relative;
+  top: 3.3rem;
+  left: -2vh;
+  padding: 0.125rem 0.375rem;
+  font-size: 1rem;
+  color: #72767d;
+  background-color: #36393f;
+  width: 2.5ch;
+  border-radius: 0.25rem;
+  height: 1.5em;
+  margin-top: -1.75em;
+  cursor: pointer;
+}
+
+.color {
+  left: 3ch;
+  cursor: auto;
+}
+.color > input {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  transform: scale(2);
+  clip-path: circle(20%);
+  background: none;
+}
+
+.emojiSelector {
+  position: relative;
+  overflow: hidden;
+  background-color: #202225;
+  border-radius: 0.6rem;
+  border-top-left-radius: 0;
+  left: 2ch;
+  top: 0.2em;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  width: 21rem;
+  height: 15rem;
+}
+.emojiSelector > div {
+  overflow-y: scroll;
+  width: 95%;
+  height: calc(82% - 2rem);
+  margin: 0 0.5rem;
+  padding-top: 2%;
+  padding-bottom: 2rem;
+  gap: 0.1rem;
+  cursor: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+.emojiSelector > div > div {
+  width: 2.2rem;
+  height: 2.2rem;
+  background-color: #2f3136;
+  border-radius: 0.6rem;
+  line-height: 2;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+}
+.emojiSelector > div > div:hover > .title {
+  opacity: 1;
+}
+.emojiSelector > div > div[hide] {
+  display: none;
+}
+.emojiSelector img {
+  object-fit: contain;
+  width: 96%;
+  height: 96%;
+}
+.emojiSelector .title {
+  font-size: 1.2rem;
+  position: absolute;
+  height: 2em;
+  padding-top: 0.2rem;
+  width: 100%;
+  background-color: #202225;
+  color: #fff;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  border-radius: 0 0 0.2rem 0.2rem;
+  opacity: 0;
+  transition: 0.1s 0.5s opacity ease-in;
+  line-height: 1.5;
+}
+.emojiSelector > input:not(p) {
+  width: 100%;
+  border-radius: 0;
+  margin-bottom: 0;
+  font-size: 1rem;
+  height: 15%;
+}
+
+.guildIcon {
+  position: fixed;
+  bottom: 1vh;
+  right: 2vw;
+  height: 40vh;
+  width: 40vh;
+  opacity: 0.08;
+  filter: blur(0.1vh);
+  pointer-events: none;
+  z-index: -1;
+  background-size: cover;
+}
+
+logsettings {
+  background-color: #2f3136;
+  min-height: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  display: block;
+  font-size: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0.6rem 0;
+  /* cursor: pointer; */
+}
+logsettings > .color {
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 16vw;
+  height: 4vh;
+  margin-bottom: 3vh;
+}
+logsettings > .color > input {
+  width: 120%;
+  transform: unset;
+  clip-path: polygon(5% 22%, 78% 22%, 78% 78%, 5% 78%);
+}
+logsettings > .set {
+  margin-top: -4rem;
+  float: unset !important;
+  margin-left: 2%;
+}
+logsettings > .color + .set {
+  margin-left: 22%;
+}
+logsettings > h6:first-child {
+  display: inline-block;
+  font-size: 1.5rem;
+  margin-bottom: 3vh;
+}
+logsettings > h6:nth-of-type(3) {
+  position: relative;
+  top: 1em;
+  margin-bottom: 2em;
+}
+logsettings > label:nth-of-type(2) {
+  float: none;
+  margin-left: 2%;
+}
+logsettings > .audit {
+  position: relative;
+  left: max(11ch, 20%);
+  top: -1.34em;
+}
+logsettings > .audit + label + h6 {
+  float: right;
+}
+
+:is(.commandList, .logList, suggestions) {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 2%;
+  gap: 2.5%;
+}
+:is(.commandList, .logList, suggestions) > :is(div, suggestion) {
+  min-width: calc(14ch + 5rem);
+  flex: 1;
+  margin-top: 1%;
+  padding: 0.3rem 0.3ch;
+  border-radius: 0.4rem;
+  background-color: #36393f;
+  position: relative;
+  height: fit-content;
+}
+:is(.commandList, .logList, suggestions) :is(label, .set) {
+  position: absolute;
+  right: -1.6ch;
+  top: 0;
+  transform: scale(0.75);
+}
+:is(.commandList, .logList, suggestions) h3 {
+  font-size: 0.8rem;
+  color: #474b52;
+  margin: -0.5em 0 0.5em 1ch;
+}
+
+:is(.commandList, .logList) details {
+  font-size: 1rem;
+  color: #ccd1da;
+}
+:is(.commandList, .logList) summary {
+  user-select: none;
+  cursor: pointer;
+}
+:is(.commandList, .logList) summary:hover::marker {
+  color: #72767d;
+}
+
+.argel {
+  background: rgba(88, 101, 242, 0.77);
+  border-radius: 0.2em;
+  padding: 0.1em;
+  cursor: pointer;
+  color: #ccd1da;
+}
+.argel::after {
+  content: attr(arg);
+}
+.argel + span {
+  margin-left: 1ch;
+}
+.argel:hover {
+  background: #5865F2;
+}
+.argel:hover > span {
+  opacity: 1;
+}
+.argel:hover::after {
+  color: #ccd1da;
+}
+.argel > span {
+  content: attr(ttl);
+  position: absolute;
+  font-size: 0.7rem;
+  padding: 0.5em;
+  border-radius: 0.2em 0.5em 0.5em 0.5em;
+  top: calc(100% + 1em);
+  left: 50%;
+  height: fit-content;
+  background: #202225;
+  color: #ccd1da;
+  pointer-events: none;
+  z-index: 3;
+  max-width: 100%;
+  width: fit-content;
+  white-space: pre-line;
+  opacity: 0;
+  transition: opacity 0.3s ease-in 0.3s;
+  top: 95%;
+  left: unset;
+  max-width: 70%;
+}
+
+:is(.commandList, .logList) > div > input {
+  font-size: inherit;
+  padding-left: 0;
+  margin-bottom: 0;
+  color: #fff;
+  width: calc(94% - 3.7rem);
+}
+:is(.commandList, .logList) > div > input:is(:focus, :hover) {
+  background-color: #2f3136;
+}
+
+.logList h1 {
+  font-size: inherit;
+  text-transform: capitalize;
+}
+
+suggestsettings {
+  background-color: #2f3136;
+  min-height: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  display: block;
+  font-size: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0.6rem 0;
+  /* cursor: pointer; */
+}
+suggestsettings .embeds {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 2%;
+  gap: 2.5%;
+  align-items: baseline;
+}
+suggestsettings .embed {
+  margin-top: 3.5em;
+}
+suggestsettings .embed.pending {
+  margin-top: 1.5em;
+}
+suggestsettings .embed::before {
+  content: attr(status);
+  color: #72767d;
+  position: absolute;
+  top: -1.2em;
+  font-size: 1.3rem;
+}
+suggestsettings .embed:nth-child(1) > .author::before {
+  background: var(--pfp), #747f8d;
+}
+suggestsettings .embed:nth-child(2) > .author::before {
+  background: var(--pfp), #43b581;
+}
+suggestsettings .embed:nth-child(3) > .author::before {
+  background: var(--pfp), #f04747;
+}
+suggestsettings .embed:nth-child(4) > .author::before {
+  background: var(--pfp), #faa61a;
+}
+suggestsettings .embed > .reaction {
+  left: 3.25ch;
+}
+suggestsettings .embed > .reaction:last-child {
+  left: 8.5ch;
+}
+suggestsettings input.statusname {
+  width: max(1.2px * var(--wdth, 0) + 1ch, 2ch);
+  border-radius: 0.2em;
+  border: dashed rgba(0, 0, 0, 0) 0.2em;
+  margin: -0.2em;
+  color: #fec !important;
+  position: relative;
+  top: -1.1em;
+  left: max(1.2px * var(--titlewdth, 0) + 1ch, 2ch);
+  margin-bottom: -2em;
+}
+suggestsettings input.statusname:is(:hover, :focus) {
+  border-color: #474b52;
+}
+suggestsettings input.title {
+  border-radius: 0.2em;
+  border: dashed rgba(0, 0, 0, 0) 0.2em;
+  margin: -0.2em;
+  color: #fec !important;
+  width: max(1.2px * var(--titlewdth, 0) + 1ch, 2ch);
+}
+suggestsettings input.title:is(:hover, :focus) {
+  border-color: #474b52;
+}
+suggestsettings b > span {
+  display: block;
+  font-weight: normal;
+}
+
+:is(suggestsettings, modsettings) .embed {
+  position: relative;
+}
+:is(suggestsettings, modsettings) .embed input:not(.reaction *) {
+  background: none;
+  font-weight: 600;
+  color: #fff;
+}
+:is(suggestsettings, modsettings) .embed > .author {
+  left: 2em;
+  margin-top: 1vh;
+}
+:is(suggestsettings, modsettings) .embed > .author::before {
+  content: "";
+  height: 1.72em;
+  width: 1.72em;
+  border-radius: 50%;
+  position: absolute;
+  left: -2em;
+  top: -0.25em;
+  background: var(--pfp), #faa61a;
+}
+:is(suggestsettings, modsettings) .color {
+  left: -2vh;
+}
+:is(suggestsettings, modsettings) input.duration,
+:is(suggestsettings, modsettings) input.reasonFrom {
+  width: max(1.2px * var(--wdth, 0) + 1ch, 2ch);
+  border-radius: 0.2em;
+  border: dashed rgba(0, 0, 0, 0) 0.2em;
+  margin: -0.2em;
+  color: #fec !important;
+}
+:is(suggestsettings, modsettings) input.duration:is(:hover, :focus),
+:is(suggestsettings, modsettings) input.reasonFrom:is(:hover, :focus) {
+  border-color: #474b52;
+}
+:is(suggestsettings, modsettings) .content > i {
+  font-style: normal;
+  display: block;
+}
+:is(suggestsettings, modsettings) .content > * {
+  margin-top: 0.57em;
+}
+
+modsettings {
+  background-color: #2f3136;
+  min-height: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  display: block;
+  font-size: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0.6rem 0;
+  /* cursor: pointer; */
+  padding-bottom: 3rem;
+  position: relative;
+}
+modsettings h6:first-child {
+  display: inline-block;
+  font-size: 1.5rem;
+  margin-bottom: 3vh;
+}
+modsettings .role {
+  position: relative;
+  background: #3e4147;
+  color: var(--clr, #ccd1da);
+  display: inline-block;
+  margin-right: 1ch;
+  padding: 0.1em 1ch;
+  white-space: nowrap;
+  border-radius: 0.2em;
+  font-size: 1rem;
+  cursor: default;
+  height: 2vh;
+  margin: 0.3vh 0 3.7vh;
+}
+modsettings .role:hover {
+  background: #3a4956;
+}
+modsettings .embed {
+  margin-top: 0.7vh;
+  gap: 0.4em;
+  width: min(520px, 50%);
+}
+modsettings .messagefrom {
+  width: max(1.2px * var(--wdth, 0) + 1ch, 2ch);
+  border-radius: 0.2em;
+  border: dashed rgba(0, 0, 0, 0) 0.2em;
+  margin: -0.2em;
+  color: #fec !important;
+  background: none;
+  margin: 0.7vh 0 0 0.25vh;
+  display: block;
+}
+modsettings .messagefrom:is(:hover, :focus) {
+  border-color: #474b52;
+}
+modsettings .by,
+modsettings .until {
+  width: max(1.2px * var(--wdth, 0) + 1ch, 2ch);
+  border-radius: 0.2em;
+  border: dashed rgba(0, 0, 0, 0) 0.2em;
+  margin: -0.2em;
+  color: #fec !important;
+  padding: 0 0.2ch;
+  font-size: 1em;
+}
+modsettings .by:is(:hover, :focus),
+modsettings .until:is(:hover, :focus) {
+  border-color: #474b52;
+}
+modsettings .hasbeen {
+  width: max(1.2px * var(--wdth, 0) + 1ch, 2ch);
+  border-radius: 0.2em;
+  border: dashed rgba(0, 0, 0, 0) 0.2em;
+  margin: -0.2em;
+  color: #fec !important;
+  margin: -0.2em 0 !important;
+  padding: 0 0.2ch;
+  height: unset;
+  font-size: 1em;
+}
+modsettings .hasbeen:is(:hover, :focus) {
+  border-color: #474b52;
+}
+modsettings .toggle {
+  float: none;
+  margin: 0.7vh 0 3vh;
+}
+modsettings .banmessage {
+  min-height: 4em;
+  height: calc(1px * var(--height, 4em));
+  width: min(520px, 50%);
+  background-color: #36393f;
+  border-radius: 0.5vh;
+  padding: 0.3em 2ch;
+  color: #ccd1da;
+  font-size: clamp(0.75rem, 16px, 1.25rem);
+  line-height: 1.2;
+  font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  resize: none;
+  transition: background-color 0.3s ease-out 0.1s;
+  margin-bottom: 3vh;
+}
+modsettings .banmessage:is(:hover, :focus) {
+  background-color: #3b3e44;
+}
+
+.comsettings {
+  width: 50%;
+  font-size: 1rem;
+}
+.comsettings[shw="1"] > :nth-child(1) {
+  display: block;
+}
+.comsettings[shw="1"] + .scrollbar > :nth-child(2) {
+  background-color: #3f434a;
+  transform: scale(1.1);
+}
+.comsettings[shw="2"] > :nth-child(2) {
+  display: block;
+}
+.comsettings[shw="2"] + .scrollbar > :nth-child(3) {
+  background-color: #3f434a;
+  transform: scale(1.1);
+}
+.comsettings[shw="3"] > :nth-child(3) {
+  display: block;
+}
+.comsettings[shw="3"] + .scrollbar > :nth-child(4) {
+  background-color: #3f434a;
+  transform: scale(1.1);
+}
+.comsettings[shw="4"] > :nth-child(4) {
+  display: block;
+}
+.comsettings[shw="4"] + .scrollbar > :nth-child(5) {
+  background-color: #3f434a;
+  transform: scale(1.1);
+}
+.comsettings[shw="5"] > :nth-child(5) {
+  display: block;
+}
+.comsettings[shw="5"] + .scrollbar > :nth-child(6) {
+  background-color: #3f434a;
+  transform: scale(1.1);
+}
+.comsettings[shw="6"] > :nth-child(6) {
+  display: block;
+}
+.comsettings[shw="6"] + .scrollbar > :nth-child(7) {
+  background-color: #3f434a;
+  transform: scale(1.1);
+}
+.comsettings[shw="7"] > :nth-child(7) {
+  display: block;
+}
+.comsettings[shw="7"] + .scrollbar > :nth-child(8) {
+  background-color: #3f434a;
+  transform: scale(1.1);
+}
+.comsettings[shw="8"] > :nth-child(8) {
+  display: block;
+}
+.comsettings[shw="8"] + .scrollbar > :nth-child(9) {
+  background-color: #3f434a;
+  transform: scale(1.1);
+}
+
+.comsetting {
+  display: none;
+  position: relative;
+  background: #36393f;
+  color: #ccd1da;
+  border-radius: 0.5vh;
+  margin-top: 4em;
+  padding: 0.3em 2ch;
+  transition: background-color 0.5s ease-out;
+}
+.comsetting::before {
+  color: #fec;
+}
+.comsetting::after {
+  content: attr(shw);
+  color: #fff;
+  position: absolute;
+  top: -1.2em;
+  left: 0;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+.comsetting > .command {
+  border-radius: 0.2em;
+  border: dashed rgba(0, 0, 0, 0) 0.2em;
+  margin: -0.2em;
+  color: #fec !important;
+  background: none;
+  font-weight: 600;
+  margin: 0 !important;
+}
+.comsetting > .command:is(:hover, :focus) {
+  border-color: #474b52;
+}
+.comsetting > .doc {
+  position: absolute;
+  right: 0;
+  height: 1.2em;
+  top: 0;
+  background: inherit;
+  border-radius: 0.5vh 0.5vh 0 0;
+  padding: 0.3em;
+  color: #72767d;
+  transition: 0.5s ease-out;
+  transition-property: top, color;
+}
+.comsetting > .roleSelect {
+  background: #31343a;
+  margin-bottom: 1rem;
+}
+.comsetting > .txt {
+  width: fit-content;
+  max-width: 90%;
+  background: #31343a;
+  margin-bottom: 1rem;
+  padding: 0.4em;
+  border-radius: 0.5vh;
+}
+.comsetting > .txt > input {
+  background: none;
+  padding: 0 0.2ch;
+  font-size: 1em;
+}
+.comsetting > .txt > .txtinput {
+  width: max(1.2px * var(--wdth, 0) + 1ch, 2ch);
+  border-radius: 0.2em;
+  border: dashed rgba(0, 0, 0, 0) 0.2em;
+  margin: -0.2em;
+  color: #fec !important;
+}
+.comsetting > .txt > .txtinput:is(:hover, :focus) {
+  border-color: #474b52;
+}
+
+.scrollbar {
+  border-radius: 0.5vh;
+  overflow: hidden;
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.7vh;
+}
+.scrollbar > * {
+  width: 20%;
+  height: 2.5rem;
+  font-size: 0.8rem;
+  background: #36393f;
+  color: #ccd1da;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  transition: 0.5s ease-out 0.1s;
+  transition-property: background-color, transform;
+}
+.scrollbar > *:is(:hover, :focus-within):not(.scrollarrow) {
+  background-color: #3f434a;
+  transform: scale(1.1);
+  z-index: 2;
+}
+.scrollbar > .scrollarrow {
+  background: #36393f center/70% url("/src/icon/arrow") no-repeat;
+}
+.scrollbar > .scrollarrow:first-child {
+  transform: scaleX(-1);
+}
+
+.hide {
+  opacity: 0;
+  position: fixed;
+  top: -99vw;
+  font-size: 0.875rem;
+}
+
+suggestion {
+  border: 0.3rem rgba(0, 0, 0, 0) solid;
+  border-top-color: var(--clr, #747f8d);
+  transition: 0.3s ease-out 0.2s;
+  transition-property: border-color, background-color, transform;
+  font-size: 1rem;
+  cursor: pointer;
+}
+suggestion > * {
+  cursor: auto;
+  width: fit-content;
+}
+suggestion[selected] {
+  transform: scale(1.1);
+}
+suggestion:hover {
+  background-color: #2f3136;
+}
+suggestion:hover::before {
+  color: #72767d;
+}
+suggestion::before {
+  content: attr(idx);
+  position: absolute;
+  right: 1ch;
+  color: #42454d;
+  transition: color 0.3s ease-out;
+  font-weight: 700;
+}
+suggestion:is(:hover, [selected]) {
+  border-color: var(--clr, #747f8d);
+}
+suggestion:is(:hover, [selected]) :is(.author, .from) {
+  color: #ccd1da;
+  animation: CtD 0.3s ease-out;
+  user-select: all;
+}
+suggestion:is(:hover, [selected]) :is(.author, .from)::after {
+  content: unset;
+}
+suggestion:is(:hover, [selected]) > .answer::before {
+  color: #72767d;
+}
+suggestion :is(.author, .from) {
+  color: rgba(0, 0, 0, 0);
+  position: relative;
+  white-space: nowrap;
+  user-select: none;
+  font-size: 0.75rem;
+  position: absolute;
+}
+suggestion :is(.author, .from)::after {
+  content: attr(nm);
+  color: var(--uclr, #ccd1da);
+  position: absolute;
+  left: 0;
+}
+suggestion > .content {
+  margin: 1em 0 0 0.3ch;
+}
+suggestion > .author {
+  margin-left: 0.3ch;
+  left: 0.6ch;
+}
+suggestion > .answer::before {
+  content: "Reason from: ";
+  color: #ccd1da;
+  font-size: 0.75rem;
+  position: absolute;
+  transition: color 0.3s ease-out;
+}
+suggestion .reason {
+  padding-top: 1em;
+  margin-top: 0.5em;
+}
+suggestion .from {
+  left: 12.5ch;
+}
+
+suggestions {
+  background-color: #2f3136;
+  min-height: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  display: block;
+  font-size: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0.6rem 0;
+  /* cursor: pointer; */
+  padding: 3rem 2% 2% !important;
+  position: relative;
+  border-radius: 0.6rem 0.6rem 0 0;
+  margin-bottom: 0;
+}
+suggestions::before {
+  content: "";
+  background: url("/src/icon/sort");
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  background-size: 2rem;
+  top: 0.5rem;
+  right: 8.7ch;
+  transform: scaleX(-1);
+  filter: brightness(0) saturate(100%) invert(52%) sepia(7%) saturate(374%) hue-rotate(180deg) brightness(87%) contrast(88%);
+}
+
+.sorter {
+  font-size: 1rem;
+  height: 2em;
+  width: 11ch;
+  margin-bottom: -2em;
+  position: relative;
+  top: 1.1em;
+  left: calc(100% - 12ch);
+  background: #36393f;
+  z-index: 1;
+  padding: 0;
+}
+
+#suggestions > .replybox {
+  position: relative;
+  background-color: #2f3136;
+  min-height: 3rem;
+  height: fit-content;
+  width: 97.5%;
+  margin: 0 0 1rem;
+  padding: 0 2% 1rem;
+  font-size: 1.2rem;
+  border-radius: 0 0 0.6rem 0.6rem;
+}
+#suggestions > .replybox > textarea {
+  min-height: 3em;
+  height: calc(1px * var(--height));
+  width: 100%;
+  margin-top: 4ch;
+  background-color: #36393f;
+  padding: 1em;
+  border-radius: 0.6rem;
+  resize: none;
+  font-size: clamp(0.75rem, 16px, 1.25rem);
+  color: #ccd1da;
+  line-height: 1.2;
+  border-bottom: var(--color) 0.3rem solid;
+  box-shadow: inset 0 -2em 6em -6em var(--color);
+  transition: background-color 0.3s ease-out 0.1s;
+}
+#suggestions > .replybox > textarea:is(:hover, :focus) {
+  background-color: #3b3e44;
+}
+#suggestions > .replybox > .buttons {
+  position: absolute;
+  top: 1ch;
+  width: 6ch;
+  height: 1.5ch;
+  display: flex;
+  justify-content: space-between;
+  background: #2f3136;
+  border-radius: 0.75ch;
+}
+#suggestions > .replybox > .buttons::before {
+  content: "";
+  height: 1.1ch;
+  width: 1.1ch;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: calc(var(--left) * 2.25ch);
+  transform: scale(1.2);
+  border: #ccd1da 0.2ch solid;
+  transition: left 0.5s ease-out;
+  text-transform: capitalize;
+}
+#suggestions > .replybox > .buttons::after {
+  content: attr(status);
+  position: absolute;
+  color: #72767d;
+  left: 7.5ch;
+  top: -0.15em;
+  font-size: 1.5ch;
+}
+#suggestions > .replybox > .buttons > div {
+  height: 1.5ch;
+  width: 1.5ch;
+  border-radius: 50%;
+  background: var(--clr);
+  cursor: pointer;
+  z-index: 1;
+}
+#suggestions > .replybox > .send {
+  position: absolute;
+  background: no-repeat center/2em url("/src/icon/reply");
+  width: 2em;
+  height: 2em;
+  top: -0.3em;
+  right: 2%;
+  cursor: pointer;
+}
+
+[status^=a] + textarea {
+  --color: var(--approve);
+}
+
+[status^=d] + textarea {
+  --color: var(--deny);
+}
+
+[status^=c] + textarea {
+  --color: var(--consider);
+}
+
+[columns] > suggestions {
+  flex-direction: column;
+}
+
+transcripts {
+  background-color: #2f3136;
+  min-height: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  display: block;
+  font-size: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0.6rem 0;
+  /* cursor: pointer; */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+transcript {
+  border-radius: 0.4rem;
+  background-color: #36393f;
+  position: relative;
+  padding-top: 3rem;
+  overflow: hidden;
+}
+transcript:not([show]):hover {
+  background-color: #3e4147;
+}
+transcript[show] {
+  height: fit-content;
+}
+transcript[show] > msg {
+  display: block;
+}
+transcript > .name {
+  position: absolute;
+  top: 0.2em;
+  width: calc(100% - 12ch - 2rem - 1.2em);
+  height: 2.7rem;
+  left: 1.2em;
+  cursor: pointer;
+}
+transcript > .name::before {
+  content: "#";
+  display: block;
+  position: absolute;
+  color: #72767d;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-family: monospace;
+  left: -1.8rem;
+  font-size: 1.3em;
+  top: -0.1em;
+  text-align: center;
+}
+transcript > .time {
+  font-size: 0.75rem;
+  position: absolute;
+  right: 3ch;
+  top: 0.25em;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.2em;
+  flex-direction: column;
+}
+transcript > .time i {
+  font-style: normal;
+}
+transcript > .time > span {
+  display: flex;
+  justify-content: space-between;
+}
+transcript > .time i:last-child {
+  margin-left: 1ch;
+}
+transcript > msg {
+  display: none;
+  font-size: 1rem;
+  position: relative;
+  padding-left: 4.5em;
+  line-height: 1.375em;
+  margin-top: 1.0625em;
+  min-height: 2.75em;
+}
+transcript > msg > .time {
+  font-size: 0.75em;
+  color: #72767d;
+  cursor: default;
+}
+transcript > msg > .content {
+  color: #dcddde;
+}
+transcript > msg:hover > .user {
+  color: #ccd1da;
+  animation: CtD 0.3s ease-out;
+  user-select: all;
+}
+transcript > msg:hover > .user::after {
+  content: unset;
+}
+transcript > msg a {
+  color: #1981bc !important;
+}
+transcript .user {
+  display: inline-block;
+  width: 0;
+  white-space: nowrap;
+  color: rgba(0, 0, 0, 0);
+  position: relative;
+  white-space: nowrap;
+  user-select: none;
+}
+transcript .user::after {
+  content: attr(nm);
+  color: var(--uclr, #ccd1da);
+  position: absolute;
+  left: 0;
+}
+transcript .user::before {
+  content: "";
+  position: absolute;
+  display: block;
+  background: center/contain no-repeat var(--avtr);
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  left: -3.5em;
+}
+transcript .embed {
+  background-color: #2f3136;
+  max-width: min(520px, 80%);
+  width: fit-content;
+}
+transcript .open {
+  position: absolute;
+  right: 12ch;
+  top: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  background: no-repeat center/100% url("/src/icon/open");
+  filter: brightness(99);
+  cursor: pointer;
+}
+
+modlogs {
+  background-color: #2f3136;
+  min-height: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  display: block;
+  font-size: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0.6rem 0;
+  /* cursor: pointer; */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 3rem 2% 2% !important;
+  position: relative;
+}
+modlogs::before {
+  content: "";
+  background: url("/src/icon/sort");
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  background-size: 2rem;
+  top: 0.5rem;
+  right: 8.7ch;
+  transform: scaleX(-1);
+  filter: brightness(0) saturate(100%) invert(52%) sepia(7%) saturate(374%) hue-rotate(180deg) brightness(87%) contrast(88%);
+}
+
+modlog {
+  border-radius: 0 0.4rem 0.4rem 0;
+  background-color: #36393f;
+  position: relative;
+  border-left: solid 0.2ch;
+  display: grid;
+  grid-template-columns: 2fr 1fr 13ch;
+  padding: 0.5rem 0.5ch;
+}
+modlog:hover {
+  background-color: #3e4147;
+}
+modlog > .type {
+  display: inline-block;
+  grid-column: 1/3;
+  text-transform: capitalize;
+  color: #dbad11;
+  font-weight: bolder;
+}
+modlog > .date {
+  color: #72767d;
+  font-size: 0.8rem;
+  display: inline-block;
+  position: absolute;
+  top: 1em;
+  right: 0;
+  width: 14ch;
+}
+modlog :is(.duration, .member, .reason, .staff):before {
+  margin-right: 0.5ch;
+}
+modlog :is(.member, .staff) {
+  color: rgba(0, 0, 0, 0);
+  position: relative;
+  white-space: nowrap;
+  user-select: none;
+}
+modlog :is(.member, .staff)::after {
+  content: attr(nm);
+  color: var(--uclr, #ccd1da);
+  position: absolute;
+  left: 0;
+}
+modlog :is(.member, .staff):hover {
+  color: #ccd1da;
+  animation: CtD 0.3s ease-out;
+  user-select: all;
+}
+modlog :is(.member, .staff):hover::after {
+  content: unset;
+}
+modlog :is(.member, .staff):not([nm]) {
+  color: #ccd1da;
+}
+modlog :is(.member, .staff)::before {
+  color: #fff;
+  background: no-repeat right/2ch var(--avtr);
+  display: inline-block;
+}
+modlog .staff {
+  grid-column: 2;
+}
+modlog .staff::before {
+  content: "Staff:";
+  width: 6.15ch;
+}
+modlog .staff::after {
+  left: 6.65ch;
+}
+modlog .member {
+  grid-column: 1;
+  grid-row: 2;
+}
+modlog .member::before {
+  content: "Member:";
+  width: 9.1ch;
+}
+modlog .member::after {
+  left: 9.6ch;
+}
+modlog .reason {
+  grid-column: 1;
+  grid-row: 3;
+  margin-left: 7.6ch;
+  word-break: break-word;
+}
+modlog .reason::before {
+  content: "Reason:";
+  margin-left: -7.6ch;
+}
+modlog .reason[unspecified]::after {
+  font-style: italic;
+  color: #ccd1da;
+  content: "Unspecified";
+}
+modlog .duration {
+  grid-column: 2;
+}
+modlog .duration::before {
+  content: "Duration:";
+}
+modlog:is(.mute, .warn) {
+  border-color: #faa61a;
+}
+modlog:is(.ban, .kick) {
+  border-color: #f04747;
+}
+modlog:is(.unban, .unmute) {
+  border-color: #43b581;
+}
+modlog > remove {
+  grid-column: 3;
+  opacity: 0;
+}
+modlog:hover > remove {
+  opacity: 1;
+}
+
+.more {
+  background-color: #36393f;
+  align-self: center;
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.5ch;
+  margin: -0.5rem;
+  cursor: pointer;
+}
+.more:hover {
+  background-color: #3e4147;
+}
+.more:not(modlog ~ *) {
+  display: none;
+}
+
+#moderation > .popup {
+  display: none;
+  position: relative;
+  height: 2rem;
+  width: 27ch;
+  border-radius: 0.5vh;
+  margin-bottom: -2rem;
+  z-index: 2;
+  overflow: hidden;
+  top: 3rem;
+  float: right;
+  border: 0.1rem #1293db solid;
+}
+#moderation > .popup[shw] {
+  display: block;
+}
+#moderation > .popup > div,
+#moderation > .popup > input {
+  position: absolute;
+  bottom: 0;
+  width: 50%;
+  height: 100%;
+  margin: 0;
+  border-radius: 0;
+}
+#moderation > .popup > input {
+  left: 0;
+  width: 21ch;
+  font-size: 1rem;
+  transition: background-color 0.1s ease-out;
+}
+#moderation > .popup > input[err] {
+  background-color: #56454c;
+}
+#moderation > .popup > div {
+  right: 0;
+  background: #dbad11;
+  cursor: pointer;
+  width: 6ch;
+  line-height: 2;
+  text-align: center;
+}
+#moderation > .popup > div:hover {
+  background: #efc330;
+}
+#moderation > .popup > div::before {
+  content: "Filter";
+}
+
+reaction {
+  background-color: #2f3136;
+  min-height: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  display: block;
+  font-size: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0.6rem 0;
+  /* cursor: pointer; */
+  display: block;
+}
+reaction rules {
+  width: 100%;
+}
+reaction create,
+reaction rule {
+  font-size: 1.5rem;
+  margin-top: 1%;
+  padding: 0.3rem 0.3ch;
+  border-radius: 0.4rem;
+  background: #36393f;
+  height: fit-content;
+  width: unset;
+}
+reaction rule:not([idinput="4"], [idinput="5"]) > input.id {
+  display: none;
+  width: 21ch;
+}
+reaction rule[idinput] .filter {
+  width: 15ch;
+}
+reaction input,
+reaction select {
+  margin-bottom: 0 !important;
+  margin-right: 2ch;
+  background-color: #31343a !important;
+}
+reaction remove {
+  margin-right: 2rem;
+}
+.multiple {
+  margin: 0.5em 0 1em;
+  font-size: 1rem;
+  height: fit-content;
+}
+.multiple > div {
+  padding: 0.1em 2ch 0.1em 1ch;
+  position: relative;
+  background: #3e4147;
+  color: var(--clr, #ccd1da);
+  display: inline-block;
+  margin: 0.1em 1ch;
+  white-space: nowrap;
+  border-radius: 0.2em;
+  height: 1.5em;
+  top: -0.5em;
+  cursor: pointer;
+}
+.multiple > div:hover {
+  background: #4e3c42;
+}
+.multiple > div:not(.add):hover::after {
+  content: "+";
+  transform: rotate(45deg);
+  transform-origin: bottom;
+  font-size: 2em;
+  text-align: center;
+  position: absolute;
+  height: 50%;
+  bottom: 0.5em;
+  right: -0.3ch;
+  color: #db1212;
+}
+.multiple > div[unknown] {
+  color: #72767d;
+}
+.multiple .add {
+  vertical-align: top;
+  padding: 0.1em 2ch;
+  width: 0;
+}
+.multiple .add:hover {
+  background: #3a4956;
+}
+.multiple .add::after {
+  content: "+";
+  font-size: 2em;
+  text-align: center;
+  position: absolute;
+  inset: 0;
+  top: -0.125em;
+}
+.multiple .add > * {
+  position: relative;
+  border-radius: 0.6rem;
+  border-top-left-radius: 0;
+  left: 2ch;
+  top: 0.2em;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+.multiple .add > [show], .multiple .add[show] > :not(.emojiSelector) {
+  opacity: 1;
+  pointer-events: all;
+}
+
+body > transcripts {
+  /* only on /Guild/_/transcript/_  */
+  background: 0;
+  padding: 0;
+  position: fixed;
+  top: 5vh;
+}
+
+body > * > transcript {
+  /* only on /Guild/_/transcript/_  */
+  background: 0;
+  overflow-y: scroll;
+  max-height: calc(95vh - 3.5rem);
+}
+body > * > transcript > div {
+  position: fixed !important;
+  margin-top: 7vh;
+}
+body > * > transcript > .time {
+  gap: 1em;
+  top: 3em;
+  right: 9ch;
+  font-size: 1rem;
+}
+
+header > .back {
+  /* only on /Guild/_/transcript/_  */
+  width: 4.5vh;
+  background: no-repeat center/100% url("/src/icon/reply");
+  transform: scaleX(-1);
+  margin-left: 2%;
+}
+
+automodsettings {
+  background-color: #2f3136;
+  min-height: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.6rem;
+  display: block;
+  font-size: 1.5rem;
+  padding: 1rem 0.5rem;
+  margin: 0.6rem 0;
+  /* cursor: pointer; */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5%;
+}
+automodsettings label:not(:first-of-type) {
+  float: none;
+  margin: 0.7vh 0 3vh;
+}
+automodsettings > .set {
+  margin: 1rem 0 0 calc(100% - 6rem);
+}
+
+automod {
+  min-width: 27rem;
+  flex: 1;
+  margin-top: 1%;
+  padding: 0.3rem 0.3ch;
+  border-radius: 0.4rem;
+  background-color: #36393f;
+  position: relative;
+  height: fit-content;
+}
+automod > h6:first-child {
+  font-size: 1.5rem;
+  display: inline-block;
+}
+automod > .reason,
+automod > .multiple > .add > * {
+  background-color: #3e4147;
+}
+automod > .reason {
+  width: 100%;
+}
+automod input[type=range] {
+  width: 38%;
+}
+automod input[type=range]::after {
+  white-space: nowrap;
+}
+automod.filler {
+  background: none;
+  margin-top: 0;
+  padding: 0 0.3ch;
+}
