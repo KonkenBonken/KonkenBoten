@@ -4205,10 +4205,12 @@ client.on('messageCreate', async m => { //Automod
 		if (word.startsWith('http://')) word = word.substr(6);
 		else word = word.substr(7);
 
-		if (invites && ['discord.gg/', 'discord.com/invite/'].some(url => word.startsWith(url)))
+		const inviteStarts = ['discord.gg/', 'discord.com/invite/', 'discordapp.com/invite/'];
+
+		if (invites && inviteStarts.some(url => word.startsWith(url)))
 			return fault = 'invites';
 
-		if (links && ![links.ignDom, (links.ignMsg && 'https://discord.com/channels/'), 'discord.gg/', 'discord.com/invite/'].flat().some(url => url && word.startsWith(url)))
+		if (links && ![links.ignDom, (links.ignMsg && 'https://discord.com/channels/'), ...inviteStarts].flat().some(url => url && word.startsWith(url)))
 			return fault = 'links';
 	});
 	if (fault);
@@ -4217,7 +4219,7 @@ client.on('messageCreate', async m => { //Automod
 	// else if (mentions && m.mentions.users.size >= (mentions.num || 4)) fault = 'mentions';
 	else if (mentions && m.content.match(/<@[&!]?(\d{17,19})>/g)?.length >= (mentions.num || 4)) fault = 'mentions';
 	else if (zalgo && /%CC%/g.test(encodeURIComponent(m.content))) fault = 'zalgo';
-	else if (spam && [...(await m.channel.messages.fetch({ limit: spam.num - 1 || 3, before: m.id })).values()].every(msg => msg.author.id == m.author.id && msg.content == m.content)) fault = 'spam';
+	else if (spam && m.content && [...(await m.channel.messages.fetch({ limit: spam.num - 1 || 3, before: m.id })).values()].every(msg => msg.author.id == m.author.id && msg.content == m.content)) fault = 'spam';
 
 	if (!fault) return;
 
@@ -5598,7 +5600,7 @@ app.all(/\/src\/(client|terms|home|error)\.css/i, async (req, res) => {
 	let file = req.path.match(/\/src\/(client|terms|home|error)\.css/i)[1];
 	res.append('Cache-Control', 'public, max-age=10800') //3h
 		.append('Content-Disposition', 'render')
-		.download(`${__dirname}/client/${file}.scss`);
+		.download(`${__dirname}/client/${file}.css`);
 });
 
 app.all(/\/src\/(client|home|transcript)\.js/i, async (req, res) => {
