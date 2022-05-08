@@ -1,0 +1,599 @@
+html {
+  font-size: 1.65vh;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  color: #ccd1da;
+  background-color: #36393f;
+  overflow-y: scroll;
+  --pfp: url("/src/icon/discord") center/70% no-repeat;
+}
+body::before {
+  content: "";
+  display: block;
+  background-image: url("/src/background");
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: saturate(0.5);
+  position: fixed;
+  top: 4.5vh;
+  height: 35vh;
+  left: 0;
+  right: 0;
+  z-index: -2;
+}
+body::after {
+  content: "";
+  display: block;
+  background: linear-gradient(180deg, rgba(52, 55, 60, 0.9333333333) 0%, #36393f) 95%;
+  position: fixed;
+  top: 4.5vh;
+  height: 35vh;
+  left: 0;
+  right: 0;
+  z-index: -1;
+}
+
+:active,
+:visited {
+  color: unset;
+}
+
+::selection {
+  background-color: rgba(219, 173, 17, 0.7);
+}
+
+img {
+  height: 100%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+header {
+  background-color: #202225;
+  height: 4.5vh;
+  /* max-height: 10vh; */
+  padding: 0.5vh 0.5vw;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  box-shadow: 0 -1vh 1vh 1vh #000;
+}
+header > * {
+  color: #ccd1da;
+}
+header > .logo {
+  height: inherit;
+  overflow: hidden;
+  display: block;
+  width: 4.5vh;
+  float: left;
+  cursor: pointer;
+}
+header > .logo > div {
+  position: absolute;
+  transform: scale(1.5);
+  /* filter: $fltr-acc1; */
+  height: inherit;
+  width: inherit;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 0% 0%, 0% 0%, 0% 0%);
+  transition: clip-path 0.2s ease-out;
+}
+header > .logo img {
+  position: absolute;
+}
+header > .user {
+  position: absolute;
+  overflow: visible;
+  /* height: 4.5vh;
+  width: 4.5vh; */
+  right: 3vw;
+  cursor: pointer;
+}
+header > .user > img {
+  float: right;
+  height: 4.5vh;
+  width: 4.5vh;
+  border-radius: 50%;
+  background-color: #2f3136;
+  transition: border-radius 0.25s ease;
+  /* margin: .2vh .2vh 0 0 */
+}
+header > .user > img:is(:focus, :hover) {
+  border-radius: 30%;
+}
+header img {
+  user-select: none;
+}
+header userpopup {
+  display: none;
+  padding: 0.6vh 0.6vw;
+  /* position: absolute; */
+  margin-right: 2.25vw;
+  margin-top: 5.5vh;
+  width: 8vw;
+  background-color: #2f3136;
+  border-radius: 0.6rem;
+  border-top-right-radius: 0;
+  cursor: pointer;
+}
+header userpopup[show] {
+  display: block;
+}
+header userpopup > a {
+  color: #ccd1da;
+  text-decoration: none;
+  display: block;
+  border-radius: 0.5ch;
+  padding-left: 1ch;
+}
+header userpopup > a:hover {
+  background-color: #36393f;
+}
+header userpopup > .logout {
+  color: #f04747;
+}
+header > .guildDropDown {
+  height: 4vh;
+  width: 25vh;
+  position: absolute;
+  right: 7vw;
+  cursor: pointer;
+  border-radius: 0.5vh;
+  background-color: #2f3136;
+  border: 0;
+  margin: 0.5vh 1vw;
+  font-size: 1em;
+}
+header > .guildDropDown > [value=AddNew] {
+  color: #dbad11;
+  background-color: #36393f;
+}
+
+@media only screen and (max-aspect-ratio: 4/5) {
+  header userpopup {
+    width: 40vw;
+    font-size: 2.5em;
+    text-align: center;
+  }
+}
+.logo > :last-child,
+.logo > :nth-child(2) {
+  overflow: hidden;
+  clip-path: polygon(85% 25%, 85% 75%, 50% 75%, 25% 45%, 25% 25%);
+}
+.logo > :last-child > img {
+  animation: slideB 1s ease-out;
+  transition: right 0.3s ease-out;
+}
+.logo:hover > :last-child > img {
+  right: -4%;
+}
+.logo > :nth-child(2) > img {
+  animation: slidek 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  right: 0;
+  top: 0;
+  transition: right 0.3s ease-out, top 0.3s ease-out;
+}
+.logo:hover > :nth-child(2) > img {
+  top: -2%;
+  right: -1%;
+}
+
+@keyframes slideB {
+  from {
+    right: 50%;
+    transform: scale(0.9);
+  }
+  to {
+    right: 0;
+    transform: unset;
+  }
+}
+@keyframes slidek {
+  0% {
+    top: 21%;
+    right: 13%;
+  }
+  70% {
+    top: 21%;
+    right: 13%;
+  }
+  100% {
+    right: 0;
+    top: 0;
+  }
+}
+.login {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: #5865F2;
+  border-radius: 0.5rem;
+  padding: 0.5vh 0.75vw;
+  margin-right: 3vw;
+  line-height: 100%;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+.login > *, .login {
+  animation: popout 14s cubic-bezier(0, 0.5, 0.7, 1.5) 3s infinite forwards;
+}
+.login > * {
+  animation-delay: 3.1s;
+}
+.login > img {
+  display: inline-block;
+  width: 4.5vh;
+}
+.login > p {
+  color: #fff;
+  display: inline-block;
+  font-weight: bolder;
+  font-size: 1.3em;
+  letter-spacing: 1.2;
+  margin-left: 0.5em;
+}
+
+@keyframes popout {
+  6%, from, to {
+    transform: scale(1);
+  }
+  3% {
+    transform: scale(0.9);
+  }
+}
+.cookie {
+  font-family: sans-serif;
+  line-height: 1.5;
+  position: fixed;
+  bottom: 60vh;
+  width: max(20vw, 250px);
+  left: calc(50vw - max(20vw, 250px) / 2);
+  color: #fff;
+  background-color: #72767d;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.cookie > .ok {
+  background-color: #dbad11;
+  height: 3rem;
+  width: calc(100% + 2rem);
+  position: relative;
+  left: -1rem;
+  bottom: -1rem;
+  text-align: center;
+  color: #202225;
+  font-weight: bolder;
+  font-size: 1.5rem;
+  line-height: 2;
+}
+.cookie > .ok:hover {
+  background-color: #efc330;
+}
+
+@keyframes slideTogether {
+  from {
+    margin-left: 1ch;
+  }
+  to {
+    margin-left: 0;
+  }
+}
+#title {
+  position: fixed;
+  width: 90vw;
+  top: 10vh;
+  left: 5vw;
+  text-align: center;
+  animation: fadeIn 0.5s ease-out;
+  user-select: none;
+  white-space: nowrap;
+}
+
+h1 {
+  display: inline-block;
+  font-size: 11vh;
+  color: #b58f0e;
+  position: relative;
+}
+h1::first-letter {
+  opacity: 0;
+}
+h1::before {
+  content: "";
+  position: absolute;
+  width: 38%;
+  height: 1em;
+  background-size: 3.5ch;
+  background-repeat: no-repeat;
+  background-image: url("/src/icon/logo3");
+  background-position: 100% center;
+}
+
+h1[b] {
+  color: #f0c83e;
+  animation: slideTogether 0.3s cubic-bezier(0, 0.5, 0.7, 1.5);
+}
+
+h1[a]:before {
+  background-image: url("/src/icon/logo");
+  width: 20%;
+  background-position: 18.9% center;
+}
+
+h2 {
+  font-size: 3vh;
+  color: #f4d772;
+  position: relative;
+  top: -2vh;
+}
+
+@media only screen and (max-aspect-ratio: 4/5) {
+  h1 {
+    font-size: 13vw;
+  }
+
+  h2 {
+    display: none;
+  }
+}
+@media only screen and (max-aspect-ratio: 2/5) {
+  header > .logo {
+    pointer-events: none;
+  }
+  header > .logo > div {
+    position: fixed;
+    height: 40vw;
+    width: 40vw;
+    top: calc(50vh - 10vw);
+    left: 30vw;
+  }
+  header > .guildDropDown {
+    /* height: 4vh;
+      width: 25vh; */
+    left: 1vw;
+    font-size: 3vh;
+    position: absolute;
+  }
+
+  .logo > :last-child > img {
+    animation: slideB 1s 0.5s ease-out both;
+  }
+
+  .logo > :nth-child(2) > img {
+    animation: slidek 1s 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  showoff:not(p) {
+    display: none;
+  }
+}
+showoff {
+  position: fixed;
+  width: 60vw;
+  flex-flow: column nowrap;
+  display: flex;
+  animation: fadeIn 0.5s ease-in;
+  overflow: scroll;
+  height: 72vh;
+  top: 25vh;
+  left: 19vw;
+  padding: 3vh 1vw;
+}
+showoff > div {
+  min-height: 15rem;
+  width: 30ch;
+  align-self: flex-end;
+  position: relative;
+  margin-bottom: 4em;
+  transition: 1s ease-in;
+  transition-property: left, right;
+}
+@media only screen and (min-width: 120ch) {
+  showoff > div > :is(p, h3) {
+    left: calc(100% - 60vw);
+  }
+}
+showoff > div > :is(p, h3) {
+  position: absolute;
+}
+showoff > div > h3 {
+  font-size: 1.3em;
+  top: -1.3em;
+  white-space: nowrap;
+}
+showoff > div > p {
+  top: 0;
+  width: min(60vw - 31ch, 30vw);
+}
+showoff > div > p > i {
+  display: block;
+  font-style: normal;
+  margin-bottom: 0.5em;
+}
+showoff > div > p > i:before {
+  content: "";
+  height: 0.5ch;
+  width: 0.5ch;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+  position: relative;
+  bottom: 0.2em;
+  right: 0.5ch;
+}
+showoff > div > p > i > i::before {
+  content: "-";
+  margin: 0 1.3ch;
+  display: inline-block;
+  transform: scaleX(3);
+}
+showoff > div > p b {
+  color: #f2ce56;
+}
+@media only screen and (max-width: 120ch) {
+  showoff > div {
+    align-self: center !important;
+  }
+  showoff > div > .display {
+    display: none;
+  }
+  showoff > div > p {
+    width: 100%;
+  }
+  showoff > div {
+    width: 60vw;
+  }
+  showoff > div:first-of-type {
+    margin-top: 2em;
+  }
+}
+showoff .display {
+  height: 100%;
+  width: 100%;
+  user-select: none;
+  border-radius: 0.8ch;
+  position: relative;
+  overflow: hidden;
+}
+showoff .display > i {
+  color: indianred;
+  transform: rotate(330deg);
+  top: 4em;
+  position: relative;
+  display: block;
+}
+showoff .discord {
+  border-radius: 1ch;
+  box-shadow: -2ch 1ch 4ch 0 rgba(0, 0, 0, 0.4666666667);
+  background-color: #2f3136;
+}
+showoff .channel {
+  height: 1.6em;
+  border-radius: 0.5ch;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  padding: 0.3em 0.6ch;
+  color: #8e9297;
+}
+showoff .channel:hover {
+  background-color: #36393f;
+}
+showoff .channel[joined] {
+  color: #fff;
+  padding-bottom: 1.9em;
+}
+showoff .channel[joined]::after {
+  content: "";
+  background: var(--pfp), #faa61a;
+  position: absolute;
+  height: 1.6em;
+  width: 1.6em;
+  top: 1.8em;
+  left: 3.9ch;
+  border-radius: 50%;
+}
+showoff .channel[joined] > b > :first-child::before {
+  content: "01";
+}
+showoff .channel > b {
+  display: inline-block;
+  height: 1em;
+  border-radius: 0.5em;
+  font-size: 0.7em;
+  background: #36393f;
+  position: absolute;
+  right: 4ch;
+  overflow: hidden;
+  padding: 0 0.5ch;
+}
+showoff .channel > b > :first-child::before {
+  content: "00";
+}
+showoff .channel > b > :last-child {
+  margin-left: 1ch;
+  background: #202225;
+  position: relative;
+  padding-right: 1ch;
+  margin-right: -1ch;
+}
+showoff .channel > b > :last-child::before {
+  content: "";
+  position: absolute;
+  left: -1ch;
+  border-top: 1.1em solid rgba(0, 0, 0, 0);
+  border-bottom: 0 solid rgba(0, 0, 0, 0);
+  border-right: 1ch solid #202225;
+}
+showoff .channel > svg {
+  display: inline-block;
+  height: 1.5em;
+  width: 2.5ch;
+  color: #72767d;
+}
+showoff .channel > p {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.8ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+showoff .controls {
+  background: #202225;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2em;
+}
+showoff .controls > svg {
+  display: inline-block;
+  width: 2.5ch;
+  height: 1.5em;
+  top: 0.25em;
+  right: 1ch;
+  color: #b9bbbe;
+  position: absolute;
+  cursor: pointer;
+}
+showoff .controls > svg:hover {
+  color: #ccd1da;
+}
+showoff > h3 {
+  position: relative;
+  font-size: 1.3em;
+  top: -1.3em;
+  align-self: center;
+  white-space: nowrap;
+}
+showoff > h3::after {
+  content: "?";
+  color: #e4b412;
+  font-size: 1.3em;
+  margin-right: -1ch;
+}
