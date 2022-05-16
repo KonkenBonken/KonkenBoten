@@ -2385,7 +2385,7 @@ const Page = {
 		},*/
 		{
 			com: 'suggest',
-			des: 'Used by members to submit a Suggestion',
+			des: 'Used by member to submit a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
 			format: argEl('suggestion', 'text; max 4096 characters'),
 			options: {
@@ -2394,7 +2394,7 @@ const Page = {
 			}
 		}, {
 			com: 'approve',
-			des: 'Used by staff to approve a Suggestion',
+			des: 'Used by moderator to approve a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
 			format: argEl('index', 'number') + argEl('reason', 'text; max 1024 characters'),
 			options: {
@@ -2403,7 +2403,7 @@ const Page = {
 			}
 		}, {
 			com: 'deny',
-			des: 'Used by staff to deny a Suggestion',
+			des: 'Used by moderator to deny a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
 			format: argEl('index', 'number') + argEl('reason', 'text; max 1024 characters'),
 			options: {
@@ -2412,7 +2412,7 @@ const Page = {
 			}
 		}, {
 			com: 'consider',
-			des: 'Used by staff to consider a Suggestion',
+			des: 'Used by moderator to consider a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
 			format: argEl('index', 'number') + argEl('reason', 'text; max 1024 characters'),
 			options: {
@@ -2428,14 +2428,14 @@ const Page = {
 			}
 		}, {
 			com: 'slowmode',
-			des: 'Used by moderator or admin to set the slowmode of the current channel; Use command without arguments to disable slowmode',
+			des: 'Used by moderator to set the slowmode of the current channel; Use command without arguments to disable slowmode',
 			format: argEl('?duration', `duration; ${durationDescription}; optional`),
 			options: {
 				duration: { type: 'STRING', description: `${durationDescription}; default: unlimited`, required: false }
 			}
 		}, {
 			com: 'clear',
-			des: 'Used by moderator or admin to remove an amount of messages from the current channel',
+			des: 'Used by moderator to delete an amount of messages in the current channel',
 			format: argEl('amount', 'number; max 499'),
 			options: {
 				amount: { type: 'INTEGER', description: 'Amount of messages to remove', minValue: 1, maxValue: 499, required: true }
@@ -2444,18 +2444,18 @@ const Page = {
 
 		{
 			com: 'info user',
-			des: 'Used by moderator or admin to get info about a member',
+			des: 'Used by moderator to get info about a member',
 			format: argEl('@user', 'user-tag or id'),
 			options: {
 				user: { type: 'USER', description: 'The user you want the information of', required: true }
 			}
 		}, {
 			com: 'info server',
-			des: 'Used by moderator or admin to get info about the current server',
+			des: 'Used by moderator to get info about the current server',
 			// format:
 		}, {
 			com: 'info role',
-			des: 'Used by moderator or admin to get info about a role',
+			des: 'Used by moderator to get info about a role',
 			format: argEl('@role', 'role-tag or id'),
 			options: {
 				role: { type: 'ROLE', description: 'The role you want the information of', required: true }
@@ -2464,7 +2464,7 @@ const Page = {
 
 		{
 			com: 'infractions',
-			des: 'Used by Moderators to get a member\'s last logged infractions',
+			des: 'Used by moderator to get a member\'s last logged infractions',
 			format: argEl('@user', 'user-tag or id'),
 			options: {
 				user: { type: 'USER', description: 'The user you want the infractions from; default: you', required: false },
