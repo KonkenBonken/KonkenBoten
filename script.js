@@ -2348,22 +2348,22 @@ const Page = {
 		},*/
 		{
 			com: 'suggest',
-			des: 'Used by members to submit a Suggestion',
+			des: 'Used by member to submit a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
 			format: argEl('suggestion', 'text; max 4096 characters')
 		}, {
 			com: 'approve',
-			des: 'Used by staff to approve a Suggestion',
+			des: 'Used by moderator to approve a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
 			format: argEl('index', 'number') + argEl('reason', 'text; max 1024  characters')
 		}, {
 			com: 'deny',
-			des: 'Used by staff to deny a Suggestion',
+			des: 'Used by moderator to deny a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
 			format: argEl('index', 'number') + argEl('reason', 'text; max 1024  characters')
 		}, {
 			com: 'consider',
-			des: 'Used by staff to consider a Suggestion',
+			des: 'Used by moderator to consider a Suggestion',
 			// beUsed: 'in the suggestion channels if enabled',
 			format: argEl('index', 'number') + argEl('reason', 'text; max 1024  characters')
 		}, {
@@ -2372,31 +2372,31 @@ const Page = {
 			format: argEl('message', 'text; max 4000 characters')
 		}, {
 			com: 'slowmode',
-			des: 'Used by moderator or admin to set the slowmode of the current channel; Use command without arguments to disable slowmode',
+			des: 'Used by moderator to set the slowmode of the current channel; Use command without arguments to disable slowmode',
 			format: argEl('?duration', 'number of seconds or duration; possible units are d, h, m, s; example: 2h30m = 2 hours and 30 minutes; max 21600 seconds; optional')
 		}, {
 			com: 'clear',
-			des: 'Used by moderator or admin to remove an amount of messages from the current channel',
+			des: 'Used by moderator to delete an amount of messages in the current channel',
 			format: argEl('amount', 'number; max 499')
 		},
 
 		{
 			com: 'userinfo',
-			des: 'Used by moderator or admin to get info about a member',
+			des: 'Used by moderator to get info about a member',
 			format: argEl('@user', 'user-tag or id')
 		}, {
 			com: 'serverinfo',
-			des: 'Used by moderator or admin to get info about the current server',
+			des: 'Used by moderator to get info about the current server',
 			// format:
 		}, {
 			com: 'roleinfo',
-			des: 'Used by moderator or admin to get info about a role',
+			des: 'Used by moderator to get info about a role',
 			format: argEl('@role', 'role-tag or id')
 		},
 
 		{
 			com: 'infractions',
-			des: 'Used by Moderators to get a member\'s last 10 logged infractions',
+			des: 'Used by moderator to get a member\'s last logged infractions',
 			format: argEl('@user', 'user-tag or id')
 		}, {
 			com: 'warn',
