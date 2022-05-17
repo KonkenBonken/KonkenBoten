@@ -4172,18 +4172,7 @@ client.on('messageCreate', async m => { //Prefixed
 			return;
 		}
 	} //if textCommand
-	else if (command == GuildData.command('echo') && m.member.permissions.has(8n)) {
-		// console.log(2);
-		let content = m.content.substr(2 + command.length);
-		if (!content) return;
-		if (content.length > 2000) {
-			m.channel.send(content.substr(0, 2000));
-			content = content.substr(2000)
-		}
-		m.channel.send(content);
-		m.delete()
-		return;
-	} else if (GuildData?.Suggestions?.channels && Object.values(GuildData.Suggestions.channels).includes(m.channel.id)) {
+	else if (GuildData?.Suggestions?.channels && Object.values(GuildData.Suggestions.channels).includes(m.channel.id)) {
 		// console.log(3);
 		let responseTypes = {
 			approve: GuildData.command('approve'),
