@@ -4366,56 +4366,6 @@ client.on('messageCreate', async m => { //Prefixed
 		m.delete();
 		// console.log(8);
 	} // if $infractions
-	if (command == GuildData.command('roleinfo')) {
-		const content = m.content.substr(2 + command.length),
-			[, roleID] = content.match(/^\s*<@&!?(\d{16,19})>$/s) || content.match(/^\s*(\d{16,19})$/s) || [],
-			[role, cached] = await Promise.all([m.guild.roles.fetch(roleID).catch(() => false), m.guild.members.fetch()]);
-
-		if (!role || !(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
-			return error();
-
-		// console.log(cached.filter(m => m.roles.cache.has(roleID)), role.members);
-		// console.log(cached.filter(m => m.roles.cache.has(roleID)).size, role.members.size);
-		let columns = Array(3).fill();
-		if (role.members) {
-			var members = role.members.map(m => m.toString());
-			if (members.length <= 5)
-				columns[0] = members.join(',\n')
-			else
-				columns = columns.map((x, i) => members.splice(0, i == 2 ? 7 : Math.round(Math.min(7, members.length / 3))).join(',\n'))
-		}
-
-		let embed = {
-			footer: { text: `Requested by: ${m.author.tag} | ${m.author.id}`, iconURL: m.member.displayAvatarURL() },
-			author: { name: `Info about ${role.name}` },
-			color: role.color || 'dbad11',
-			thumbnail: { url: role.iconURL() },
-			fields: [
-					['Id:', role.id],
-					['Displayed separately:', role.hoist ? 'Yes' : 'No'],
-					// ['Muted:', GuildData.Moderation.timout ? (GuildData.Moderation.muted ? 'Yes' : 'No') : undefined],
-					['Created at:', moment(role.createdAt).format('D/M-YYYY - HH:mm')],
-					['Members:', columns[0]],
-					['⠀', columns[1]],
-					['⠀', columns[2]],
-				]
-				.filter(([, value]) => value /*&&value.toString()*/ )
-				.map(([name, value, inline]) => ({ name, value: value.toString(), inline: !inline }))
-			// .map(([name, value, inline]) =>
-			// (value != undefined && value.toString()) ? { name: name + ':', value: value.toString(), inline: !inline } : { name: '⠀', value: '⠀', inline: !inline })
-		};
-
-		// m.delete();
-		m.channel.send({
-			embeds: [embed],
-			components: [{
-				components: [{ label: 'Parse Permissions', customId: 'roleinfo-parse-permissions-' + roleID, type: 2, style: 1 }],
-				type: 1
-			}]
-		});
-		return m.delete()
-	}
-
 
 	// } // if prefix
 	// } catch (e) {console.log(e.message, 3476);}
