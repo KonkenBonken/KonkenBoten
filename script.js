@@ -4112,12 +4112,13 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 
 	if (!commandObj) return sendError(`Command not found: ${subCommand} ${interaction.commandName}`);
 
-	if (subCommand) var arguments = Object.keys(commandObj.options).map(name => {
-		const arg = interaction.options.get(name);
-		for (type in ['value', 'user', 'member', 'channel', 'role'])
-			if (arg[type])
-				return arg[type];
-	})
+	var options = Object.fromEntries(Object.keys(commandObj.options).map(name => {
+		const arg = interaction.options.get(name),
+			value = ['value', 'user', 'member', 'channel', 'role'].find(type => arg[type]);
+		return [name, value];
+	}))
+
+	commandObj.handler(options, { ...interaction, GuildData, DataBase, interaction });
 
 
 }); // Slash-Commands
