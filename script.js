@@ -4096,15 +4096,6 @@ client.on('messageCreate', async m => { //Automod
 client.on('interactionCreate', async interaction => { // Slash-Commands
 	if (!(interaction.isCommand() && interaction.inCachedGuild())) return;
 
-	// c = {
-	// 	com: 'info role',
-	// 	des: 'Used by moderator or admin to get info about a role',
-	// 	format: argEl('@role', 'role-tag or id'),
-	// 	options: {
-	// 		role: { type: 'ROLE', description: 'The role you want the information of', required: true }
-	// 	}
-	// };
-
 	const error = message => {
 		let content = 'An error occured';
 		if (message) content += '\n> ' + message;
@@ -4117,7 +4108,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 
 	if (!commandObj) return sendError(`Command not found: ${subCommand} ${interaction.commandName}`);
 
-	var options = Object.fromEntries(Object.keys(commandObj.options).map(name => {
+	var options = Object.fromEntries(Object.keys(commandObj.options || {}).map(name => {
 		const arg = interaction.options.get(name),
 			value = ['value', 'user', 'member', 'channel', 'role'].find(type => arg[type]);
 		return [name, value];
@@ -4375,49 +4366,6 @@ client.on('messageCreate', async m => { //Prefixed
 		m.delete();
 		// console.log(8);
 	} // if $infractions
-	if (command == GuildData.command('serverinfo')) {
-		if (!(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
-			return error();
-		const { guild } = m,
-		[channels, { threads }] = await Promise.all([guild.channels.fetch(), guild.channels.fetchActiveThreads()]);
-
-		let embed = {
-			footer: { text: `Requested by: ${m.author.tag} | ${m.author.id}`, iconURL: m.member.displayAvatarURL() },
-			author: { name: `Info about ${guild.name}` },
-			color: 'dbad11',
-			thumbnail: { url: guild.iconURL() },
-			image: { url: guild.discoverySplashURL({ size: 512 }) },
-			fields: [
-					['Id:', guild.id],
-					['Owner:', `<@${guild.ownerId}>`],
-					['Created at:', moment(guild.createdAt).format('D/M-YYYY - HH:mm')],
-
-					['Members:', guild.memberCount],
-					['Channels:', channels.size],
-					['Roles:', guild.roles.cache.size],
-
-					['Text Channels:', channels.filter(c => c.isText()).size],
-					['Voice Channels:', channels.filter(c => c.isVoice()).size],
-					['Thread Channels:', threads.size],
-
-					['Boosts:', guild.premiumSubscriptionCount],
-					['Description:', guild.description],
-					['Total Infractions:', Object.values(GuildData.Moderation?.logs || {}).flat().length || undefined],
-					// ['Ban count:', guild.bans.cache.size],
-
-				]
-				.filter(([, value]) => value != undefined /*&&value.toString()*/ )
-				.map(([name, value, inline]) => ({ name, value: value.toString(), inline: !inline }))
-			// .map(([name, value, inline]) =>
-			// (value != undefined && value.toString()) ? { name: name + ':', value: value.toString(), inline: !inline } : { name: '⠀', value: '⠀', inline: !inline })
-		};
-
-		// m.delete();
-		m.channel.send({
-			embeds: [embed]
-		});
-		return m.delete()
-	}
 	if (command == GuildData.command('roleinfo')) {
 		const content = m.content.substr(2 + command.length),
 			[, roleID] = content.match(/^\s*<@&!?(\d{16,19})>$/s) || content.match(/^\s*(\d{16,19})$/s) || [],
