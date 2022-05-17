@@ -4123,7 +4123,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 		return [name, value];
 	}))
 
-	commandObj.handler(options, interaction, { /*GuildData, DataBase,interaction,*/ client, error, Duration, CleanDate });
+	commandObj.handler(options, interaction, { /*GuildData, DataBase,interaction,*/ client, error, Duration, CleanDate, capital, moment, ParseModLogs });
 
 
 }); // Slash-Commands
@@ -4375,49 +4375,6 @@ client.on('messageCreate', async m => { //Prefixed
 		m.delete();
 		// console.log(8);
 	} // if $infractions
-	else if (command == GuildData.command('userinfo')) {
-		const content = m.content.substr(2 + command.length),
-			[, memberID] = content.match(/^\s*<@!?(\d{16,19})>$/s) || content.match(/^\s*(\d{16,19})$/s) || [],
-			member = await m.guild.members.fetch(memberID).catch(() => false);
-		// console.log(member);
-		// console.log(!member, !member.user, !m.member.roles.cache.has(GuildData.Moderation?.staff), !m.member.permissions.has(8n));
-		if (!member || !member.user || !(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
-			return error();
-
-		let fieldsLength = 0,
-			embed = {
-				footer: { text: `Requested by: ${m.author.tag} | ${m.author.id}`, iconURL: m.member.displayAvatarURL() },
-				author: { name: `Info about ${member.displayName}` },
-				color: member.displayColor || 'dbad11',
-				thumbnail: { url: member.displayAvatarURL() },
-				fields: [
-						['Id:', member.id],
-						['Username:', member.user.tag],
-						['Bot:', member.user.bot ? 'Yes' : 'No'],
-						['Boosted:', member.premiumSince ? 'Since ' + moment(member.premiumSince).format('D/M-YYYY - HH:mm') : 'No'],
-						['Muted:', (GuildData.Moderation.timout ? member.isCommunicationDisabled() : member.roles.cache.has(GuildData.Moderation.muted)) ? 'Yes' : 'No'],
-						['Permissions', member.permissions.bitfield], // Object.entries(member.permissions.serialize()).filter(([, v]) => v).map(([k]) => k)
-						['Joined server at:', moment(member.joinedAt).format('D/M-YYYY - HH:mm')], // ['⠀', '⠀'],
-						['Joined Discord at:', moment(member.user.createdAt).format('D/M-YYYY - HH:mm')],
-						['Recent infractions:', ParseModLogs(GuildData.Moderation.logs, m.guild, member).slice(0, 3).map(log =>
-							`**${capital(`${log.dur?'temporarily':''} ${log.t} ${log.dur?('- '+CleanDate(log.dur)):''}`.trim())}:**\n⠀${(log.r||'*No reason specified*').replace(/\n/g,' ')} - *${moment(log.d).fromNow()}*`).filter(log => (fieldsLength += log.length) <= 1024).join('\n') || undefined, true],
-					]
-					.filter(([, value]) => value != undefined /*&&value.toString()*/ )
-					.map(([name, value, inline]) => ({ name, value: value.toString(), inline: !inline }))
-				// .map(([name, value, inline]) =>
-				// (value != undefined && value.toString()) ? { name: name + ':', value: value.toString(), inline: !inline } : { name: '⠀', value: '⠀', inline: !inline })
-			};
-
-		// m.delete();
-		m.channel.send({
-			embeds: [embed],
-			components: [{
-				components: [{ label: 'Parse Permissions', customId: 'userinfo-parse-permissions-' + memberID, type: 2, style: 1 }],
-				type: 1
-			}]
-		});
-		return m.delete()
-	}
 	if (command == GuildData.command('serverinfo')) {
 		if (!(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
 			return error();
