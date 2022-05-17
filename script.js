@@ -220,7 +220,7 @@ const NewGuildSubrcibers = [],
 			.Append(Select.Role({ guild }))
 	};
 
-const commands = Import_commands({ client, DataBase, Cache, WriteDataBase });
+const commands = Import_commands({ client, Duration, CleanDate, capital, moment, ParseModLogs /* DataBase, Cache, WriteDataBase */ });
 
 const RandomUser = () => 'User#' + Math.floor(Math.random() * 8999 + 1000),
 	// Sass = file => new Promise((resolver, reject) => sass.render({
@@ -4114,7 +4114,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 		return [name, value];
 	}))
 
-	commandObj.handler(options, interaction, { /*GuildData, DataBase,interaction,*/ client, error, Duration, CleanDate, capital, moment, ParseModLogs });
+	commandObj.handler(options, interaction, { error /*,GuildData,interaction*/ });
 
 
 }); // Slash-Commands
