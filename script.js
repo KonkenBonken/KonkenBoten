@@ -2605,47 +2605,6 @@ const moderationCommands = { // logs.push -> { type, reason, staff, member, date
 
 		Suggest = {
 			//	Suggestions: { enabled: true, channels: { suggest: '83730873837', response: '83730873874' }, staff: '9476457896', index: 4, embed: { suggestion: 'Suggestion', reasonFrom: 'Reason from', approve: 'Approved', deny: 'Denied', consider: 'Considered', up: '⬆️', /*upvote*/ down: '⬇️', /*downvote*/ colors: { pending: CssColors.gray, approve: CssColors.green, deny: CssColors.red, consider: CssColors.yellow } }, suggestions: { 1: { user: '83730873837', /*member ID*/ suggestion: '', msg: '97697567046', /*msg ID*/ answer: { user: '97697567046', /*staffmember ID*/ reason: '', status: 'consider' / 'approve' / 'deny' } } } },
-			suggest: (guild, member, suggestion) => new Promise(async (resolver, reject) => {
-				try {
-					if (!(guild && member && suggestion)) throw 1;
-					let Rule = DataBase.guilds[guild.id].Suggestions,
-						index = +Rule.index || 1,
-						channel = await client.channels.fetch(Rule.channels.suggest)
-					// .catch(e => null);	if (!channel) throw 2;
-
-					suggestion = suggestion.substr(0, 4096);
-
-					let msg = await channel.send({
-						embeds: [{
-							color: parseInt(Rule.embed.colors.pending, 16),
-							author: {
-								iconURL: member.displayAvatarURL(),
-								name: member.tag
-							},
-							title: `${Rule.embed.suggestion} #${index}`,
-							description: suggestion
-						}]
-					});
-
-					msg.react(Rule.embed.up || '⬆️').then(() => msg.react(Rule.embed.down || '⬇️')
-						.catch(console.error)).catch(console.error);
-
-					Rule.suggestions = Rule.suggestions || {};
-					Rule.suggestions[index] = {
-						user: member.id,
-						msg: msg.id,
-						suggestion
-					}
-
-					Rule.index = ++index;
-
-					resolver(msg);
-					WriteDataBase();
-
-				} catch (e) {
-					reject(e);
-				}
-			}),
 			respond: (guild, user, reason, index, responseType) => new Promise(async (resolver, reject) => {
 				// console.log(11);
 				//responseType == ['approve', 'deny', 'consider']
@@ -4096,10 +4055,12 @@ client.on('messageCreate', async m => { //Automod
 client.on('interactionCreate', async interaction => { // Slash-Commands
 	if (!(interaction.isCommand() && interaction.inCachedGuild())) return;
 
-	const error = message => {
-		let content = 'An error occured';
-		if (message) content += '\n> ' + message;
-		interaction.reply(content);
+	const error = (message, onlyLog = false) => {
+		if (!onlyLog) {
+			let content = 'An error occured';
+			if (message) content += '\n> ' + message;
+			interaction.reply(content);
+		}
 		sendError(`Error in command: ${interaction.commandName}\nmessage:${message}`);
 	};
 
@@ -4114,7 +4075,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 		return [name, value];
 	}))
 
-	commandObj.handler(options, interaction, { error /*,GuildData,interaction*/ });
+	commandObj.handler(options, interaction, { error, GuildData /*,interaction*/ });
 
 
 }); // Slash-Commands
@@ -4180,11 +4141,7 @@ client.on('messageCreate', async m => { //Prefixed
 		// console.log([command == GuildData.command('suggest'), [Object.values(responseTypes).includes(command), m.member.roles.cache.get(GuildData.Suggestions.staff), m.member.roles.cache.has(GuildData.Suggestions.staff)]]);
 		// console.log([m.member.roles.cache]);
 		try {
-			if (command == GuildData.command('suggest'))
-				Suggest.suggest(m.guild, m.author, m.content.substr(2 + command.length))
-				.then(() => m.delete()).catch(error)
-
-			else if (Object.values(responseTypes).includes(command) && m.member.roles.resolve(GuildData.Suggestions.staff))
+			if (Object.values(responseTypes).includes(command) && m.member.roles.resolve(GuildData.Suggestions.staff))
 				Suggest.respond(
 					m.guild, m.author,
 					m.content.match(/^.\S+\s+\d+\s+(.*)/)[1],
