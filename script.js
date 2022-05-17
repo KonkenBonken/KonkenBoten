@@ -2603,68 +2603,57 @@ const moderationCommands = { // logs.push -> { type, reason, staff, member, date
 			// "enabled": true,"channel": "798590264511037450","staff": "825378302579048448","author": "tesst au2","content": "By clicking 💬 tesst3","emoji": "","color": "#5dac79","existingMessage": "827248807896809542"
 		}, //TicketSetup
 
-		Suggest = {
-			//	Suggestions: { enabled: true, channels: { suggest: '83730873837', response: '83730873874' }, staff: '9476457896', index: 4, embed: { suggestion: 'Suggestion', reasonFrom: 'Reason from', approve: 'Approved', deny: 'Denied', consider: 'Considered', up: '⬆️', /*upvote*/ down: '⬇️', /*downvote*/ colors: { pending: CssColors.gray, approve: CssColors.green, deny: CssColors.red, consider: CssColors.yellow } }, suggestions: { 1: { user: '83730873837', /*member ID*/ suggestion: '', msg: '97697567046', /*msg ID*/ answer: { user: '97697567046', /*staffmember ID*/ reason: '', status: 'consider' / 'approve' / 'deny' } } } },
-			respond: (guild, user, reason, index, responseType) => new Promise(async (resolver, reject) => {
-				// console.log(11);
-				//responseType == ['approve', 'deny', 'consider']
-				try {
-					if (!(guild && reason && +index && responseType)) throw 1;
-					// console.log(12);
-					let Rule = DataBase.guilds[guild.id].Suggestions,
-						suggestion = Rule.suggestions[index],
-						channel = await client.channels.fetch(Rule.channels.response).catch(() => false),
-						member = await guild.members.fetch(suggestion.user).catch(() => false);
+		SuggestRespond = (guild, user, reason, index, responseType) => new Promise(async (resolver, reject) => {
+			//responseType == 'approve'|'deny'|'consider'
+			if (!(guild && user && reason && +index && responseType)) return reject('Unknown error');
+			let Rule = DataBase.guilds[guild.id].Suggestions,
+				suggestion = Rule.suggestions[index],
+				channel = await client.channels.fetch(Rule.channels.response).catch(() => false),
+				member = await guild.members.fetch(suggestion.user).catch(() => false);
 
-					if (!(channel && member)) return reject(536342);
+			if (!channel) return reject('Response Channel not found');
+			if (!member) return reject('Member not found');
 
-					reason = reason.substr(0, 1024);
+			reason = reason.substr(0, 1024);
 
-					// console.log(13);
-					let [msg, suggestChannel] = await Promise.all([channel.send({
-							embeds: [{
-								color: parseInt(Rule.embed.colors[responseType], 16),
-								author: {
-									iconURL: member?.user.displayAvatarURL(),
-									name: member?.user.tag || 'Unknown'
-								},
-								title: `${Rule.embed.suggestion} #${index} ${Rule.embed[responseType]}`,
-								description: suggestion.suggestion,
-								fields: [{
-									name: `${Rule.embed.reasonFrom} ${user.tag}:`,
-									value: reason,
-								}]
-							}]
-						}).catch(e => null),
-						client.channels.fetch(Rule.channels.suggest).catch(e => null)
-					]), suggestionMsg = await suggestChannel.messages.fetch(suggestion.msg).catch(e => null);
-					// suggestChannel = await client.channels.fetch(Rule.channels.suggest).catch(e => null),
-					// suggestionMsg = await suggestChannel.messages.fetch(suggestion.msg).catch(e => null);
-					// console.log(14);
-					if (!(msg && suggestChannel && suggestionMsg)) throw 2;
-
-					suggestChannel.messages.edit(suggestionMsg, {
+			let [msg, suggestChannel] = await Promise.all([channel.send({
 						embeds: [{
-							...suggestionMsg.embeds[0].toJSON(),
-							color: parseInt(Rule.embed.colors[responseType], 16)
+							color: parseInt(Rule.embed.colors[responseType], 16),
+							author: {
+								iconURL: member.displayAvatarURL(),
+								name: member.user.tag
+							},
+							title: `${Rule.embed.suggestion} #${index} ${Rule.embed[responseType]}`,
+							description: suggestion.suggestion,
+							fields: [{
+								name: `${Rule.embed.reasonFrom} ${user.tag}:`,
+								value: reason,
+							}]
 						}]
-					}).catch(e => console.log(e.message));
-					// console.log(15);
-					suggestion.answer = {
-						type: responseType,
-						user: user.id,
-						reason
-					}
+					}).catch(e => false),
+					client.channels.fetch(Rule.channels.suggest).catch(e => false)
+				]),
+				suggestionMsg = await suggestChannel.messages.fetch(suggestion.msg).catch(e => false);
 
-					resolver(msg);
-					WriteDataBase();
-					// console.log(16);
-				} catch (e) {
-					reject(e);
-					console.log(17, e);
-				}
-			})
-		},
+			if (!msg) return reject('Could not send message');
+			if (!suggestChannel) return reject('Suggestion Channel not found');
+
+			suggestChannel.messages.edit(suggestionMsg, {
+				embeds: [{
+					...suggestionMsg.embeds[0].toJSON(),
+					color: parseInt(Rule.embed.colors[responseType], 16)
+				}]
+			}).catch(() => false);
+
+			suggestion.answer = {
+				type: responseType,
+				user: user.id,
+				reason
+			}
+
+			resolver(msg);
+			WriteDataBase();
+		}),
 		MutedPermissions = async role => {
 			try {
 				if (role && role instanceof Discord.Role) {
@@ -3276,7 +3265,7 @@ io.on('connection', async socket => {
 						reason = reason.substr(0, 1024);
 						let member = await socket.Guild.members.fetch(socket.discordID);
 						if (reason && +index && responseType)
-							Suggest.respond(socket.Guild, socket.discord, reason, +index, responseType)
+							SuggestRespond(socket.Guild, socket.discord, reason, +index, responseType)
 							.catch(e => fun(null, e))
 							.then(() => fun({
 								reason,
@@ -4129,29 +4118,6 @@ client.on('messageCreate', async m => { //Prefixed
 			return;
 		}
 	} //if textCommand
-	else if (GuildData?.Suggestions?.channels && Object.values(GuildData.Suggestions.channels).includes(m.channel.id)) {
-		// console.log(3);
-		let responseTypes = {
-			approve: GuildData.command('approve'),
-			deny: GuildData.command('deny'),
-			consider: GuildData.command('consider')
-		};
-		// console.log({				m,				suggest: GuildData.command('suggest'),				command			});
-
-		// console.log([command == GuildData.command('suggest'), [Object.values(responseTypes).includes(command), m.member.roles.cache.get(GuildData.Suggestions.staff), m.member.roles.cache.has(GuildData.Suggestions.staff)]]);
-		// console.log([m.member.roles.cache]);
-		try {
-			if (Object.values(responseTypes).includes(command) && m.member.roles.resolve(GuildData.Suggestions.staff))
-				Suggest.respond(
-					m.guild, m.author,
-					m.content.match(/^.\S+\s+\d+\s+(.*)/)[1],
-					m.content.match(/^.\S+\s+(\d+)/)[1],
-					Object.fromEntries(Object.entries(responseTypes).map(x => x.reverse()))[command],
-				).then(() => m.delete()).catch(error)
-			else error();
-		} catch { error() }
-		return;
-	}
 
 	let modCommand = Object.keys(moderationCommands).find(c => command == GuildData.command(c));
 	// modCommand -> Originalnamnet på kommandot
