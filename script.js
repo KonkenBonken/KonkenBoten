@@ -4105,9 +4105,14 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 	// 	}
 	// };
 
+	const error = message => {
+		let content = 'An error occured';
+		if (message) content += '\n> ' + message;
+		interaction.reply(content);
+		sendError(`Error in command: ${interaction.commandName}\nmessage:${message}`);
+	};
 
-	const subCommand = interaction.getSubcommand(false) || '',
-		command = GuildData.command(`${subCommand} ${interaction.commandName}`.trim()),
+	const command = interaction.commandName, //Add support for custom commands
 		commandObj = commands.find(c => c.com == command);
 
 	if (!commandObj) return sendError(`Command not found: ${subCommand} ${interaction.commandName}`);
@@ -4118,7 +4123,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 		return [name, value];
 	}))
 
-	commandObj.handler(options, { ...interaction, GuildData, DataBase, interaction });
+	commandObj.handler(options, interaction, { GuildData, DataBase, interaction, error, Duration, CleanDate });
 
 
 }); // Slash-Commands
