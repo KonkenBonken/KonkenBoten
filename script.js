@@ -4375,34 +4375,7 @@ client.on('messageCreate', async m => { //Prefixed
 		m.delete();
 		// console.log(8);
 	} // if $infractions
-	else if (command == GuildData.command('slowmode')) {
-		let sec = m.content.substr(2 + command.length);
-		if (sec == 'off' || !sec || sec == 0) sec = 0;
-		else if (!isNaN(+sec)) sec = +sec;
-		else
-			try {
-				sec = Duration(sec);
-				var durFormat = true;
-			} catch (e) { return error(); }
-
-		if (!m.channel.setRateLimitPerUser || !(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
-			return error();
-
-		if (sec == 0) var description = `Slowmode disabled`;
-		else if (isNaN(sec) || sec > 21600) return error();
-		else if (durFormat) var description = `Slowmode set to ${CleanDate(sec)}`
-		else var description = `Slowmode set to ${sec} seconds`
-
-		await m.channel.setRateLimitPerUser(sec, `${description} by ${m.author.tag}`)
-		m.delete();
-		m.channel.send({
-			embeds: [{
-				color: 'dbad11',
-				description
-			}]
-		}).then(msg => setTimeout(() => msg.delete(), 5e3));
-
-	} else if (command == GuildData.command('clear')) {
+	else if (command == GuildData.command('clear')) {
 		let amt = +m.content.substr(2 + command.length)
 		if (!amt || !m.channel.bulkDelete || !(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
 			return error();
