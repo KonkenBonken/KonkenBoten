@@ -4123,7 +4123,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 		return [name, value];
 	}))
 
-	commandObj.handler(options, interaction, { GuildData, DataBase, interaction, error, Duration, CleanDate });
+	commandObj.handler(options, interaction, { /*GuildData, DataBase,interaction,*/ client, error, Duration, CleanDate });
 
 
 }); // Slash-Commands
@@ -4375,44 +4375,6 @@ client.on('messageCreate', async m => { //Prefixed
 		m.delete();
 		// console.log(8);
 	} // if $infractions
-	else if (command == GuildData.command('clear')) {
-		let amt = +m.content.substr(2 + command.length)
-		if (!amt || !m.channel.bulkDelete || !(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
-			return error();
-
-		amt++;
-		amt = Math.min(amt, 500)
-		let hundreds = [...Array(Math.floor(amt / 100)).fill(100), amt % 100].filter(x => x);
-		// console.log(hundreds);
-
-		let messages = [],
-			before = (BigInt(m.id) + 1n).toString();
-		for (const limit of hundreds) {
-			let msgs = await m.channel.messages.fetch({ limit, before });
-			before = msgs.lastKey();
-			messages.push([...msgs.keys()]);
-		}
-		// console.log(messages.reduce((a, b) => a.length + b.length));
-		let deleted = await Promise.all(messages.map(x => m.channel.bulkDelete(x, true)));
-		// let deleted = await Promise.all(hundreds.map(x => m.channel.bulkDelete(x, true)));
-		//// deleted = deleted.map(x => [...x.values()]).flat();
-
-		deleted = deleted.map(x => x.size || 1).reduce((a, b) => a + b) - 1;
-
-		// console.log(deleted);
-		// m.delete();
-		m.channel.send({
-			embeds: [{
-				color: 'dbad11',
-				description: `Deleted ${deleted} messages`
-			}]
-		}).then(msg => setTimeout(() => msg.delete(), 5e3));
-
-
-		client.emit('messageClear', deleted, m.channel, m.member)
-	}
-
-	//
 	else if (command == GuildData.command('userinfo')) {
 		const content = m.content.substr(2 + command.length),
 			[, memberID] = content.match(/^\s*<@!?(\d{16,19})>$/s) || content.match(/^\s*(\d{16,19})$/s) || [],
