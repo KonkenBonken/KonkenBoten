@@ -2499,134 +2499,118 @@ const moderationCommands = { // logs.push -> { type, reason, staff, member, date
 		// duration, until,
 		// ?muted, ?duration
 		// 	}
-		warn: {
-			function: async ({ member, reason, channel, staff, logs, text, guild, dmAll, banMessage, tellWho }) => {
-				try {
-					logs.push({ t: 'warn', s: staff.id, r: reason, m: member.id, d: encodeT() });
-					channel.send(moderationEmbed(text.txt, member, reason, text));
-					await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }));
-				} catch (e) {
-					console.log(moderationEmbed(text.txt, member, reason, text),
-						text, 38163);
-				}
-			}
-		},
-		kick: {
-			function: async ({ member, reason, channel, staff, logs, text, dmInvite, guild, banMessage, tellWho }) => {
-				await member.kick(reason);
-				logs.push({ t: 'kick', s: staff.id, r: reason, m: member.id, d: encodeT() });
+		warn: async ({ member, reason, channel, staff, logs, text, guild, dmAll, banMessage, tellWho }) => {
+			try {
+				logs.push({ t: 'warn', s: staff.id, r: reason, m: member.id, d: encodeT() });
 				channel.send(moderationEmbed(text.txt, member, reason, text));
-				await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage, dmInvite }));
+				await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }));
+			} catch (e) {
+				console.log(moderationEmbed(text.txt, member, reason, text),
+					text, 38163);
 			}
 		},
-		ban: {
-			function: async ({ member, reason, channel, staff, logs, text, guild, banMessage, tellWho }) => {
-				//member = Member|id
-				let banMember = await guild.members.ban(member, { reason }); // Any: Member|User|Id
-				if (!(member instanceof Discord.GuildMember)) {
-					member = banMember;
-					if (typeof member == "string")
-						member = await client.users.fetch(member)
-						.then(user => ({ user, id: user.id, send: user.send }))
-						.catch(e => ({ id: member, user: member, send: () => console.error('Banned member not found') }))
-					if (member instanceof Discord.User)
-						member = { user: member, id: member.id };
-					member.send = member.send || member.user?.send;
-				}
+		kick: async ({ member, reason, channel, staff, logs, text, dmInvite, guild, banMessage, tellWho }) => {
+			await member.kick(reason);
+			logs.push({ t: 'kick', s: staff.id, r: reason, m: member.id, d: encodeT() });
+			channel.send(moderationEmbed(text.txt, member, reason, text));
+			await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage, dmInvite }));
+		},
+		ban: async ({ member, reason, channel, staff, logs, text, guild, banMessage, tellWho }) => {
+			//member = Member|id
+			let banMember = await guild.members.ban(member, { reason }); // Any: Member|User|Id
+			if (!(member instanceof Discord.GuildMember)) {
+				member = banMember;
+				if (typeof member == "string")
+					member = await client.users.fetch(member)
+					.then(user => ({ user, id: user.id, send: user.send }))
+					.catch(() => ({ id: member, user: member, send: () => console.error('Banned member not found') }))
+				if (member instanceof Discord.User)
+					member = { user: member, id: member.id };
+				member.send = member.send || member.user?.send;
+			}
 
-				// await member.ban({ reason });
-				logs.push({ t: 'ban', s: staff.id, r: reason, m: member.id, d: encodeT() });
-				channel.send(moderationEmbed(text.txt, member, reason, text));
-				try {
-					await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage }));
-				} catch (e) { console.error(e.message) }
-			}
+			// await member.ban({ reason });
+			logs.push({ t: 'ban', s: staff.id, r: reason, m: member.id, d: encodeT() });
+			channel.send(moderationEmbed(text.txt, member, reason, text));
+			try {
+				await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage }));
+			} catch (e) { console.error(e.message) }
 		},
-		unban: {
-			function: async ({ member, reason, channel, staff, logs, text, dmInvite, guild, banMessage, tellWho }) => {
-				//member = id
-				let user = await guild.members.unban(member, reason);
-				// member = await guild.members.fetch(member);
+		unban: async ({ member, reason, channel, staff, logs, text, dmInvite, guild, banMessage, tellWho }) => {
+			//member = id
+			let user = await guild.members.unban(member, reason);
+			// member = await guild.members.fetch(member);
 
-				channel.send(moderationEmbed(text.txt, { user }, reason, text));
-				logs.push({ t: 'unban', s: staff.id, r: reason, m: user.id, d: encodeT() });
-				await user.send(await moderationDmEmbed(text.txt, { text, reason, member: user, tellWho, staff, guild, banMessage, dmInvite }));
-			}
+			channel.send(moderationEmbed(text.txt, { user }, reason, text));
+			logs.push({ t: 'unban', s: staff.id, r: reason, m: user.id, d: encodeT() });
+			await user.send(await moderationDmEmbed(text.txt, { text, reason, member: user, tellWho, staff, guild, banMessage, dmInvite }));
 		},
-		tempban: {
-			function: async ({ member, reason, channel, staff, logs, text, dmInvite, guild, dmAll, banMessage, duration, until, tellWho }) => {
-				//member = Member|id
-				let banMember = await guild.members.ban(member, { reason }), // Any: Member|User|Id
-					tempIndex = DataBase.temp.push({ g: guild.id, m: member.id, type: 'ban', until: +until }) - 1;
-				if (duration * 1000 <= 2147483647) setTimeout(() => //var timeoutIndex =
-					guild.members.unban(member.id, 'Temporarily ban expired' + (reason ? ` - reason: ${reason}` : ''))
-					.then(() => delete DataBase.temp[tempIndex]),
+		tempban: async ({ member, reason, channel, staff, logs, text, dmInvite, guild, dmAll, banMessage, duration, until, tellWho }) => {
+			//member = Member|id
+			let banMember = await guild.members.ban(member, { reason }), // Any: Member|User|Id
+				tempIndex = DataBase.temp.push({ g: guild.id, m: member.id, type: 'ban', until: +until }) - 1;
+			if (duration * 1000 <= 2147483647) setTimeout(() => //var timeoutIndex =
+				guild.members.unban(member.id, 'Temporarily ban expired' + (reason ? ` - reason: ${reason}` : ''))
+				.then(() => delete DataBase.temp[tempIndex]),
+				duration * 1000);
+
+			// if(user instanceof Discord.GuildMember)
+			if (!(member instanceof Discord.GuildMember)) {
+				if (typeof member == "string")
+					member = await client.users.fetch(member)
+					.then(user => ({ user, id: user.id }))
+					.catch(e => ({ id: member, user: member, send: () => console.error('Banned member not found') }))
+				if (member instanceof Discord.User)
+					member = { user: member, id: member.id };
+				member.send = member.send || member.user?.send;
+			}
+			// await member.ban({ reason });
+			channel.send(moderationEmbed(text.txt, member, reason, text, duration, until));
+			logs.push({ t: 'ban', s: staff.id, r: reason, m: member.id, d: encodeT(), dur: duration, unt: encodeT(until) }); //, timeoutIndex: () => timeoutIndex
+			try {
+				await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage, dmInvite }, 'Banned until', until));
+			} catch (e) { console.error(e.message) }
+		},
+		mute: async ({ member, reason, channel, staff, logs, muted, text, guild, dmAll, banMessage, tellWho, timeout }) => {
+			// console.log({ timeout, fn: member.timeout });
+			let dur = [];
+			if (timeout) {
+				await member.timeout(24192e5, reason); //28d
+				dur[1] = Date.now() + 24192e5;
+			} else
+				await member.roles.add(muted, reason);
+
+			channel.send(moderationEmbed(text.txt, member, reason, text, ...dur));
+			logs.push({ t: 'mute', s: staff.id, r: reason, m: member.id, d: encodeT() });
+			await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }));
+		},
+		unmute: async ({ member, reason, channel, staff, logs, muted, text, guild, dmAll, banMessage, tellWho, timeout }) => {
+			if (timeout)
+				await member.timeout(null, reason);
+			else
+				await member.roles.remove(muted, reason);
+
+			channel.send(moderationEmbed(text.txt, member, reason, text));
+			logs.push({ t: 'unmute', s: staff.id, r: reason, m: member.id, d: encodeT() });
+			await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }));
+		},
+		tempmute: async ({ member, reason, channel, staff, logs, muted, text, guild, dmAll, banMessage, duration, until, tellWho, timeout }) => {
+			let d = encodeT();
+			if (timeout)
+				await member.timeout(Math.min(duration * 1000, 24192e5), reason); //28d
+			else {
+				await member.roles.add(muted, reason);
+				let tempIndex = DataBase.temp.push({ g: guild.id, m: member.id, type: 'mute', until: +until, role: muted, key: [staff.id, d, (reason || '*').replace(/\W/g, '').substr(0, 20)].join('-') }) - 1;
+				if (duration * 1000 <= 2147483647) setTimeout(() => { //var timeoutIndex =
+						member.roles.remove(muted, 'Temporarily mute expired' + (reason ? ` - Mute reason: ${reason}` : ''))
+							.then(() => delete DataBase.temp[tempIndex]);
+					},
 					duration * 1000);
-
-				// if(user instanceof Discord.GuildMember)
-				if (!(member instanceof Discord.GuildMember)) {
-					if (typeof member == "string")
-						member = await client.users.fetch(member)
-						.then(user => ({ user, id: user.id }))
-						.catch(e => ({ id: member, user: member, send: () => console.error('Banned member not found') }))
-					if (member instanceof Discord.User)
-						member = { user: member, id: member.id };
-					member.send = member.send || member.user?.send;
-				}
-				// await member.ban({ reason });
-				channel.send(moderationEmbed(text.txt, member, reason, text, duration, until));
-				logs.push({ t: 'ban', s: staff.id, r: reason, m: member.id, d: encodeT(), dur: duration, unt: encodeT(until) }); //, timeoutIndex: () => timeoutIndex
-				try {
-					await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage, dmInvite }, 'Banned until', until));
-				} catch (e) { console.error(e.message) }
 			}
-		},
-		mute: {
-			function: async ({ member, reason, channel, staff, logs, muted, text, guild, dmAll, banMessage, tellWho, timeout }) => {
-				// console.log({ timeout, fn: member.timeout });
-				let dur = [];
-				if (timeout) {
-					await member.timeout(24192e5, reason); //28d
-					dur[1] = Date.now() + 24192e5;
-				} else
-					await member.roles.add(muted, reason);
 
-				channel.send(moderationEmbed(text.txt, member, reason, text, ...dur));
-				logs.push({ t: 'mute', s: staff.id, r: reason, m: member.id, d: encodeT() });
-				await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }));
-			}
-		},
-		unmute: {
-			function: async ({ member, reason, channel, staff, logs, muted, text, guild, dmAll, banMessage, tellWho, timeout }) => {
-				if (timeout)
-					await member.timeout(null, reason);
-				else
-					await member.roles.remove(muted, reason);
-
-				channel.send(moderationEmbed(text.txt, member, reason, text));
-				logs.push({ t: 'unmute', s: staff.id, r: reason, m: member.id, d: encodeT() });
-				await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }));
-			}
-		},
-		tempmute: {
-			function: async ({ member, reason, channel, staff, logs, muted, text, guild, dmAll, banMessage, duration, until, tellWho, timeout }) => {
-				let d = encodeT();
-				if (timeout)
-					await member.timeout(Math.min(duration * 1000, 24192e5), reason); //28d
-				else {
-					await member.roles.add(muted, reason);
-					let tempIndex = DataBase.temp.push({ g: guild.id, m: member.id, type: 'mute', until: +until, role: muted, key: [staff.id, d, (reason || '*').replace(/\W/g, '').substr(0, 20)].join('-') }) - 1;
-					if (duration * 1000 <= 2147483647) setTimeout(() => { //var timeoutIndex =
-							member.roles.remove(muted, 'Temporarily mute expired' + (reason ? ` - Mute reason: ${reason}` : ''))
-								.then(() => delete DataBase.temp[tempIndex]);
-						},
-						duration * 1000);
-				}
-
-				channel.send(moderationEmbed(text.txt, member, reason, text, duration, until));
-				logs.push({ t: 'mute', s: staff.id, r: reason, m: member.id, d, dur: duration, unt: encodeT(until) }); //, timeoutIndex: () => timeoutIndex
-				await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }, 'Muted until', until)).catch(console.log);
-			}
+			channel.send(moderationEmbed(text.txt, member, reason, text, duration, until));
+			logs.push({ t: 'mute', s: staff.id, r: reason, m: member.id, d, dur: duration, unt: encodeT(until) }); //, timeoutIndex: () => timeoutIndex
+			await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }, 'Muted until', until)).catch(console.log);
 		}
 	},
 	// GetPopup = (obj, Preset) => { /*Preset: {<name>: {type: <attr>, value: <value>}}*/	let form = newDiv('form');	if (obj.displayPrefix) form.setAttribute('prefix', '');	if (obj.id) form.id = obj.id;	if (obj.title) {		let title = newDiv('h1');		title.innerHTML = obj.title;		form.append(title);	}	obj.fields.forEach(fieldObj => {		let field = newDiv(fieldObj.type || 'input', ...(fieldObj.classList || []));		if (fieldObj.name) field.name = fieldObj.name;		if (fieldObj.placeholder) field.placeholder = fieldObj.placeholder;		if (fieldObj.value) field.setAttribute('value', fieldObj.value);		if (fieldObj.innerHTML) field.innerHTML = fieldObj.innerHTML;		if (fieldObj.append) field.append(fieldObj.append);		if (fieldObj && fieldObj.attributes && fieldObj.attributes[0] && fieldObj.attributes[0][0])			fieldObj.attributes.forEach(attr => field.setAttribute(attr[0], attr[1] || ''));		if (Preset && fieldObj.name && Object.keys(Preset).includes(fieldObj.name)) {			let value = Preset[fieldObj.name];			field[value.type || 'value'] = value.value || value;			field.setAttribute(value.type || 'value', value.value || value);		}		form.append(field);	});	return form;},
@@ -4143,7 +4127,7 @@ client.on('messageCreate', async m => { //Automod
 
 	if (fault.pnsh >= 2) { //if 2 || 3
 		if (GuildData.Moderation.logsEnabled && !GuildData.Moderation.logs[ClientID]) GuildData.Moderation.logs[ClientID] = [];
-		moderationCommands.warn.function({
+		moderationCommands.warn({
 			member: m.member,
 			reason,
 			channel: await client.channels.fetch(GuildData.Moderation.channel).catch(e => null),
@@ -4256,7 +4240,6 @@ client.on('messageCreate', async m => { //Prefixed
 	let modCommand = Object.keys(moderationCommands).find(c => command == GuildData.command(c));
 	// modCommand -> Originalnamnet på kommandot
 	if (modCommand) {
-		// console.log(6.2);
 		if (m.author.bot) return error();
 
 		if (!GuildData.Moderation) GuildData.Moderation = {};
@@ -4344,7 +4327,7 @@ client.on('messageCreate', async m => { //Prefixed
 		};
 		// console.log(args.text);
 		// if (!(member && channel)) return error();
-		await moderationCommands[modCommand].function(args).catch(e => e);
+		await moderationCommands[modCommand](args).catch(e => e);
 		// if (duration && m.guild.id == '785416126033035264') m.guild.channels.fetch('933099574866886706').then(c => c.send(`${member} borde un${modCommand.includes('ban')?'bannas':'mutas'} <t:${Math.floor(until/1e3)}:R>`))
 		// if (duration && m.guild.id == '702933462209790013') m.guild.channels.fetch('933101963074232320').then(c => c.send(`${member} borde un${modCommand.includes('ban')?'bannas':'mutas'} <t:${Math.floor(until/1e3)}:R>`))
 		m.delete();
