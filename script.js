@@ -3036,6 +3036,7 @@ io.on('connection', async socket => {
 				// e: e.identifier, // name:id
 				// url: e.url, // https://cdn.discordapp.com/emojis/${id}.png
 			].join()).join(';');
+			else guildEmojis = undefined;
 			if (!guildEmojis) guildEmojis = undefined;
 			fun([EmojiList, guildEmojis]);
 		});
