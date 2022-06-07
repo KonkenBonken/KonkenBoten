@@ -1373,7 +1373,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						['Channel:', e.channel],
 						['Created by:', e.creator],
 						['Event id:', e.id],
-						['Scheduled date:', moment(e.scheduledStartAt).format('D/M-YYYY - HH:mm')],
+						['Scheduled date:', moment(e.scheduledStartAt).tz(moment.ZoneLookup(e.guild.preferredLocale)).format('D/M-YYYY - HH:mm')],
 						['Public:', e.privacyLevel == 'PUBLIC' ? 'Yes' : undefined],
 						['Url:', e.url]
 					]
@@ -1393,7 +1393,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						['Channel:', e.channel],
 						['Created by:', e.creator],
 						['Event id:', e.id],
-						['Scheduled date:', moment(e.scheduledStartAt).format('D/M-YYYY - HH:mm')],
+						['Scheduled date:', moment(e.scheduledStartAt).tz(moment.ZoneLookup(e.guild.preferredLocale)).format('D/M-YYYY - HH:mm')],
 						['Public:', e.privacyLevel == 'PUBLIC' ? 'Yes' : undefined],
 						['Url:', e.url]
 					]
@@ -1413,7 +1413,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						['Channel:', newE.channelId != oldE.channelId && `${oldE.channel} => ${newE.channel}`],
 						['Created by:', newE.creatorId != oldE.creatorId && `${oldE.creator} => ${newE.creator}`],
 						['Event id:', newE.id],
-						['Scheduled date:', newE.scheduledStartTimestamp != oldE.scheduledStartTimestamp && `${moment(oldE.scheduledStartAt).format('D/M-YYYY - HH:mm')} => ${moment(newE.scheduledStartAt).format('D/M-YYYY - HH:mm')}`],
+						['Scheduled date:', newE.scheduledStartTimestamp != oldE.scheduledStartTimestamp && `${moment(oldE.scheduledStartAt).tz(moment.ZoneLookup(e.guild.preferredLocale)).format('D/M-YYYY - HH:mm')} => ${moment(newE.scheduledStartAt).tz(moment.ZoneLookup(e.guild.preferredLocale)).format('D/M-YYYY - HH:mm')}`],
 						['Public:', newE.privacyLevel != oldE.privacyLevel && newE.privacyLevel == 'PUBLIC' ? 'Yes' : 'No'],
 						['Url:', newE.url]
 					]
@@ -4496,11 +4496,11 @@ client.on('messageCreate', async m => { //Prefixed
 						['Id:', member.id],
 						['Username:', member.user.tag],
 						['Bot:', member.user.bot ? 'Yes' : 'No'],
-						['Boosted:', member.premiumSince ? 'Since ' + moment(member.premiumSince).format('D/M-YYYY - HH:mm') : 'No'],
+						['Boosted:', member.premiumSince ? 'Since ' + moment(member.premiumSince).tz(moment.ZoneLookup(m.guild.preferredLocale)).format('D/M-YYYY - HH:mm') : 'No'],
 						['Muted:', (GuildData.Moderation.timout ? member.isCommunicationDisabled() : member.roles.cache.has(GuildData.Moderation.muted)) ? 'Yes' : 'No'],
 						['Permissions', member.permissions.bitfield], // Object.entries(member.permissions.serialize()).filter(([, v]) => v).map(([k]) => k)
-						['Joined server at:', moment(member.joinedAt).format('D/M-YYYY - HH:mm')], // ['⠀', '⠀'],
-						['Joined Discord at:', moment(member.user.createdAt).format('D/M-YYYY - HH:mm')],
+						['Joined server at:', moment(member.joinedAt).tz(moment.ZoneLookup(m.guild.preferredLocale)).format('D/M-YYYY - HH:mm')], // ['⠀', '⠀'],
+						['Joined Discord at:', moment(member.user.createdAt).tz(moment.ZoneLookup(m.guild.preferredLocale)).format('D/M-YYYY - HH:mm')],
 						['Recent infractions:', ParseModLogs(GuildData.Moderation.logs, m.guild, member).slice(0, 3).map(log =>
 							`**${capital(`${log.dur?'temporarily':''} ${log.t} ${log.dur?('- '+CleanDate(log.dur)):''}`.trim())}:**\n⠀${(log.r||'*No reason specified*').replace(/\n/g,' ')} - *${moment(log.d).fromNow()}*`).filter(log => (fieldsLength += log.length) <= 1024).join('\n') || undefined, true],
 					]
@@ -4535,7 +4535,7 @@ client.on('messageCreate', async m => { //Prefixed
 			fields: [
 					['Id:', guild.id],
 					['Owner:', `<@${guild.ownerId}>`],
-					['Created at:', moment(guild.createdAt).format('D/M-YYYY - HH:mm')],
+					['Created at:', moment(guild.createdAt).tz(moment.ZoneLookup(m.guild.preferredLocale)).format('D/M-YYYY - HH:mm')],
 
 					['Members:', guild.memberCount],
 					['Channels:', channels.size],
@@ -4591,7 +4591,7 @@ client.on('messageCreate', async m => { //Prefixed
 					['Id:', role.id],
 					['Displayed separately:', role.hoist ? 'Yes' : 'No'],
 					// ['Muted:', GuildData.Moderation.timout ? (GuildData.Moderation.muted ? 'Yes' : 'No') : undefined],
-					['Created at:', moment(role.createdAt).format('D/M-YYYY - HH:mm')],
+					['Created at:', moment(role.createdAt).tz(moment.ZoneLookup(m.guild.preferredLocale)).format('D/M-YYYY - HH:mm')],
 					['Members:', columns[0]],
 					['⠀', columns[1]],
 					['⠀', columns[2]],
