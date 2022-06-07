@@ -4799,8 +4799,11 @@ client.on('interactionCreate', async interaction => {
 		if (customId == 'ticket-start') {
 			let channelname = Rule.name ? Rule.name.replace(RegExp('{u}', 'g'), user.username).substr(0, 100) : `support-${user.username}`;
 
+			let timeZone = moment.ZoneLookup(guild.preferredLocale),
+				dateString = moment().tz(timeZone).format('D/M-YYYY - HH:mm');
+
 			let ticketChannel = await guild.channels.create(channelname, {
-				topic: `Support Channel created by ${user.tag} - ${moment().format('D/M-YYYY - HH:mm')}`,
+				topic: `Support Channel created by ${user.tag} - ${dateString}`,
 				parent: +Rule.parent ? Rule.parent : null,
 				permissionOverwrites: [{
 					id: guild.roles.everyone,
