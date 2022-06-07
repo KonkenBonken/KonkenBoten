@@ -4795,7 +4795,7 @@ client.on('interactionCreate', async interaction => {
 			let channelname = Rule.name ? Rule.name.replace(RegExp('{u}', 'g'), user.username).substr(0, 100) : `support-${user.username}`;
 
 			let ticketChannel = await guild.channels.create(channelname, {
-				topic: `Support Channel created by ${user.tag} - ${moment(new Date()).format('D/M-YYYY - HH:mm')}`,
+				topic: `Support Channel created by ${user.tag} - ${moment().format('D/M-YYYY - HH:mm')}`,
 				parent: +Rule.parent ? Rule.parent : null,
 				permissionOverwrites: [{
 					id: guild.roles.everyone,
