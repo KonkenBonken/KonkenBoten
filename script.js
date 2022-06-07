@@ -17,7 +17,7 @@ import { JSDOM } from "jsdom";
 import lightRandom from 'light-random';
 import Fetch from 'node-fetch';
 import cookieParser from 'cookie-parser';
-import moment from 'moment';
+import moment from 'moment-timezone';
 // import sass from 'sass';
 import { parse as Duration, stringify as CleanDate } from 'simple-duration';
 import ObjectMerge from 'deepmerge';

@@ -20,7 +20,7 @@
     "http": "0.0.1-security",
     "jsdom": "^19.0.0",
     "light-random": "^1.1.2",
-    "moment": "^2.29.3",
+    "moment-timezone": "^0.5.34",
     "node-cache": "^5.1.2",
     "node-fetch": "^3.2.4",
     "simple-duration": "^1.0.1",
