@@ -1373,7 +1373,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						['Channel:', e.channel],
 						['Created by:', e.creator],
 						['Event id:', e.id],
-						['Scheduled date:', moment(decodeT(e.scheduledStartAt)).format('D/M-YYYY - HH:mm')],
+						['Scheduled date:', moment(e.scheduledStartAt).format('D/M-YYYY - HH:mm')],
 						['Public:', e.privacyLevel == 'PUBLIC' ? 'Yes' : undefined],
 						['Url:', e.url]
 					]
@@ -1393,7 +1393,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						['Channel:', e.channel],
 						['Created by:', e.creator],
 						['Event id:', e.id],
-						['Scheduled date:', moment(decodeT(e.scheduledStartAt)).format('D/M-YYYY - HH:mm')],
+						['Scheduled date:', moment(e.scheduledStartAt).format('D/M-YYYY - HH:mm')],
 						['Public:', e.privacyLevel == 'PUBLIC' ? 'Yes' : undefined],
 						['Url:', e.url]
 					]
@@ -1413,7 +1413,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						['Channel:', newE.channelId != oldE.channelId && `${oldE.channel} => ${newE.channel}`],
 						['Created by:', newE.creatorId != oldE.creatorId && `${oldE.creator} => ${newE.creator}`],
 						['Event id:', newE.id],
-						['Scheduled date:', newE.scheduledStartTimestamp != oldE.scheduledStartTimestamp && `${moment(decodeT(oldE.scheduledStartAt)).format('D/M-YYYY - HH:mm')} => ${moment(decodeT(newE.scheduledStartAt)).format('D/M-YYYY - HH:mm')}`],
+						['Scheduled date:', newE.scheduledStartTimestamp != oldE.scheduledStartTimestamp && `${moment(oldE.scheduledStartAt).format('D/M-YYYY - HH:mm')} => ${moment(newE.scheduledStartAt).format('D/M-YYYY - HH:mm')}`],
 						['Public:', newE.privacyLevel != oldE.privacyLevel && newE.privacyLevel == 'PUBLIC' ? 'Yes' : 'No'],
 						['Url:', newE.url]
 					]
