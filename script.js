@@ -2948,6 +2948,11 @@ app.response.error = async function (code, message) { // wont return response | 
 	this.status(code).end(document.documentElement.outerHTML);
 }
 
+moment._ZoneLookup = { cs: 'CZ', da: 'DK', el: 'GR', hi: 'IN', ja: 'JP', ko: 'KP', uk: 'UA' };
+moment.ZoneLookup = locale => moment.tz._countries[
+	moment._ZoneLookup[locale] ?? locale.toUpperCase().replace(/^..-/, '')
+]?.zones[0];
+
 // Socket.io - socket
 
 
