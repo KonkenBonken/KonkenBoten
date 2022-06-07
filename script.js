@@ -2449,9 +2449,13 @@ const Page = {
 		}
 	],
 	encodeT = n => Math.round((n || Date.now()) / 6e4 - 271e5), // Date ->  T
-	decodeT = (n, parse = false) => { //            T   -> Date
+	decodeT = (n, parse = false, guild) => { // T   -> Date
 		n = new Date((n + 271e5) * 6e4);
-		if (parse) n = moment(n).format('DD/MM - HH:mm');
+		if (parse) {
+			n = moment(n);
+			if (guild) n.tz(moment.ZoneLookup(guild.preferredLocale))
+			n = n.format('DD/MM - HH:mm');
+		}
 		return n
 	},
 	nextChar = (s, n) => s.split('').reverse().map(c => String.fromCharCode(c.charCodeAt(0) + n)).join(''),
@@ -2807,7 +2811,7 @@ const TranscriptMsgsToHtml = (msgs, guild) => Promise.all(msgs.map(async ({ a, c
 			files = newDiv('div', 'files');
 
 		div.append(author, content);
-		time.innerHTML = decodeT(t, true);
+		time.innerHTML = decodeT(t, true, guild);
 		if (f) files.innerHTML = f.map(([n, u]) => `<a href="${u}">${n}</a>`).join('', div.append(files));
 
 		div.append(time);
@@ -3442,7 +3446,7 @@ io.on('connection', async socket => {
 								expires.innerHTML = `<i>Expires:</i><i>${moment(decodeT(closeAt)).fromNow()}</i>`;
 								try {
 									if (!fromto || !fromto[1]) Transcript.fromto = fromto = msgs.filter((x, i) => !i || ++i == msgs.length).map(({ t }) => t);
-									fromto = fromto.map(n => n ? decodeT(n, true) : 0);
+									fromto = fromto.map(n => n ? decodeT(n, true, guild) : 0);
 									if (fromto[0].slice(0, -8) == fromto[1].slice(0, -8)) fromto[1] = fromto[1].slice(8);
 
 									if (fromto[0]) from.innerHTML = `<i>Created:</i><i>${fromto[0]}</i>`;
@@ -5180,7 +5184,7 @@ app.all(/^\/Guild\/\d{16,19}\/transcript\/\d{11,12}/i, async (req, res) => {
 
 	// if (+closeAt) {let dates = [+decodeT(closeAt), +decodeT(fromto[0]) + 2592e6],date = new Date(Math.min(...dates));}
 
-	fromto = fromto.map(n => n ? decodeT(n, true) : 0);
+	fromto = fromto.map(n => n ? decodeT(n, true, guild) : 0);
 	if (fromto[0].slice(0, -8) == fromto[1].slice(0, -8)) fromto[1] = fromto[1].slice(8);
 
 	if (fromto[0]) from.innerHTML = `<i>Created:</i><i>${fromto[0]}</i>`;
