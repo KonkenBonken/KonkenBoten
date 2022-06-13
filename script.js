@@ -220,7 +220,7 @@ const NewGuildSubrcibers = [],
 			.Append(Select.Role({ guild }))
 	};
 
-const commands = Import_commands({ client, Duration, CleanDate, capital, moment, ParseModLogs /* DataBase, Cache, WriteDataBase */ });
+const commands = Import_commands({ client, Duration, CleanDate, capital, moment, ParseModLogs, ObjectMerge /* DataBase, Cache, WriteDataBase */ });
 
 const RandomUser = () => 'User#' + Math.floor(Math.random() * 8999 + 1000),
 	// Sass = file => new Promise((resolver, reject) => sass.render({
@@ -4102,108 +4102,6 @@ client.on('messageCreate', async m => { //Prefixed
 			return;
 		}
 	} //if textCommand
-
-	let modCommand = Object.keys(moderationCommands).find(c => command == GuildData.command(c));
-	// modCommand -> Originalnamnet på kommandot
-	if (modCommand) {
-		if (m.author.bot) return error();
-
-		if (!GuildData.Moderation) GuildData.Moderation = {};
-		if (GuildData.Moderation.logsEnabled && !GuildData.Moderation.logs) GuildData.Moderation.logs = {};
-		if (!GuildData.Moderation.coms) GuildData.Moderation.coms = {};
-
-		let activeRole = GuildData.Moderation.coms[modCommand]?.role;
-		if (!+activeRole) activeRole = GuildData.Moderation.staff;
-		if (!(m.member.roles.cache.has(activeRole) || m.member.permissions.has(8n))) return; // !if has role OR admin
-		const content = m.content.substr(2 + command.length);
-		let [, memberID, reason] = content.match(/^\s*<@!?(\d{16,19})>\s*(.*)$/s) || content.match(/^\s*(\d{16,19})\s*(.*)$/s) || [];
-		// console.log({ memberID, reason, content });
-		if (!(memberID)) return error();
-		if (GuildData.Moderation.logsEnabled && !GuildData.Moderation.logs[m.author.id]) GuildData.Moderation.logs[m.author.id] = [];
-
-		const [member, channel, mutedRole] = await Promise.all([
-			modCommand == 'unban' ? memberID : m.guild.members.fetch(memberID).catch(e => modCommand.includes('ban') ? memberID : error()),
-			client.channels.fetch(GuildData.Moderation.channel),
-			new Promise(async resolve => {
-				if (!modCommand.includes('mute') || GuildData.Moderation.timeout) return resolve(false);
-
-				let role = GuildData.Moderation.muted && await m.guild.roles.fetch(GuildData.Moderation.muted).catch(e => false)
-				if (role) return resolve(role);
-
-				role = await m.guild.roles.create({
-					name: 'Muted',
-					color: 7895160, // #787878
-					position: m.guild.roles.botRoleFor(client.user).position,
-					// position: m.guild.me.roles.highest.position, //- 1
-					// permissions: 0n,
-					// unicodeEmoji: '🔇',
-					mentionable: false,
-					reason: 'Muted Role created'
-				}).catch(e => console.error(e, 2756));
-
-				MutedPermissions(role);
-				GuildData.Moderation.muted = role.id;
-
-				return resolve(role);
-			})
-		]).catch(e => [
-			console.error(e, 89684),
-			error()
-		]);
-
-		if (!(member && channel)) return;
-
-		// console.log([m.member.roles.highest.name, member.roles.highest.name], m.member.roles.highest.comparePositionTo(member.roles.highest), m.member.roles.highest.comparePositionTo(member.roles.highest) < 0, m.guild.ownerId == m.member.id);
-
-		if (GuildData.Moderation.dmInvite && ['tempban', 'kick', 'unban'].includes(modCommand)) {
-			let invites = await m.guild.invites.fetch().catch(e => null);
-			var dmInvite =
-				invites && [...invites.values()].find(i => i.inviter?.id == client.user.id && i.channel.id == channel.id) ||
-				await channel.createInvite({ maxAge: 0, unique: true, reason: 'Created an Invite for inviting tempbanned or kicked members' }).catch(e => console.error('Cant create Invite:', e));
-		}
-		if (modCommand != 'unban' && m.guild.ownerId != m.member.id && (!member.roles || m.member.roles.highest.comparePositionTo(member.roles.highest) <= 0)) return error();
-		if (modCommand.includes('mute') && m.guild.me.roles.highest.comparePositionTo(mutedRole) <= 0) return error();
-
-		let durationString;
-		if (modCommand.startsWith('temp')) try {
-			[, durationString, reason] = (reason + ' ').match(/^\s*(\w+)\s+(.*)$/s);
-			var duration = Duration(durationString),
-				until = new Date(Date.now() + duration * 1000); // console.log({ duration });
-		} catch (e) { console.error(e); return error() }
-		const args = {
-			member, //Member  if unban: id
-			channel, //Channel
-			reason: reason.trim().substr(0, 512) || undefined, //string
-			guild: m.guild, //Guild
-			staff: m.member, //Member
-			logs: GuildData.Moderation.logsEnabled ? GuildData.Moderation.logs[m.author.id] : [], //array
-			muted: GuildData.Moderation.muted, //id
-			duration, //seconds
-			until, //Date
-			text: {
-				...ObjectMerge({ reason: 'Reason:', hasBeen: 'has been', by: 'by', duration: 'Duration:', messageFrom: `Message from ${m.guild.name}:`, until: 'until', color: 'dbad11' }, GuildData.Moderation.text || {}),
-				...ObjectMerge(commands.find(c => c.com == modCommand) || {},
-					GuildData.Moderation.coms && GuildData.Moderation.coms[modCommand] || {})
-			},
-			dmInvite: dmInvite && dmInvite.toString(), //Invite
-			dmAll: !!GuildData.Moderation.dmAll, //bool
-			banMessage: GuildData.Moderation.banMessage, //string
-			tellWho: !!GuildData.Moderation.tellWho, //bool
-			timeout: !!GuildData.Moderation.timeout && !!m.member.timeout //bool
-		};
-		// console.log(args.text);
-		// if (!(member && channel)) return error();
-		await moderationCommands[modCommand](args).catch(e => e);
-		// if (duration && m.guild.id == '785416126033035264') m.guild.channels.fetch('933099574866886706').then(c => c.send(`${member} borde un${modCommand.includes('ban')?'bannas':'mutas'} <t:${Math.floor(until/1e3)}:R>`))
-		// if (duration && m.guild.id == '702933462209790013') m.guild.channels.fetch('933101963074232320').then(c => c.send(`${member} borde un${modCommand.includes('ban')?'bannas':'mutas'} <t:${Math.floor(until/1e3)}:R>`))
-		m.delete();
-		WriteDataBase();
-		setTimeout(WriteDataBase, 4e3);
-		// console.log(6.3);
-		return;
-	}
-
-	// ({Moderation: {enabled: 0, /* 0=false; 1=true */channel: '8578', /*brottsregistret*/staff: '874647', /*staffroll*/text: { reason: 'Reason:', hasBeen: 'has been', by: 'by', duration: 'Duration:', messageFrom: `Message from ${m.guild.name}:`, until: 'until', color: 'dbad11' },dmInvite: 0,dmAll: 0, /*false = only dm banned/tempbanned*/banMessage: 'text', /*empty if disabled*/tellWho: 0,logsEnabled: 0,muted: '938733', /*mutedroll*/logs: {"03298450": /*staffID*/[{ type: 'ban', reason: '', staff: '5645', member: '873', expires: 'parseT', duration: 'seconds' }]},coms: {warn: { txt: 'warned', role: '8578' }, /*txt1: 'warn',*/kick: { txt: 'kicked', role: '8578' }, /*txt1: 'kick',*/ban: { txt: 'banned', role: '8578' }, /*txt1: 'ban',*/unban: { txt: 'unbanned', role: '8578' }, /*txt1: 'unban',*/tempban: { txt: 'temporarily banned', role: '8578' },/*txt1: 'temporarily ban',*/mute: { txt: 'muted', role: '8578' }, /*txt1: 'mute',*/unmute: { txt: 'unmuted' }, /*txt1: 'unmute',*/tempmute: { txt: 'temporarily muted', role: '8578' }, /*txt1: 'temporarily mute',*/}}})
 	else if (command == GuildData.command('infractions')) {
 		if (!(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n))) return error();
 		if (!GuildData.Moderation?.logs || !Object.keys(GuildData.Moderation.logs).length) {
