@@ -17,7 +17,7 @@ import { JSDOM } from "jsdom";
 import lightRandom from 'light-random';
 import Fetch from 'node-fetch';
 import cookieParser from 'cookie-parser';
-import moment from 'moment';
+import moment from 'moment-timezone';
 // import sass from 'sass';
 import { parse as Duration, stringify as CleanDate } from 'simple-duration';
 import ObjectMerge from 'deepmerge';
@@ -1377,7 +1377,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						['Channel:', e.channel],
 						['Created by:', e.creator],
 						['Event id:', e.id],
-						['Scheduled date:', moment(decodeT(e.scheduledStartAt)).format('D/M-YYYY - HH:mm')],
+						['Scheduled date:', moment(e.scheduledStartAt).guild(e.guild).format('D/M-YYYY - HH:mm')],
 						['Public:', e.privacyLevel == 'PUBLIC' ? 'Yes' : undefined],
 						['Url:', e.url]
 					]
@@ -1397,7 +1397,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						['Channel:', e.channel],
 						['Created by:', e.creator],
 						['Event id:', e.id],
-						['Scheduled date:', moment(decodeT(e.scheduledStartAt)).format('D/M-YYYY - HH:mm')],
+						['Scheduled date:', moment(e.scheduledStartAt).guild(e.guild).format('D/M-YYYY - HH:mm')],
 						['Public:', e.privacyLevel == 'PUBLIC' ? 'Yes' : undefined],
 						['Url:', e.url]
 					]
@@ -1417,7 +1417,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						['Channel:', newE.channelId != oldE.channelId && `${oldE.channel} => ${newE.channel}`],
 						['Created by:', newE.creatorId != oldE.creatorId && `${oldE.creator} => ${newE.creator}`],
 						['Event id:', newE.id],
-						['Scheduled date:', newE.scheduledStartTimestamp != oldE.scheduledStartTimestamp && `${moment(decodeT(oldE.scheduledStartAt)).format('D/M-YYYY - HH:mm')} => ${moment(decodeT(newE.scheduledStartAt)).format('D/M-YYYY - HH:mm')}`],
+						['Scheduled date:', newE.scheduledStartTimestamp != oldE.scheduledStartTimestamp && `${moment(oldE.scheduledStartAt).guild(oldE.guild).format('D/M-YYYY - HH:mm')} => ${moment(newE.scheduledStartAt).guild(newE.guild).format('D/M-YYYY - HH:mm')}`],
 						['Public:', newE.privacyLevel != oldE.privacyLevel && newE.privacyLevel == 'PUBLIC' ? 'Yes' : 'No'],
 						['Url:', newE.url]
 					]
@@ -2374,9 +2374,13 @@ const Page = {
 		}),
 	},
 	encodeT = n => Math.round((n || Date.now()) / 6e4 - 271e5), // Date ->  T
-	decodeT = (n, parse = false) => { //            T   -> Date
+	decodeT = (n, parse = false, guild) => { // T   -> Date
 		n = new Date((n + 271e5) * 6e4);
-		if (parse) n = moment(n).format('DD/MM - HH:mm');
+		if (parse) {
+			n = moment(n);
+			if (guild) n.guild(guild);
+			n = n.format('DD/MM - HH:mm');
+		}
 		return n
 	},
 	nextChar = (s, n) => s.split('').reverse().map(c => String.fromCharCode(c.charCodeAt(0) + n)).join(''),
@@ -2523,7 +2527,7 @@ const TranscriptMsgsToHtml = (msgs, guild) => Promise.all(msgs.map(async ({ a, c
 			files = newDiv('div', 'files');
 
 		div.append(author, content);
-		time.innerHTML = decodeT(t, true);
+		time.innerHTML = decodeT(t, true, guild);
 		if (f) files.innerHTML = f.map(([n, u]) => `<a href="${u}">${n}</a>`).join('', div.append(files));
 
 		div.append(time);
@@ -2664,6 +2668,12 @@ app.response.error = async function (code, message) { // wont return response | 
 	this.status(code).end(document.documentElement.outerHTML);
 }
 
+moment._ZoneLookup = { cs: 'CZ', da: 'DK', el: 'GR', hi: 'IN', ja: 'JP', ko: 'KP', uk: 'UA' };
+moment.ZoneLookup = locale => moment.tz._countries[
+	moment._ZoneLookup[locale] ?? locale.toUpperCase().replace(/^..-/, '')
+]?.zones[0];
+moment().constructor.prototype.guild = guild => moment.tz(moment.ZoneLookup(guild.preferredLocale));
+
 // Socket.io - socket
 
 
@@ -2752,6 +2762,7 @@ io.on('connection', async socket => {
 				// e: e.identifier, // name:id
 				// url: e.url, // https://cdn.discordapp.com/emojis/${id}.png
 			].join()).join(';');
+			else guildEmojis = undefined;
 			if (!guildEmojis) guildEmojis = undefined;
 			fun([EmojiList, guildEmojis]);
 		});
@@ -3152,7 +3163,7 @@ io.on('connection', async socket => {
 								expires.innerHTML = `<i>Expires:</i><i>${moment(decodeT(closeAt)).fromNow()}</i>`;
 								try {
 									if (!fromto || !fromto[1]) Transcript.fromto = fromto = msgs.filter((x, i) => !i || ++i == msgs.length).map(({ t }) => t);
-									fromto = fromto.map(n => n ? decodeT(n, true) : 0);
+									fromto = fromto.map(n => n ? decodeT(n, true, guild) : 0);
 									if (fromto[0].slice(0, -8) == fromto[1].slice(0, -8)) fromto[1] = fromto[1].slice(8);
 
 									if (fromto[0]) from.innerHTML = `<i>Created:</i><i>${fromto[0]}</i>`;
@@ -4197,10 +4208,11 @@ client.on('interactionCreate', async interaction => {
 		if (!staffRole) return console.log('Error 897', guild.name);
 
 		if (customId == 'ticket-start') {
-			let channelname = Rule.name ? Rule.name.replace(RegExp('{u}', 'g'), user.username).substr(0, 100) : `support-${user.username}`;
+			let channelname = Rule.name ? Rule.name.replace(RegExp('{u}', 'g'), user.username).substr(0, 100) : `support-${user.username}`,
+				dateString = moment().guild(guild).format('D/M-YYYY - HH:mm');
 
 			let ticketChannel = await guild.channels.create(channelname, {
-				topic: `Support Channel created by ${user.tag} - ${moment(new Date()).format('D/M-YYYY - HH:mm')}`,
+				topic: `Support Channel created by ${user.tag} - ${dateString}`,
 				parent: +Rule.parent ? Rule.parent : null,
 				permissionOverwrites: [{
 					id: guild.roles.everyone,
@@ -4577,7 +4589,7 @@ app.all(/^\/Guild\/\d{16,19}\/transcript\/\d{11,12}/i, async (req, res) => {
 
 	// if (+closeAt) {let dates = [+decodeT(closeAt), +decodeT(fromto[0]) + 2592e6],date = new Date(Math.min(...dates));}
 
-	fromto = fromto.map(n => n ? decodeT(n, true) : 0);
+	fromto = fromto.map(n => n ? decodeT(n, true, guild) : 0);
 	if (fromto[0].slice(0, -8) == fromto[1].slice(0, -8)) fromto[1] = fromto[1].slice(8);
 
 	if (fromto[0]) from.innerHTML = `<i>Created:</i><i>${fromto[0]}</i>`;
