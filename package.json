@@ -4,7 +4,8 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "kb": "node --trace-warnings script.js"
+    "build:css": "npx sass client/ --no-source-map --style=compressed",
+    "build": "npm i && npm run build:css"
   },
   "author": "Konrad Pettersson",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "moment-timezone": "^0.5.34",
     "node-cache": "^5.1.2",
     "node-fetch": "^3.2.4",
+    "sass": "^1.52.3",
     "simple-duration": "^1.0.1",
     "socket.io": "^4.5.0",
     "terser": "^5.13.1",
