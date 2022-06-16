@@ -8,3 +8,4 @@ scriptv12.js
 DataBase.json
 .env
 src/emojis3.js
+client/**.css
