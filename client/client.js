@@ -1054,17 +1054,8 @@ let DebugTest; {
 		let comsettings = modsettings.q('.comsettings'),
 			scrollItems = modsettings.qa('.scrollbar>*:not(.scrollarrow)'),
 			scrollArrows = modsettings.qa('.scrollbar>.scrollarrow'),
-			txtinputs = comsettings.qa('.txtinput'),
-			commandInputs = comsettings.qa('.command');
+			txtinputs = comsettings.qa('.txtinput');
 		// docs = comsettings.qa('.doc');
-
-		comsettings.qa('.info>*>*').forEach(info =>
-			info.innerHTML = `Every member with this role and everyone with admin permission can call the<y>${info.innerHTML}</y>command. The default role is the role specified above; if a role is selected here, the Moderator role abouve will be ignored.`
-		);
-
-		commandInputs.forEach(el => el.addEventListener('input', () =>
-			el.nextSibling.firstChild.innerHTML = el.value || el.placeholder
-		));
 
 		scrollItems.forEach((item, i) => item.addEventListener('click', () =>
 			comsettings.setAttribute('shw', i + 1)));
@@ -1077,7 +1068,7 @@ let DebugTest; {
 		}));
 
 
-		[reason, ...hasBeens, duration, ...txtinputs, ...commandInputs, byInput, messageFrom, until].forEach(el => {
+		[reason, ...hasBeens, duration, ...txtinputs, byInput, messageFrom, until].forEach(el => {
 			sizeFun(el, true);
 			// setTimeout(() => sizeFun(el, true), 2e3);
 			el.addEventListener('keydown', e => sizeFun(el, true));
@@ -1127,27 +1118,10 @@ let DebugTest; {
 			// console.debug(data);
 
 			textAreaSizeFun(banMessage);
-			commandInputs.forEach(el => el.addEventListener('input', () =>
-				q(`.commandList>#${el.placeholder}>input`).innerHTML = el.value || el.placeholder
-			));
 
 			socket.emit('Moderation', ['set', data], (res, err) => {
 				if (err) console.debug(err, alert('An error occurred'));
 				if (res) stopLoad('Moderation settings set')
-			})
-
-
-			commandInputs.forEach(el => {
-				// const stopLoadCom = logLoad();
-				// console.log([el.parentElement.id, el.value]);
-				if (el.parentElement.id != el.value) socket.emit('SetCommand', {
-					ori: el.parentElement.id,
-					new: el.value
-				}, (value, err) => {
-					if (err) console.debug(err)
-					// stopLoadCom();
-				})
-				// else stopLoadCom();
 			})
 		})
 	});

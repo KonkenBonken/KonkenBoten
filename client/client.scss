@@ -1669,7 +1669,6 @@ logsettings {
   }
   // &[optional]::before {content: '?';}
 }
-// :is(.comsetting, .commandList, .logList) input:not([type="checkbox"]) {
 
 :is(.commandList, .logList) > div > input {
   font-size: inherit;
@@ -1916,10 +1915,6 @@ modsettings {
   padding: .3em 2ch;
   transition: background-color .5s ease-out;
   // transition-property: background-color, opacity;
-  &::before {
-    color: $yellowish;
-  }
-
   &::after {
     content: attr(shw);
     color: $white;
@@ -1932,10 +1927,8 @@ modsettings {
   }
 
   > .command {
-    @include dashedInput;
-    background: none;
     font-weight: 600;
-    margin: 0 !important;
+    height: 1.2em;
   }
 
   > .doc {

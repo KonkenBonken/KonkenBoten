@@ -1926,53 +1926,22 @@ const Page = {
 				if (Rule.banMessage) banMessage.innerHTML = Rule.banMessage;
 				banMessage.setAttribute('maxlength', 4096);
 
-				const comSettings = newDiv('div', 'comsettings'),
-					comDivs = ['warn', 'kick', 'ban', 'unban', 'tempban', 'mute', 'unmute', 'tempmute'].map(x => {
+				const comSettings = newDiv('div', 'comsettings').Attribute('shw', 1)
+					.Append(...['warn', 'kick', 'ban', 'unban', 'tempban', 'mute', 'unmute', 'tempmute'].map(x => {
 						let defaultObj = commands.find(c => c.com == x),
-							commandObj = ObjectMerge(defaultObj, (Rule.coms && Rule.coms[x]) || {}),
-							div = newDiv('div', 'comsetting'),
-							input = newDiv('input', 'command'),
-							role = Select.Role({ set: (Rule.coms && Rule.coms[x]?.role), hint: ['staff', 'mod', 'admin'], guild }),
-							defaultRole = newDiv('option'),
-							// roleH6 = h6('Moderator Role', infoPopup(`Every member with this role and everyone with admin permission can call the<y>${dataBaseGuild.prefix||DefaultPrefix}${x}</y>command. The default role is the role specified above; if a role is selected here, the Moderator role abouve will be ignored.`)),
-							roleH6 = h6('Moderator Role', ((dataBaseGuild.prefix || DefaultPrefix) + x)),
-							// txtH6 = h6('Action Name', infoPopup((dataBaseGuild.prefix || DefaultPrefix) + x)),
-							doc = newDiv('div', 'doc'),
-							// txt1 = newDiv('input', 'txt', 'txt1'),
-							txt = newDiv('div', 'txt'),
-							txtInput = newDiv('input', 'txtinput');
-						// console.log({ commandObj, coms: Rule.coms });
+							commandObj = ObjectMerge(defaultObj, (Rule.coms && Rule.coms[x]) || {});
 
-						defaultRole.value = '0';
-						defaultRole.innerHTML = 'Default Role';
-						if (!(Rule.coms && Rule.coms[x]?.role)) {
-							[...role.selectedOptions].forEach(o => o.removeAttribute('selected'));;
-							defaultRole.setAttribute('selected', '');
-						}
-						role.prepend(defaultRole);
-
-						// txt1.innerHTML = commandObj.txt1;
-						txtInput.setAttribute('value', commandObj.txt);
-						// txt1.placeholder = defaultObj.txt1;
-						txtInput.placeholder = defaultObj.txt;
-
-						div.setAttribute('shw', defaultObj.txt1);
-
-						txt.append(
-							RandomUser(),
-							hasBeen.cloneNode(),
-							txtInput
-						);
-						div.append(input, doc, roleH6, role, txt); // txt1,
-						input.setAttribute('value', dataBaseGuild.command(x));
-						doc.innerHTML = `<span>${x}</span> ${commandObj.format}`;
-						div.id = input.placeholder = x;
-						doc.setAttribute('prefix', '');
-						div.setAttribute('prefix', '');
-						return div;
-					});
-				comSettings.append(...comDivs)
-				comSettings.setAttribute('shw', 1);
+						return
+						newDiv('div', 'comsetting').Attribute('shw', defaultObj.txt1).Attribute('prefix').Id(x)
+							.Append(
+								newDiv('div', 'command').Html(dataBaseGuild.command(x)),
+								newDiv('div', 'doc').Attribute('prefix').Html(`<span>${x}</span> ${commandObj.format}`),
+								newDiv('div', 'txt').Append(
+									RandomUser(),
+									hasBeen.cloneNode(),
+									newDiv('input', 'txtinput').Attribute('value', commandObj.txt).Attribute('placeholder', defaultObj.txt)
+								));
+					}))
 
 				let scrollbar = newDiv('div', 'scrollbar'),
 					scrollItems = ['warn', 'kick', 'ban', 'un ban', 'temp ban', 'mute', 'un mute', 'temp mute'].map(x => {
