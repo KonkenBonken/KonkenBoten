@@ -366,7 +366,7 @@ page {
 }
 
 :is(.displayPrefix, [prefix], #commands rule > h1)::before {
-  content: var(--prefix, "$");
+  content: var(--prefix, "/");
 }
 
 newrule {
@@ -394,7 +394,6 @@ newrule {
 // transcripts,
 
 commandSettings,
-setprefix,
 ticketsettings {
   @include blockElement;
 }
@@ -470,7 +469,7 @@ rule {
 }
 
 #commands editrule::before {
-  content: var(--prefix, "$");
+  content: var(--prefix, "/");
   position: absolute;
   z-index: 1;
   left: 1.2ch;
@@ -988,9 +987,8 @@ form {
   font-size: .7rem;
   margin-left: 3ch;
 }
-// :is(commandSettings, ticketSettings) input:not([type*=c]),editrule > input:not([type^=c], [type^=r]),
 
-input:not([type^=c], [type^=r], :is(suggestsettings, setprefix, modsettings) *),
+input:not([type^=c], [type^=r], :is(suggestsettings, modsettings) *),
 select {
   background-color: $color3;
   height: 4vh;
@@ -1174,15 +1172,6 @@ input.saveOption {
 //   font-size: 1em;
 //   margin-left: 1ch;
 // }
-
-setPrefix > input {
-  background-color: $color3;
-  height: 2rem;
-  width: 10ch;
-  border-radius: .5rem;
-  color: $white;
-  padding-left: 2ch;
-}
 
 .set {
   background-color: $accent1;

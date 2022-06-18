@@ -72,7 +72,6 @@ const app = express(),
 		pingTimeout: 120e3,
 	}),
 	port = 80,
-	DefaultPrefix = '$',
 	PageTitle = 'KonkenBoten - The Ultimate Discord Bot',
 	// ES5 = require('es6-arrow-function').compile,
 	// MinifyCSS = require('clean-css'),
@@ -1465,11 +1464,8 @@ const Page = {
 			dataBaseGuild.TextCommandRules = dataBaseGuild.TextCommandRules || [];
 			dataBaseGuild.TextCommandRules = dataBaseGuild.TextCommandRules.filter(r => r.command && r.content);
 			let page = await basePage({ id, title }),
-				// prefix = dataBaseGuild.prefix || DefaultPrefix,
 				rules = newDiv('rules'),
 				create = newDiv('create');
-
-			// 	,prefixTitle = newDiv('h2'),	setPrefixDiv = newDiv('setPrefix'),	setPrefixInput = newDiv('input'),	setPrefixButton = newDiv('div', 'set');prefixTitle.innerHTML = 'Prefix';setPrefixInput.placeholder = prefix;setPrefixInput.setAttribute('value', prefix);setPrefixInput.setAttribute('maxlength', 1);setPrefixDiv.append(setPrefixInput, setPrefixButton);page.append(prefixTitle, setPrefixDiv);
 
 			const rulesTitle = newDiv('h2');
 			rulesTitle.innerHTML = 'Custom Commands';
@@ -1531,18 +1527,6 @@ const Page = {
 				return commandsItem;
 			}));
 
-			const prefix = dataBaseGuild.prefix || DefaultPrefix,
-				prefixTitle = newDiv('h2'),
-				setPrefixDiv = newDiv('setPrefix'),
-				setPrefixInput = newDiv('input'),
-				setPrefixButton = newDiv('div', 'set');
-			prefixTitle.innerHTML = 'Prefix';
-			setPrefixInput.placeholder = prefix;
-			setPrefixInput.setAttribute('value', prefix);
-			setPrefixInput.setAttribute('maxlength', 1);
-			setPrefixDiv.append(setPrefixInput, setPrefixButton);
-
-
 			if (!dataBaseGuild.Reactions) dataBaseGuild.Reactions = {};
 			let reactions = dataBaseGuild.Reactions;
 			// reactions = [{e: '😃🎃',c: '92348',f: 1 /*undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/}, {	e: '🎃',c: '92348',	f: 'u708576015315632168' /* undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/}];
@@ -1566,7 +1550,6 @@ const Page = {
 			// }}
 
 			page.append(
-				prefixTitle, setPrefixDiv,
 				reactTitle, reactDiv,
 				commandsTitle, commandSettings,
 				rulesTitle, rules, create
@@ -1577,8 +1560,7 @@ const Page = {
 		support: (guild, title, id) => new Promise(async resolver => {
 			let dataBaseGuild = DataBase.guilds[guild.id] || {};
 			if (!dataBaseGuild.Tickets) dataBaseGuild.Tickets = {};
-			let prefix = dataBaseGuild.prefix || DefaultPrefix,
-				page = await basePage({ id, title }),
+			let page = await basePage({ id, title }),
 				ticketTitle = newDiv('h2'),
 				ticketSettings = newDiv('ticketSettings', 'inputField'),
 				onoff = newToggle(dataBaseGuild.Tickets?.enabled),

@@ -145,12 +145,6 @@ let DebugTest; {
 	Element.prototype.q = function (a) { return this.querySelector(a) }
 	Element.prototype.qa = function (a) { return Array.from(this.querySelectorAll(a)) }
 
-	socket.emit('GetPrefix', 0, (res, defaultPrefix) => {
-		if (res != defaultPrefix) {
-			prefix = res;
-			document.documentElement.style.setProperty('--prefix', `"${res}"`);
-		}
-	});
 	let GetAllTime = {};
 	GetAllTime.datalists = Date.now();
 
