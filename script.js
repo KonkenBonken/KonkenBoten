@@ -1473,24 +1473,13 @@ const Page = {
 			create.innerHTML = 'Add a Custom Command';
 
 			if (dataBaseGuild.TextCommandRules.length)
-				rules.append(...dataBaseGuild.TextCommandRules.map(rule => {
-					let { command, content, embed, disabled } = rule,
-					ruleDiv = newDiv('rule'),
-						commandDiv = newDiv('h1'),
-						previewDiv = newDiv('h2'),
-						edit = newDiv('edit'),
-						remove = newDiv('remove'),
-						toggle = newToggle(!disabled);
-
-					ruleDiv.append(commandDiv, previewDiv, toggle, edit, remove);
-
-					// ruleDiv.setAttribute('type', embed ? 'embed' : 'text');
-					// if (disabled) ruleDiv.setAttribute('disabled', '');
-					commandDiv.innerHTML = command;
-					previewDiv.innerHTML = (embed ? [rule.content.ttl, rule.content.desc, rule.content.ftr?.nm].filter(x => x).join(' - ') : content).substr(0, 90);
-
-					return ruleDiv;
-				}));
+				rules.append(...dataBaseGuild.TextCommandRules.map(({ command, content, embed, disabled }) =>
+					newDiv('rule').Append(
+						newDiv('h1').Html(command),
+						newDiv('h2').Html((embed ? [content.ttl, content.desc, content.ftr?.nm].filter(x => x).join(' - ') : content).substr(0, 90)),
+						newToggle(!disabled), newDiv('edit'), newDiv('remove')
+					)
+				));
 			rules.append(newDiv('empty'));
 			// TextCommandRules = {
 			// 	embed: false,
