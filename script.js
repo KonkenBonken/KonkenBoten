@@ -5137,6 +5137,14 @@ app.all(/(weather|news)/, (req, res) => res.error(410, 'page gone'));
 app.use((req, res) => res.error(404, 'page not found'));
 
 // Error.stackTraceLimit = 1e5;
+const sendError = async (message = '', err) => {
+	let channel = await client.channels.fetch('927875941127045180').catch(e => false);
+	if (!channel) channel = await client.guilds.fetch('703665426747621467').then(guild => guild.channels.fetch('927875941127045180')).catch(e => false);
+
+	if (channel) return channel.send(
+		`${err}\n		${message}`
+	)
+};
 process.on('uncaughtException', async err => {
 	console.log(
 		'\n\nUncaught error:\n',
@@ -5144,6 +5152,7 @@ process.on('uncaughtException', async err => {
 		err.stack.split('\n').filter(s => s.includes('src/managers') || s.includes('KonkenBoten/script.js')).join('\n'),
 		'\n\n'
 	);
+	await sendError(err.stack.split('\n').find(s => s.includes('KonkenBoten/script.js')), err);
 
 	let channel = await client.channels.fetch('927875941127045180').catch(e => false);
 	if (!channel) channel = await client.guilds.fetch('703665426747621467').then(guild => guild.channels.fetch('927875941127045180')).catch(e => false);
