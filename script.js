@@ -185,7 +185,7 @@ const NewGuildSubrcibers = [],
 			.Append(Select.Role({ guild }))
 	};
 
-const commands = Import_commands({ client, Duration, CleanDate, capital, moment, ParseModLogs, ObjectMerge, MutedPermissions, encodeT, DataBase, WriteDataBase /*Cache*/ });
+const commands = Import_commands({ client, Duration, CleanDate, capital, moment, ParseModLogs, ObjectMerge, MutedPermissions, encodeT, DataBase, WriteDataBase, newDiv });
 
 const RandomUser = () => 'User#' + Math.floor(Math.random() * 8999 + 1000),
 	FieldtoPerms = (bitfield = 0n) => {
