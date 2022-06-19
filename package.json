@@ -4,7 +4,8 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "kb": "node --trace-warnings script.js"
+    "build:css": "npx sass client/ --no-source-map --style=compressed",
+    "build": "npm i && npm run build:css"
   },
   "author": "Konrad Pettersson",
   "license": "ISC",
@@ -13,7 +14,7 @@
     "cookie-parser": "^1.4.6",
     "deepmerge": "^4.2.2",
     "discord-oauth2": "^2.10.0",
-    "discord.js": "^13.7.0",
+    "discord.js": "^13.8.0",
     "dotenv": "^16.0.0",
     "express": "^4.18.1",
     "fs": "^0.0.1-security",
@@ -23,6 +24,7 @@
     "moment-timezone": "^0.5.34",
     "node-cache": "^5.1.2",
     "node-fetch": "^3.2.4",
+    "sass": "^1.52.3",
     "simple-duration": "^1.0.1",
     "socket.io": "^4.5.0",
     "terser": "^5.13.1",
