@@ -500,24 +500,6 @@ let DebugTest; {
 
 		if (srvr = querySelector('header>.srvr')) srvr.q('x')?.addEventListener('click', () => srvr.remove());
 
-		qa('.commandList>div').forEach(item => {
-			let set = item.q('.set'),
-				input = item.q('input'),
-				original = item.q('h3').innerHTML,
-				before = input.value;
-			set.addEventListener('click', () => {
-				let stopLoad = logLoad();
-				if ((value = input.value) == before) return stopLoad('Command already set');
-				socket.emit('SetCommand', { ori: original, new: value }, (value, err) => {
-					before = value;
-					if (err) console.debug(err, alert('An error occurred'))
-					else input.value = value;
-					stopLoad('/' + original + ' command set to ' + '/' + value);
-				})
-			});
-		});
-
-
 		let suggestsettings = querySelector('suggestsettings'),
 			setButton = suggestsettings.q('.set');
 		setButton.addEventListener('click', e => {

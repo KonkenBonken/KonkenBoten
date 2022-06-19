@@ -2021,7 +2021,6 @@ const Page = {
 			} catch (e) { console.log(e); };
 
 			page.append(
-				// prefixTitle, setPrefixDiv,
 				modTitle, modSettings
 			);
 			if (dataBaseGuild.premium) page.append(automodTitle, automodSettings);
@@ -2701,17 +2700,6 @@ io.on('connection', async socket => {
 			sendLogLoad('Audit Logs ' + (socket.GuildData.logs.audit ? 'enabled' : 'disabled'))
 			if (socket.GuildData.logs.isEmpty()) socket.GuildData.logs = undefined;
 			WriteDataBase();
-		});
-		socket.on('SetCommand', (data, fun) => {
-			if (!socket.GuildData.commands) socket.GuildData.commands = {};
-			if (commands.map(c => c.com).includes(data.ori)) {
-				socket.GuildData.commands[data.ori] = data.new.substr(0, 50);
-
-				fun(socket.GuildData.commands[data.ori]);
-				sendLogLoad(socket.GuildData.prefix + data.ori + ' command set to ' + socket.GuildData.prefix + data.new)
-				if (socket.GuildData.commands.isEmpty()) socket.GuildData.commands = undefined;
-				WriteDataBase();
-			} else throw 'Invalid Command'
 		});
 		socket.on('Command', ([key, data], fun) => { //Custom text command
 			try {
