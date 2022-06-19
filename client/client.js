@@ -53,8 +53,7 @@ let DebugTest; {
 			input.addEventListener('input', update);
 			update();
 		};
-	let prefix = '$',
-		datalistText, datalistRoles, datalistVoice,
+	let datalistText, datalistRoles, datalistVoice,
 		logLoadIndex = 0,
 		resolveDatalists,
 		awaitDatalists = new Promise(r => resolveDatalists = r),
@@ -203,22 +202,6 @@ let DebugTest; {
 				socket.emit('NewGuildSubrcibe', 0, id => window.open(`/Guild/${id}`, "_self"));
 			} else window.open(`/Guild/${value}`, "_self")
 		});
-
-
-		querySelector('setprefix>div').addEventListener('click', e => {
-			let stopLoad = logLoad(),
-				button = e.target,
-				input = button.parentElement.q('input'),
-				newPrefix = input.value;
-			if (newPrefix != prefix) socket.emit('SetPrefix', newPrefix, newPrefix => {
-				prefix = newPrefix;
-				document.documentElement.style.setProperty('--prefix', `"${newPrefix}"`);
-				input.value = newPrefix;
-				stopLoad('Prefix set to ' + newPrefix);
-			})
-			else stopLoad('Prefix already set');
-		});
-
 
 		querySelector("ticketsettings>label>input").addEventListener('change', e => {
 			let stopLoad = logLoad();
@@ -529,7 +512,7 @@ let DebugTest; {
 					before = value;
 					if (err) console.debug(err, alert('An error occurred'))
 					else input.value = value;
-					stopLoad(prefix + original + ' command set to ' + prefix + value);
+					stopLoad('/' + original + ' command set to ' + '/' + value);
 				})
 			});
 		});
