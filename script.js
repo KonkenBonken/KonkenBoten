@@ -1702,13 +1702,12 @@ const Page = {
 			if (!dataBaseGuild.logs.enabled) dataBaseGuild.logs.enabled = [];
 			let page = await basePage({ id, title }),
 				logSetting = newDiv('logSettings'),
-				logsTitle = newDiv('h2'),
+				logsTitle = newDiv('h2').Html('Logs'),
 				channelSelect = newDiv('select', 'channelSelect'),
 				logList = newDiv('div', 'logList'),
 				toggle = newToggle(dataBaseGuild.logs.on, 'toggle'),
 				auditToggle = newToggle(dataBaseGuild.logs.audit, 'toggle', 'audit');
 
-			logsTitle.innerHTML = 'Logs';
 			let selected = false;
 			[...guild.channels.cache.values()].filter(c => ['GUILD_TEXT', 'GUILD_NEWS'].includes(c.type)).sort((a, b) => a.rawPosition - b.rawPosition).forEach(c => {
 				let option = newDiv('option');
@@ -2970,7 +2969,7 @@ io.on('connection', async socket => {
 							resultsDiv.append(transcriptsTitle, transcriptsDiv);
 							transcriptsDiv.append(...await Promise.all(Transcripts.map(async ({ id, channelName, closedBy, msgs, closeAt, fromto }, i) => {
 								let Transcript = Transcripts[i],
-									div = newDiv('transcript'),
+									div = newDiv('transcript').Id(id),
 									name = newDiv('div', 'name'),
 									timeDiv = newDiv('div', 'time'),
 									closed = newDiv('div', 'closed'),
@@ -2978,7 +2977,6 @@ io.on('connection', async socket => {
 
 								timeDiv.append(from, to, expires);
 
-								div.id = id
 								name.innerHTML = channelName || 'Unknown';
 								expires.innerHTML = `<i>Expires:</i><i>${moment(decodeT(closeAt)).fromNow()}</i>`;
 								try {
@@ -3081,8 +3079,7 @@ io.on('connection', async socket => {
 						else if (Cache.has(cacheLable))
 							fun(Cache.get(cacheLable))
 						else {
-							let resultsDiv = newDiv(),
-								modlogsDiv = newDiv('modlogs');
+							let modlogsDiv = newDiv('modlogs');
 
 							// ({
 							// 		t: 'ban',
@@ -3379,7 +3376,7 @@ client.on('ready', async () => {
 	WriteDataBase();
 
 	Object.entries(DataBase.guilds).filter(x => x[1]?.Tickets?.enabled)
-		.forEach(([guildID, { Tickets }]) =>
+		.forEach(([guildID]) =>
 			TicketSetup(guildID)
 		);
 
@@ -3701,13 +3698,12 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 			hasNew = RulesIDs.includes(newState.channelId);
 		if (hasOld || hasNew) {
 
-			if (hasOld) { // if Leave
+			if (hasOld) // if Leave
 				if (oldState.channel && !oldState.channel.members.size) {
 					DataBase.voiceCreated = Created.filter(x => x != oldState.channelId);
 					oldState.channel.delete().catch(e => console.log('ERROR: oldState.channel.delete()', e.message))
 					WriteDataBase()
 				}
-			}
 
 			if (hasNew) { // if Join
 				let Rule = Rules[RulesIDs.indexOf(newState.channelId)];
@@ -3889,8 +3885,6 @@ client.on('interactionCreate', async interaction => {
 			console.time('ticket-claim');
 			if (!(member.roles.cache.has(Rule.staff) || member.permissions.has(8n))) return;
 
-			console.log(1);
-
 			let updatePromise = interaction.update({
 				...message,
 				nonce: undefined,
@@ -3902,11 +3896,9 @@ client.on('interactionCreate', async interaction => {
 					type: 1
 				}]
 			});
-			console.log(2);
 
 			channel.permissionOverwrites.create(Rule.staff, { SEND_MESSAGES: false, VIEW_CHANNEL: true });
 			channel.permissionOverwrites.create(user, { SEND_MESSAGES: true })
-			console.log(3);
 
 			let [moderators] = await Promise.all([
 				guild.roles.fetch(Rule.staff).catch(e => undefined),
@@ -3920,7 +3912,6 @@ client.on('interactionCreate', async interaction => {
 					value: member.id,
 					description: `${member.user.tag} | ${member.id}`
 				}));
-			console.log(4);
 
 			await updatePromise;
 			interaction.followUp({
@@ -3941,7 +3932,6 @@ client.on('interactionCreate', async interaction => {
 					type: 1
 				}] : undefined
 			})
-			console.log(5);
 
 			console.timeEnd('ticket-claim');
 			client.emit('ticketClaim', channel, user);
@@ -4320,8 +4310,7 @@ app.get('/oauth', async (req, res) => {
 		}).catch(e => fail() && {});
 
 		if (!access_token) return fail();
-
-		var [user, guilds] = await Promise.all([oauth.getUser(access_token), oauth.getUserGuilds(access_token)]).catch(e => [console.error(e)]);
+		var [user, guilds] = await Promise.all([oauth.getUser(access_token), oauth.getUserGuilds(access_token)]);
 		if (!user || !guilds) return fail();
 
 		const LoginExpire = 864e5 * 4, //4d
