@@ -3562,7 +3562,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 		if (!onlyLog) {
 			let content = 'An error occured';
 			if (message) content += '\n> ' + message;
-			interaction.reply(content);
+			interaction.reply({ content, ephemeral: true });
 		}
 		sendError(`Error in command: ${interaction.commandName}\nmessage:${message}`);
 	};
