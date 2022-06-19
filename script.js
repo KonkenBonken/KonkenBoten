@@ -4031,7 +4031,7 @@ client.on('messageCreate', async m => { //Prefixed
 				await channel.createInvite({ maxAge: 0, unique: true, reason: 'Created an Invite for inviting tempbanned or kicked members' }).catch(e => console.error('Cant create Invite:', e));
 		}
 		if (modCommand != 'unban' && m.guild.ownerId != m.member.id && (!member.roles || m.member.roles.highest.comparePositionTo(member.roles.highest) <= 0)) return error();
-		if (modCommand.includes('mute') && m.guild.me.roles.highest.comparePositionTo(mutedRole) <= 0) return error();
+		if (modCommand.includes('mute') && mutedRole && m.guild.me.roles.highest.comparePositionTo(mutedRole) <= 0) return error();
 
 		let durationString;
 		if (modCommand.startsWith('temp')) try {
