@@ -3402,6 +3402,14 @@ client.on('ready', async () => {
 	setInterval(setInvites, 72e5); //2h
 	setInterval(TopggSend, 864e5); //24h
 
+	await client.application.commands.set(
+		commands.map(({ com: name, des: description, options, default: defaultPermission }) => ({
+			name,
+			description,
+			defaultPermission,
+			options: Object.entries(options).map(([name, option]) => ({ name, ...option })),
+		}))
+	);
 });
 
 client.on("guildCreate", async guild => {
