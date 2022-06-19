@@ -8,34 +8,27 @@ import dotenv from 'dotenv'
 dotenv.config()
 import Discord from "discord.js";
 import fsSync from 'fs';
-// import { promises as fs } from 'fs';
 import { minify as Terser } from "terser";
-// import csso from 'csso';
-// const MinifyCSS = csso.minify;
-// import { Base64 } from 'js-base64';
 import { JSDOM } from "jsdom";
 import lightRandom from 'light-random';
 import Fetch from 'node-fetch';
 import cookieParser from 'cookie-parser';
 import moment from 'moment-timezone';
-// import sass from 'sass';
 import { parse as Duration, stringify as CleanDate } from 'simple-duration';
 import ObjectMerge from 'deepmerge';
 import express from 'express';
 import { Server as socketIo } from 'socket.io';
-// import { measure as Temperature } from 'pi-temperature';
 import { isWebUri as isValidUrl } from 'valid-url';
 
 import Import_http from 'http';
 import Import_discordOauth2 from "discord-oauth2";
 import Import_topGgSdk from '@top-gg/sdk';
 import Import_nodeCache from 'node-cache';
-// import Import_emojiTestList from 'emoji-test-list';
 import Import_commands from './lib/commands.js';
 import EmojiList from './src/emojis.js';
 console.timeEnd('Packages');
 console.time('Consts');
-// console.log(Import_emojis);
+
 const fs = fsSync.promises;
 
 const intents = new Discord.Intents( // https://discord.com/developers/docs/topics/gateway#list-of-intents
@@ -63,7 +56,6 @@ const intents = new Discord.Intents( // https://discord.com/developers/docs/topi
 console.time('Login');
 client.login(process.env.TOKEN);
 
-// console.log(intents.serialize());
 const app = express(),
 	server = Import_http.createServer(app),
 	io = new socketIo(server, {
@@ -73,26 +65,10 @@ const app = express(),
 	}),
 	port = 80,
 	PageTitle = 'KonkenBoten - The Ultimate Discord Bot',
-	// ES5 = require('es6-arrow-function').compile,
-	// MinifyCSS = require('clean-css'),
 	DataBase = JSON.parse(fsSync.readFileSync('DataBase.json', 'utf8').trim().replace(/Ã¤/g, 'ä').replace(/Ã¥/g, 'å').replace(/Ã¶/g, 'ö')),
-	// topggSdk = require('@top-gg/sdk'),
 	topggApi = new(Import_topGgSdk.Api)('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMzgwMzU3NTI2NDAxODQzMyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4NjYzNDU4fQ.gqGp-wnvzaFk69HGOohqYPlJ2J4bEjL7RRAvWFCroMQ'),
 	TopggSend = () => topggApi.postStats({ serverCount: client.guilds.cache.size }),
-	// Remebered = new Map(),
 	Cache = new(Import_nodeCache)();
-// const EmojiList = Object.entries(Import_emojiTestList).filter((x, i) => x[0].length <= 2 && +x[1].age <= 12) //&& x[1].toFullyQualified
-// 	.filter((x, i) => !(i >= 1289 || i >= 1239 && i <= 1259 || i >= 1138 && i <= 1233 || i >= 1154 && i <= 1157 || i >= 699 && i <= 729 || i >= 295 && i <= 303 || [18, 19, 127, 146].includes(i)))
-// 	.map(([e, o]) => ({
-// 		e: o.toFullyQualified || e, // TODO: Testa om icke-toFullyQualified kan reageras i DC
-// 		n: o.name,
-// 		i: (o.toFullyQualified || e).codePointAt().toString(16)
-// 	})).filter((x, i, o) => o.map(y => y.e).indexOf(x.e) == i);
-// EmojiList = Import_emojis.split(';').map(s=>s.split(',')).map(([name,id])=>({
-// 	e: o.toFullyQualified || e,
-// 	n: o.name
-// 	}))
-
 
 const NewGuildSubrcibers = [],
 	ClientID = '813803575264018433',
@@ -108,16 +84,14 @@ const NewGuildSubrcibers = [],
 		clientSecret: "wn-BWF8mQv0xSkSDfNEG2HE7eos6caIM",
 		redirectUri: RedirectTo.de
 	}),
-	// removeNull = obj => Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != null).map(([k, v]) => [k, v === Object(v) ? removeNull(v) : v])),
-	// WriteDataBase = () => fs.writeFile('DataBase.json', JSON.stringify(DataBase)),
+
 	WriteDataBase = () => {
 		if (performance.now() > 30e3)
 			fs.writeFile('DataBase-temp.json', JSON.stringify(DataBase)).then(() => fs.rename('DataBase-temp.json', 'DataBase.json').catch(x => 0))
 	},
 	{ document } = new JSDOM().window,
 	{ isArray } = Array,
-	// isObject = x => x && typeof x === 'object' && !isArray(x),
-	// Duration = str => simpleDuration(str.split(' ')[0]),
+
 	newDiv = (el = 'div', ...classes) => {
 		let div = document.createElement(el);
 		if (classes) classes.filterX.forEach(cl => div.classList.add(cl));
@@ -134,21 +108,13 @@ const NewGuildSubrcibers = [],
 	},
 	h6 = (txt, i) => {
 		let el = newDiv('h6').Html(txt);
-		// el.innerHTML = txt;
 		if (typeof i == 'string') i = infoPopup(i);
 		if (i) el.append(i);
 		return el;
 	},
 	infoPopup = txt =>
-	newDiv('i', 'info').Append(newDiv('div').Append(newDiv('div').Html(txt)))
-	// let i = newDiv('i', 'info'),
-	// 	popupPar = newDiv('div'),
-	// 	popup = newDiv('div');
-	// popup.innerHTML = txt;
-	// i.append(popupPar);
-	// popupPar.append(popup);
-	// return i;
-	,
+	newDiv('i', 'info').Append(newDiv('div').Append(newDiv('div').Html(txt))),
+
 	newToggle = (on, ...classList) => {
 		let toggle = newDiv('label', ...classList),
 			checkbox = newDiv('input');
@@ -222,12 +188,6 @@ const NewGuildSubrcibers = [],
 const commands = Import_commands({ client, Duration, CleanDate, capital, moment, ParseModLogs, ObjectMerge, MutedPermissions, encodeT, DataBase, WriteDataBase /*Cache*/ });
 
 const RandomUser = () => 'User#' + Math.floor(Math.random() * 8999 + 1000),
-	// Sass = file => new Promise((resolver, reject) => sass.render({
-	// 	file: `client/${file}.scss`
-	// }, (err, res) => {
-	// 	if (err) reject(err, console.log('ERR - ', err))
-	// 	else resolver(res.css.toString());
-	// })),
 	FieldtoPerms = (bitfield = 0n) => {
 		try {
 			let res = Object.fromEntries(Object.entries(Discord.Permissions.FLAGS).reverse()
@@ -237,7 +197,6 @@ const RandomUser = () => 'User#' + Math.floor(Math.random() * 8999 + 1000),
 			console.error(e);
 			return null;
 		}
-
 	};
 let prefetchs = [...[
 		...['logo', 'commands', 'voice', 'moderation', 'suggestions', 'support', 'sort', 'reply', 'arrow', 'discord'].map(x => `src/icon/${x}`),
@@ -248,8 +207,7 @@ let prefetchs = [...[
 	'</>; rel="canonical"', '<https://top.gg/bot/813803575264018433/vote>; rel="prerender"',
 
 ].join();
-// console.log(prefetchs, prefetchs.length);
-// prefetchs = 'krgyh';
+
 const ParseModLogs = (logs, guild, targetMember, targetStaff) => Object.entries(logs)
 	//targetMember = Member | User | id
 	.map(([staffId, staffLogs]) =>
@@ -343,13 +301,7 @@ const ParseModLogs = (logs, guild, targetMember, targetStaff) => Object.entries(
 
 		// let listGuilds = guildsObj.filter(g => client.guilds.cache.has(g.id) && (new Discord.BitField(BigInt(g.permissions))).has(8n)),
 
-		// try {
 		var listGuilds = guildsObj //.filter(g => client.guilds.cache.has(g.id) && isAdmin(g.permissions))
-		// console.log(5.21);
-		// } catch (e) {
-		// 	var listGuilds = guildsObj.filter(g => client.guilds.cache.has(g.id));
-		// 	console.log(e, 5.31)
-		// }
 
 		let //listGuilds = guildsObj.filter(g => client.guilds.cache.has(g.id)),
 			guildDropDown = newDiv('select', 'guildDropDown');
@@ -371,17 +323,7 @@ const ParseModLogs = (logs, guild, targetMember, targetStaff) => Object.entries(
 		guildDropDown.append(addOption);
 		resolver(document);
 	})
-// ,userGuildList = async userId =>
-// 	Promise.all(client.guilds.cache.map(async g =>
-// 		g.members.cache.has(userId) || g.members.fetch(userId).catch(x => false))).then(x => x.guild);
-// const mainPage = async (req, res, userObj, guildsObj) => {
-// 		if (req.cookies.LstGld) return res.redirect(302, '/Guild/' + req.cookies.LstGld)
-// 		// var guild = guildsObj.filter(x => x).find(g => g.verified || (client.guilds.cache.has(g.id) && isAdmin(g.permissions)))
-// 		var guild = guildsObj.find(g => g.id)
-// 		// var guild = guild || guildsObj.find(g => client.guilds.cache.has(g.id));
-// 		if (guild?.id) return res.redirect(302, '/Guild/' + guild.id)
-// 		res.redirect(302, URLs.botRedirect);
-// 	};
+
 const basePage = options => new Promise(async resolver => {
 		let page = newDiv('page');
 		if (options.id) page.id = options.id;
@@ -401,8 +343,6 @@ const basePage = options => new Promise(async resolver => {
 	},
 	Invites = {},
 	AuditLog = async (guild, type, targetID, log = true) =>
-		// (await guild.fetchAuditLogs({ type })).entries
-		// .find(a => a.target?.id == targetID && a.createdTimestamp + 10e3 > Date.now());
 		guild.fetchAuditLogs({ type }).then(a => a.entries
 			.find(a => a.target?.id == targetID && a.createdTimestamp + 10e3 > Date.now())).catch(e => false);
 // https://discord.js.org/#/docs/main/stable/typedef/AuditLogAction
@@ -1521,16 +1461,13 @@ const Page = {
 			// reactions = [{e: '😃🎃',c: '92348',f: 1 /*undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/}, {	e: '🎃',c: '92348',	f: 'u708576015315632168' /* undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/}];
 			const reactTitle = newDiv('h2', 'reactTitle'),
 				reactDiv = newDiv('reaction'),
-				// reactNew = newDiv('div', 'create'),
 				reactList = newDiv('rules'),
 				reactData = newDiv('div', 'hide', 'reactiondata');
 			reactTitle.innerHTML = 'Auto Reaction';
-			// reactData.innerHTML = Object.entries(reactions).filter(x => x[1]).map(([c, r]) => [r.e, c, r.f].join(',')).join(';'); // el.innerHTML.split(';').map(x=>x.split(',')).map(( [e,c,f])=>({e,c,f}))
 			reactData.innerHTML = Object.entries(reactions).filter(x => x[1]).map(([c, r]) => [r.e.join('.'), c, r.f].join(',')).join(';');
 			reactDiv.append(reactList, reactData);
 
 			if (dataBaseGuild.Reactions.isEmpty()) dataBaseGuild.Reactions = undefined;
-
 
 			// Reactions = {
 			// '92348': {
@@ -1553,7 +1490,6 @@ const Page = {
 				ticketTitle = newDiv('h2'),
 				ticketSettings = newDiv('ticketSettings', 'inputField'),
 				onoff = newToggle(dataBaseGuild.Tickets?.enabled),
-				// checkbox = newDiv('input'),
 				ticketDiv = newDiv('div'),
 				ticketH6 = newDiv('h5'),
 				channelSelect = Select.Channel({ set: dataBaseGuild.Tickets.channel, hint: ['support', 'ticket'], guild }),
@@ -1562,17 +1498,13 @@ const Page = {
 				ticketName = newDiv('input', 'ticketName'),
 				set = newDiv('div', 'set');
 
-			// checkbox.type = 'checkbox';
 			if (dataBaseGuild.Tickets?.enabled)
 				ticketSettings.setAttribute('show', '');
-			// checkbox.setAttribute('checked', '');
 
-			// onoff.append(checkbox, newDiv());
 			ticketSettings.append(onoff);
 
 			ticketH6.innerHTML = 'Toggle Support Channels';
 			ticketTitle.innerHTML = 'Support Channels';
-			// set.innerHTML = 'SET';
 			ticketName.setAttribute('value', 'support-{u}');
 			ticketName.setAttribute('autocomplete', 'off');
 			channelSelect.name = 'channel';
@@ -1696,7 +1628,6 @@ const Page = {
 
 			author.innerHTML = dataBaseGuild.Tickets.author || 'Support';
 			content.innerHTML = dataBaseGuild.Tickets.messages?.save || `**The member can no longer see this channel and the channel is about to close**\nDon't save the transcript: ❌\nSave the transcript: ✔️`;
-			// embed = newDiv('div', 'embed', 'close');author = newDiv('div', 'author');content = newDiv('div', 'content');advanced.append(h6('Custom Close Message', infoPopup('This embeded message will be sent if someone wants to download the transcript to close the channel, by reacting with ❌')),	embed);embed.append(author, content);content.setAttribute('contentEditable', '');author.innerHTML = dataBaseGuild.Tickets.author || 'Support';content.innerHTML = dataBaseGuild.Tickets.messages?.close || `Press ❌ to close this support channel`;
 
 			ticketDiv.append(advanced, set);
 			if (dataBaseGuild.Tickets.isEmpty()) dataBaseGuild.Tickets = undefined;
@@ -1777,21 +1708,7 @@ const Page = {
 				toggle = newToggle(dataBaseGuild.logs.on, 'toggle'),
 				auditToggle = newToggle(dataBaseGuild.logs.audit, 'toggle', 'audit');
 
-			// toggle.append(checkbox, newDiv());
-			// checkbox.type = 'checkbox';
-			// if () checkbox.setAttribute('checked', '');
-			// auditToggle.append(auditCheckbox, newDiv());
-			// auditCheckbox.type = 'checkbox';
-			// if () auditCheckbox.setAttribute('checked', '');
-
 			logsTitle.innerHTML = 'Logs';
-
-			// colorDiv.append(colorSelect);
-			// colorSelect.setAttribute('type', 'color');
-			// if (dataBaseGuild.logs.color) colorSelect.setAttribute('value', dataBaseGuild.logs.color);
-
-			// set.innerHTML = 'SET';
-
 			let selected = false;
 			[...guild.channels.cache.values()].filter(c => ['GUILD_TEXT', 'GUILD_NEWS'].includes(c.type)).sort((a, b) => a.rawPosition - b.rawPosition).forEach(c => {
 				let option = newDiv('option');
@@ -1827,11 +1744,7 @@ const Page = {
 					sum = newDiv('summary'),
 					codename = newDiv('h3'),
 					toggle = newToggle(dataBaseGuild.logs.enabled.includes(Rule));
-				// checkbox = newDiv('input')
-				// checkbox.type = 'checkbox';
-				// if (dataBaseGuild.logs.enabled.includes(Rule)) checkbox.setAttribute('checked', '');
 
-				// toggle.append(checkbox, newDiv());
 				logItem.append(title, codename);
 				if (decription) logItem.append(des);
 				logItem.append(toggle);
@@ -1899,7 +1812,6 @@ const Page = {
 
 				content.innerHTML = 'Broke rule #1.1: Do not brake our rules'
 				durationContent.innerHTML = ['2h30m', '1h15m', '4h', '1d', '2w'][Math.floor(Math.random() * 5)]
-				// durationContent.append(infoPopup("This will only be showed by temporarily penalties"))
 
 				hasBeen.setAttribute('value', Rule.text?.hasBeen || 'has been');
 				hasBeen.placeholder = 'has been';
@@ -2055,10 +1967,6 @@ const Page = {
 							Multiple.Role({ set: ignRls?.map(Snowflake.decode), guild }),
 							h6('Action', 'What the bot should do when finding a message containing a foul'),
 							newRange(1, 3, +pnsh, 'action'),
-							// h6('Delete Message', 'Whether the bot should delete the message containing the foul'),
-							// newToggle(pnsh % 2, 'del'), //if 1||3
-							// h6('Warn Member', 'Whether the bot warn the member'),
-							// newToggle(pnsh >= 2, 'warn'), //if 2||3
 							h6('Reason', 'The reason to be provided when warning the member and to be sent in the current channel'),
 							newDiv('input', 'reason').Value(rsn || defaultReasons[type])
 						]
@@ -2145,12 +2053,10 @@ const Page = {
 
 			setupTitle.innerHTML = 'Suggestions';
 			toggleTitle.innerHTML = 'Toggle Suggestions';
-			// checkbox.type = 'checkbox';
+
 			if (Rule.enabled)
 				suggestSettings.setAttribute('show', '');
-			// checkbox.setAttribute('checked', '');
 
-			// onoff.append(checkbox, newDiv());
 			suggestSettings.append(toggleTitle, onoff, innerSettings);
 
 			let staffSelect = Select.Role({ set: Rule.staff, hint: ['staff', 'mod'], guild }),
@@ -2368,8 +2274,6 @@ const AllMessages = channel => new Promise(async resolver => {
 			else reactMessage = await channel.send(reactMessageObj).catch(e => console.log(e, 4927));
 			DataBaseGuild.Tickets.existingMessage = reactMessage?.id;
 
-			// Startcollector[guildID] = reactMessage.createReactionCollector(reactFilter(Rule.emoji)).on('collect', async (_, u) => {}); //💬
-
 			WriteDataBase();
 			// "enabled": true,"channel": "798590264511037450","staff": "825378302579048448","author": "tesst au2","content": "By clicking 💬 tesst3","emoji": "","color": "#5dac79","existingMessage": "827248807896809542"
 		}, //TicketSetup
@@ -2524,7 +2428,6 @@ const defaultReasons = {
 };
 const isTicket = channel =>
 	c.topic?.startWith('Support Channel created by');
-// c.messages.fetch().then(messages => !!messages.values().find(m => m.author.id == ClientID && m.components[0]?.components[0]?.customId == 'ticket-close'));
 
 const Snowflake = {
 	_alphabet: '0123456789!#$%&()*+,-./:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz|{}~¡¢£¤¥¦§¨©«°±´µ¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿĀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƞƟƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǁǂǃǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǴǵǶǷǸǹǺǻǼǽǾǿȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗșȚțȝȞȟȠȡȢȣȤȥȦȧȨȩȫȬȭȮȯȰȱȲȳȵȺȻȼȽȾȿɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏḂḃḊḋḞḟṀṁṖṗṠṡṪṫẀẁẂẃẄẅẛỲỳ',
@@ -2561,11 +2464,9 @@ console.timeEnd('Consts');
 
 //end of Const
 let MaybeGuild, SupportServer, idleTimer;
-// Array.prototype.diff = function(a) {return this.filter(x => !a.includes(x)).concat(a.filter(x => !this.includes(x)));}
-// Array.prototype.filterX = function () { return this.filter(Boolean) }
+
 Object.defineProperty(Array.prototype, 'filterX', { get: function () { return this.filter(Boolean) } });
 Object.prototype.command = function (cmd) {
-	// this.commands = this.commands || {};
 	return this.commands?.[cmd] || cmd
 }
 Object.prototype.isEmpty = function () {
@@ -2578,12 +2479,11 @@ Object.entries(DataBase.loggedIn).forEach(([id, data]) => {
 	const [{ expires }, guilds] = data,
 	duration = expires - Date.now();
 	console.log(id, CleanDate(duration / 1000, 'm'));
-	// console.log(data[0]);
+
 	if (duration <= 0) return delete DataBase.loggedIn[id]
-	// else {
+
 	Cache.set(id, data, duration);
 	setTimeout(() => delete DataBase.loggedIn[id], duration);
-	// if (DataBase.loggedIn[id]._check) delete DataBase.loggedIn[id]._check;
 
 	data[1] = guilds.filter(x => x);
 
@@ -2757,10 +2657,8 @@ io.on('connection', async socket => {
 			data.unlisted = data.unlisted ? 1 : undefined;
 			data.claim = data.claim ? 1 : undefined;
 
-
 			fun(data);
 
-			// if (Startcollector[socket.GuildID]) {if (socket.GuildData.Tickets.channel == Startcollector[socket.GuildID].message.channel.id) Startcollector[socket.GuildID]?.stop()else Startcollector[socket.GuildID].message.delete();delete Startcollector[socket.GuildID];}
 			TicketSetup(socket.GuildID);
 			sendLogLoad('Support Channel settings set');
 			if (socket.GuildData.Tickets.isEmpty()) socket.GuildData.Tickets = undefined;
@@ -2788,16 +2686,7 @@ io.on('connection', async socket => {
 			// 								enabled: ['guildMemberAdd', 'inviteDelete', 'messageDelete'],
 			// 							}}
 		});
-		// socket.on('SetLogColor', (data, fun) => {
-		// 	try {
-		// 		if (!socket.GuildData.logs) socket.GuildData.logs = {};
-		// 		socket.GuildData.logs.color = data;
-		// 		fun();
-		// 		WriteDataBase();
-		// 	} catch (e) {
-		// 		fun(e)
-		// 	}
-		// });
+
 		socket.on('SetLogChannel', (data, fun) => {
 			if (!socket.GuildData.logs) socket.GuildData.logs = {};
 			socket.GuildData.logs.channel = data;
@@ -2850,7 +2739,7 @@ io.on('connection', async socket => {
 							...rule,
 							...data
 						}
-						// console.log({ data });
+
 						sendLogLoad('Custom Command set: ' + socket.GuildData.prefix + command)
 						fun(true);
 					},
@@ -2868,7 +2757,7 @@ io.on('connection', async socket => {
 						sendLogLoad('Custom Command ' + (Rules[rule[1]].disabled ? 'disabled: ' : 'enabled: ') + socket.GuildData.prefix + command)
 					}
 				};
-				// console.log({ key, data });
+
 				functions[key](data);
 				if (!socket.GuildData.TextCommandRules.length) socket.GuildData.TextCommandRules = undefined;
 
@@ -2881,7 +2770,6 @@ io.on('connection', async socket => {
 			try {
 				if (!socket.GuildData.VoiceRules) socket.GuildData.VoiceRules = [];
 				let Rules = socket.GuildData.VoiceRules;
-				//npm i simple-duration
 
 				let functions = {
 					get: channelID => fun(Rules.find(r => r.channel == channelID)),
@@ -2901,7 +2789,7 @@ io.on('connection', async socket => {
 						let len = Rules.length;
 						socket.GuildData.VoiceRules = Rules = Rules.filter(x => x.channel != channelID);
 						let removed = len - Rules.length;
-						// console.log({ removed });
+
 						fun(removed > 0);
 						sendLogLoad('Voice Channel deleted: #' + data.channelname)
 					},
@@ -2912,7 +2800,7 @@ io.on('connection', async socket => {
 						sendLogLoad('Voice Channel ' + (Rules[rule[1]].disabled ? 'disabled: #' : 'enabled: #') + data.channelname)
 					}
 				};
-				// console.log({ key, data });
+
 				functions[key](data);
 				if (!socket.GuildData.VoiceRules.length) socket.GuildData.VoiceRules = undefined;
 				WriteDataBase();
@@ -2922,8 +2810,6 @@ io.on('connection', async socket => {
 		});
 		socket.on('Suggestions', ([key, data], fun) => {
 			let err = e => fun(null, e);
-			// socket.emit('Suggestions', ['toggle', arg], res => {
-			// console.log([key, data]);
 			try {
 				if (!socket.GuildData.Suggestions) socket.GuildData.Suggestions = {};
 				let Suggestions = socket.GuildData.Suggestions;
@@ -3069,12 +2955,9 @@ io.on('connection', async socket => {
 			try {
 				let err = e => fun(null, e);
 				if (!socket.GuildData.Tickets) socket.GuildData.Tickets = {};
-				// if (!socket.GuildData.Tickets.transcripts) socket.GuildData.Tickets.transcripts = [];
 				let Transcripts = socket.GuildData.Tickets.transcripts;
-				// return fun(socket.GuildData);
 				let functions = {
 					getAll: async () => {
-						// console.log(Transcripts);
 						if (!(isArray(Transcripts) && Transcripts[0])) err('No transcripts found')
 						else {
 							socket.GuildData.Tickets.transcripts = Transcripts.filter(x => x);
@@ -3091,14 +2974,11 @@ io.on('connection', async socket => {
 									name = newDiv('div', 'name'),
 									timeDiv = newDiv('div', 'time'),
 									closed = newDiv('div', 'closed'),
-									// createdDiv = newDiv('div', 'created'),
 									[from, to, expires] = [newDiv('span'), newDiv('span'), newDiv('span')];
 
 								timeDiv.append(from, to, expires);
 
 								div.id = id
-								// else Transcript.id = Date.now() - 16e11;
-
 								name.innerHTML = channelName || 'Unknown';
 								expires.innerHTML = `<i>Expires:</i><i>${moment(decodeT(closeAt)).fromNow()}</i>`;
 								try {
@@ -3110,34 +2990,15 @@ io.on('connection', async socket => {
 									if (fromto[1]) to.innerHTML = `<i>Closed:</i><i>${fromto[1]}</i>`;
 								} catch { console.error('fromto Error'); }
 
-								// closedBy = await client.users.fetch(closedBy).catch(e => null);
-								// if (closedBy) closed.innerHTML = `Support Channel closed by ${closedBy.tag}`
-
 								div.append(name, timeDiv, ...await TranscriptMsgsToHtml(msgs, guild) /*,closedBy*/ );
 
-								// if (fromto) fromto = fromto.map(n => decodeT(n));
-								// timeDiv.innerHTML += (fromto || newFromto).map(d => d ? d.toLocaleString('sv').slice(5, -3) : 'Unknown')
-								// .map((x, i, o) => (i && x.slice(0, -6) == o[0].slice(0, -6)) ? x.slice(6) : x)
-								// 	.map(x => `<span>${x}</span>`).join('');
 								return div;
 							})));
 							fun(resultsDiv.innerHTML)
 						}
 					}
-					// ,extend: async id => {
-					// 	if (!Transcripts || !Transcripts[0]) err('No transcipts found')
-					// 	else if (!id) err('No id provided')
-					// 	else {
-					// 		let Transcript = Transcripts.find(t => t.id == id);
-					// 		if (!Transcripts) err('Transcipt not found')
-					// 		else {
-					// 			Transcript.closeAt = encodeT(Date.now() + 6048e5);
-					// 			fun(true);
-					// 		}
-					// 	}
-					// }
 				};
-				// console.log({ key, data });
+
 				functions[key](data);
 				WriteDataBase();
 			} catch (e) {
@@ -3151,9 +3012,6 @@ io.on('connection', async socket => {
 				if (!GuildData.Moderation) GuildData.Moderation = {};
 				const { Moderation } = GuildData;
 
-				// if (!socket.GuildData.Tickets.transcripts) socket.GuildData.Tickets.transcripts = [];
-				// let Moderation = socket.GuildData.Moderation;
-				// return fun(socket.GuildData);
 				let functions = {
 					set: async data => {
 						if (GuildData.Moderation.muted && data.timeout) {
@@ -3190,7 +3048,6 @@ io.on('connection', async socket => {
 							['tempmute', 'temporarily muted']
 						].forEach(([key, value]) => {
 							/* if coms default: delete*/
-							// data.coms[key] = data.coms[key] || {};
 							if (data.coms[key].txt == value) data.coms[key].txt = undefined;
 							else data.coms[key].txt = data.coms[key].txt.trim();
 							if (!+data.coms[key].role) data.coms[key].role = undefined;
@@ -3205,9 +3062,6 @@ io.on('connection', async socket => {
 					},
 					getAll: async ([page = 0, filterIndex = 0, filterId]) => {
 						if (!Moderation?.logs) return err('No logs found');
-						// console.log([page, ['all', 'member', 'staff'][filterIndex], filterId]);
-						// console.log(Transcripts);
-						// 										 [all, member, staff]
 
 						const filterFunction = [
 								[],
@@ -3220,9 +3074,8 @@ io.on('connection', async socket => {
 							unsliced = ParseModLogs(Moderation.logs, guild, ...filterFunction),
 							logs = unsliced.slice(pageLength * page, pageLength * (page + 1));
 						// lastPage = unsliced.length == logs.length;
-						// console.log(logs.length);
+
 						const cacheLable = ['modlogs', guild.id, page, filterIndex, filterId, unsliced.length].map(x => x || '-').join('-');
-						// console.log(cacheLable);
 
 						if (!(isArray(logs) && logs[0])) err('No logs found')
 						else if (Cache.has(cacheLable))
@@ -3230,10 +3083,6 @@ io.on('connection', async socket => {
 						else {
 							let resultsDiv = newDiv(),
 								modlogsDiv = newDiv('modlogs');
-							// modlogsTitle = newDiv('h2')
-							// modlogsTitle.innerHTML = 'Moderations Logs';
-
-							// resultsDiv.append( modlogsDiv);//modlogsTitle,
 
 							// ({
 							// 		t: 'ban',
@@ -3247,14 +3096,13 @@ io.on('connection', async socket => {
 							// 	})
 							let members = logs.map(x => [x.staffId, x.m]).flat()
 							members = [...new Set(members)];
-							// console.log(members);
+
 							console.time('fetch members');
-							// await Promise.all(members.map(id => guild.members.fetch(id).catch(() => null)))
+
 							await guild.members.fetch({ user: members }).catch(() => null)
 							console.timeEnd('fetch members');
 
 							modlogsDiv.append(...await Promise.all(logs.map(async ({ t: type, d: date, r: reason, dur: duration, /*unt: until,*/ staff, member, staffId, m }, i) => {
-								// console.time(i);
 								let div = newDiv('modlog', type),
 									typeDiv = newDiv('div', 'type'),
 									dateDiv = newDiv('div', 'date'),
@@ -3285,10 +3133,6 @@ io.on('connection', async socket => {
 
 								[staff, member] = await Promise.all([staff(), member()]);
 
-								// if (member?.user?.tag)
-								// if (member instanceof Discord.GuildMember) console.log('member')
-								// else console.log([member]);
-
 								if (staff instanceof Discord.GuildMember) {
 									staffDiv.innerHTML = staff.user.tag;
 									staffDiv.setAttribute('nm', staff.displayName);
@@ -3311,10 +3155,9 @@ io.on('connection', async socket => {
 									memberDiv.style.setProperty('--avtr', `url(${user.displayAvatarURL()})`);
 								} else memberDiv.innerHTML = m
 
-								// console.timeEnd(i);
 								return div;
 							})));
-							// fun(resultsDiv.innerHTML)
+
 							fun(modlogsDiv.innerHTML)
 							Cache.set(cacheLable, modlogsDiv.innerHTML, 10800) //3h
 						}
@@ -3322,15 +3165,13 @@ io.on('connection', async socket => {
 					remove: async id => {
 						let [staffId, date, reason] = id.split('-');
 						console.log([staffId, date, reason]);
-						// Moderation.logs[staffId] = Moderation.logs[staffId].filter(log => log.d != date);
+
 						let beforeLength = Moderation.logs[staffId].length,
 							index = Moderation.logs[staffId].findIndex(log =>
 								log.d == date &&
 								(log.r || '*').replace(/\W/g, '').substr(0, 20) == reason
 							),
 							rule = Moderation.logs[staffId][index];
-
-						// if(rule.timeoutIndex&&rule.timeoutIndex() )clearTimeout(rule.timeoutIndex());
 
 						Moderation.logs[staffId] = Moderation.logs[staffId].filter((x, i) => i != index);
 
@@ -3340,7 +3181,7 @@ io.on('connection', async socket => {
 						sendLogLoad('Moderation log removed');
 					}
 				};
-				// console.log({ key, data });
+
 				functions[key](data);
 				WriteDataBase();
 			} catch (e) {
@@ -3349,7 +3190,6 @@ io.on('connection', async socket => {
 		});
 
 		socket.on('Reactions', ([key, data], fun) => {
-			// socket.GuildData.Reactions = {};
 			try {
 				if (!socket.GuildData.Reactions || isArray(socket.GuildData.Reactions))
 					socket.GuildData.Reactions = {};
@@ -3357,19 +3197,12 @@ io.on('connection', async socket => {
 
 				let functions = {
 					set: ([oldChannelId, data]) => {
-						// console.log([oldChannelId, data.c]);
-						// oldChannelId = oldChannelId || data.c;
-
 						let dataC = data.c;
 						data.c = undefined;
 
 						if (oldChannelId && oldChannelId != dataC) Rules[oldChannelId] = undefined;
-
-						// if (oldChannelId)var rule = Rules.map((x, i) => [x, i]).find(x => x[0].c == oldChannelId),index = rule ? rule[1] : Rules.length;else index = Rules.length;
-
 						if (data.f == '0') data.f = undefined;
 
-						// console.log([oldChannelId, data]);
 						if (data.e)
 							Rules[dataC] = data;
 						else Rules[dataC] = undefined;
@@ -3377,23 +3210,18 @@ io.on('connection', async socket => {
 						sendLogLoad('Auto Reaction set: ' + dataC)
 					},
 					remove: channelId => {
-						// socket.GuildData.Reactions = Rules.filter(x => x.c != channelId);
-						console.log([channelId], 8234);
 						Rules[channelId] = undefined;
 						fun(true);
 						sendLogLoad('Auto Reaction removed: ' + channelId)
 					}
 				};
-				// console.log({ key, data });
 				functions[key](data);
-				// console.log(Rules);
 				WriteDataBase();
 			} catch (e) {
 				fun(null, e)
 			}
 		});
 		socket.on('Automod', ([key, data], fun) => {
-			// socket.GuildData.Reactions = {};
 			try {
 				if (!socket.GuildData.Moderation)
 					socket.GuildData.Moderation = {};
@@ -3401,10 +3229,8 @@ io.on('connection', async socket => {
 					socket.GuildData.Moderation.automod = {};
 				const Rules = socket.GuildData.Moderation.automod;
 
-
 				let functions = {
 					set: data => {
-
 						['words', 'links', 'invites', 'spam', 'caps', 'mentions', 'zalgo'].forEach(key => {
 							const rule = data[key];
 
@@ -3456,9 +3282,7 @@ io.on('connection', async socket => {
 						sendLogLoad('Auto Moderation settings set');
 					}
 				};
-				// console.log({ key, data });
 				functions[key](data);
-				// console.log(Rules);
 				WriteDataBase();
 			} catch (e) {
 				fun(null, e)
@@ -3476,19 +3300,14 @@ DataBase.guilds['785416126033035264'].premium = 1; //arcombe
 DataBase.guilds['702933462209790013'].premium = 1; //mello
 DataBase.guilds['703665426747621467'].premium = 1; //test
 
-// Object.keys(DataBase.guilds).forEach(id => {});
-
 if (!DataBase.temp) DataBase.temp = [];
 if (!DataBase.voiceCreated) DataBase.voiceCreated = [];
 DataBase.temp = DataBase.temp.filter(x => x);
 
 // Discord - client.on
-// const modTimoutsTracker = {};
 client.on('ready', async () => {
 	console.timeEnd('Login');
-	// console.log({ intents: client.options.intents });
 	server.listen(port, () => console.log(`listening on ${port} and logged in as ${client.user.username}!`));
-	// console.log(DataBase);
 
 	console.log(client.guilds.cache.filter(g => g.available).size, 'available of', client.guilds.cache.size, 'Guilds before fetch');
 	await client.guilds.fetch( /*{ force: true }*/ );
@@ -3502,7 +3321,6 @@ client.on('ready', async () => {
 
 
 	DataBase.temp.forEach(async (temp, i) => {
-		// let duration = new Date(temp.until) - Date.now(),
 		let duration = temp.until - Date.now(),
 			guild = await client.guilds.fetch(temp.g);
 
@@ -3513,7 +3331,6 @@ client.on('ready', async () => {
 
 		// { g: guild.id, m: member.id, type: 'mute', until: +until, role: muted,key }
 		// { t: 'mute', s: staff.id, r: reason, m: member.id, d: encodeT(), dur: duration, unt: encodeT(until), timeoutIndex: () => timeoutIndex }
-
 
 		let reason = `Temporarily ${temp.type} expired`,
 
@@ -3528,40 +3345,17 @@ client.on('ready', async () => {
 					() => fun().finally(() => delete DataBase.temp[i]),
 					108e5));
 
-		// modTimoutsTracker[temp.key || 'a'] =
 		setTimeout(() => prom(fun()), duration)
-
-
-		// if (temp.type == 'mute') {const member = await guild.members.fetch(temp.m).catch(e => setTimeout(		() => guild.members.fetch(temp.m)		.then(m => m.roles.remove(temp.role, 'Temporarily mute expired'))		.finally(() => delete DataBase.temp[i]), 108e5) /*3h*/	&& false);if (!member) return;const unmute = () => member.roles.remove(temp.role, 'Temporarily mute expired');if (duration > 0)	duration < 2147483647 && setTimeout(unmute, duration)	else unmute()} else if (temp.type == 'ban') {	const unban = () => guild.members.unban(temp.m, 'Temporarily ban expired').catch(e =>setTimeout(	() => guild.members.unban(temp.m, 'Temporarily ban expired')	.finally(() => delete DataBase.temp[i]), 108e5) /*3h*/);	if (duration > 0)		duration < 2147483647 && setTimeout(unban, duration)	else unban()}delete DataBase.temp[i];
 	});
-
-	// setTimeout(() => console.log(modTimoutsTracker), 4e3);
 
 	[...client.guilds.cache.values()].forEach(async guild => {
 		let { id } = guild;
 		if (!DataBase.guilds[id]) DataBase.guilds[id] = {};
 		let DataBaseGuild = DataBase.guilds[id];
-		// if (DataBase.guilds[id].Moderation?.logs) DataBase.guilds[id].Moderation.logs = undefined;
 		if (DataBaseGuild.muted) {
 			var role = await guild.roles.fetch(DataBase.guilds[id].muted).catch(e => false);
 			if (role) MutedPermissions(role);
 		}
-
-		// if (DataBaseGuild.Reactions) {
-		// 	Object.keys(DataBaseGuild.Reactions).forEach(id => {
-		// 		if (typeof DataBaseGuild.Reactions[id].e == 'string') {
-		// 			DataBaseGuild.Reactions[id].e = [...DataBaseGuild.Reactions[id].e]
-		// 			console.log(DataBaseGuild.Reactions[id].e);
-		// 		}
-		// 	});
-		// }
-
-
-		// if (id == '873582580325302312') try {let Rule = DataBaseGuild.Suggestionsif (Rule?.suggestions && Rule.channels?.suggest && Rule.channels.response) {let channelSug = await client.channels.fetch(Rule.channels.suggest),messages = await AllMessages(channelSug);messages = messages.filter(m => m.author.id == client.user.id && m.embeds[0]).map(m => [m.embeds[0], m.id]).forEach(([{ author, title, description }, Mid]) => {try {let index = +title.match(/#(\d+)$/)[1];/*console.log([title, index, Rule.suggestions[index]]);*/if (Rule.suggestions[index] && Rule.suggestions[index]?.suggestion == description) return console.log('finns redan');let member = guild.members.cache.find(m => console.log(m.user.tag) || m.user.tag == author.name);if (!member) return console.log('ingen member', author.name);/*Rule.suggestions[index] = {*//*user: member.id,*//*msg: id,*//*suggestion: description*//*}*/console.log([guild.name, {user: member.id,msg: Mid,suggestion: description}]);} catch (e) { console.log('e3') }})}} catch (e) { console.log('e4') }
-
-		// WriteDataBase();
-
-		// let Tickets = DataBase.guilds[id].Tickets;if (Tickets?.transcipts) Tickets.transcipts = transcipts.map(transcript => {transcript.msgs = transcript.msgs.map(m => {if (typeof m.c == 'string') m.c = encryptString(m.c)return m;});return transcript;})
 	});
 
 	let checkExpiredTranscripts = guildId => {
@@ -3577,7 +3371,6 @@ client.on('ready', async () => {
 				DataBase.guilds[guildId].Tickets.transcripts = transcripts.filter(x => x);
 				console.log(`Deleted transcript: "${channelName}" in ${guildId}`);
 			}
-			// DataBase.guilds[guildId].Tickets.transcripts = transcripts.filter(x => x);
 		});
 	};
 	[...client.guilds.cache.keys()].forEach(checkExpiredTranscripts);
@@ -3588,17 +3381,6 @@ client.on('ready', async () => {
 	Object.entries(DataBase.guilds).filter(x => x[1]?.Tickets?.enabled)
 		.forEach(([guildID, { Tickets }]) =>
 			TicketSetup(guildID)
-
-			// Tickets.ticketsCreated?.forEach(async (id, i) => {
-			// 	let channel = await client.channels.fetch(id).catch(x => false);
-			//
-			// 	if (channel) {
-			// 		let msg = (await AllMessages(channel)).reverse().find(m => m.author.id == ClientID);
-			// 		if (msg) startMsgSetup(msg, guildID);
-			// 	} else delete Tickets.ticketsCreated[i]
-			//
-			// 	Tickets.ticketsCreated = Tickets.ticketsCreated.filter(x => x)
-			// })
 		);
 
 	SupportServer = await client.guilds.fetch('827687377224728629');
@@ -3618,62 +3400,16 @@ client.on('ready', async () => {
 					uses: inv.uses
 				}))
 	};
-	// setInvites();
+
 	setTimeout(setInvites, 6e4); //1min
 	setInterval(setInvites, 72e5); //2h
 	setInterval(TopggSend, 864e5); //24h
-
-
-	// client.users.fetch('417331788436733953').then(async konk => {
-	// 	let dm = await konk.createDM(),
-	// 		msgs = await dm.messages.fetch({ after: '904334126029631499', limit: 100 });
-	// 	msgs = msgs.filter(m => m.author.id == '813803575264018433');
-	// 	msgs = msgs.map(m => m.delete());
-	// 	await Promise.all(msgs);
-	// 	console.log('done');
-	// })
-
-	// DennaErrorÄrMedveten[':)']
-
-	// console.log(DataBase.guilds['785416126033035264'].Moderation.logs['212334413760036864'].pop());  // Tar bort senaste infraction som cobz gett i Arcombe
-	// console.log(
-	// 	SupportServer.emojis.cache,
-	// 	SupportServer.emojis.cache.toJSON()
-	// );
-
-
-	// await client.application.commands.set([{
-	// 		name: 'approve',
-	// 		description: 'Approve a Suggestion',
-	// 		options: [{ type: 'INTEGER', name: 'index', description: 'The index of the suggestion', minValue: 1, maxValue: 13, required: true }, { type: 'STRING', name: 'reason', description: 'Why you approve this suggestion', required: true }]
-	// 	}, {
-	// 		name: 'clear',
-	// 		description: 'Clear messages',
-	// 		options: [{ type: 'INTEGER', name: 'amount', description: 'The amount of messages', minValue: 1, maxValue: 499, required: false }]
-	// 	}, {
-	// 		name: 'tempmute',
-	// 		description: 'Temporarily mute a member',
-	// 		options: [{ type: 'USER', name: 'member', description: 'The memebr to mute', required: true }, { type: 'STRING', name: 'duration', description: 'The duration', required: true }, { type: 'STRING', name: 'reason', description: 'Why you mute', required: false }]
-	// 	}
-	//
-	// 	, {
-	// 		type: 'USER',
-	// 		name: 'Tempban!'
-	// 	}, {
-	// 		type: 'MESSAGE',
-	// 		name: 'echo'
-	// 	}
-	// ], '703665426747621467');
 
 });
 
 client.on("guildCreate", async guild => {
 	console.log('\x1b[33m%s\x1b[0m', `Added to ${guild.name}`);
 
-	// if ((ownRole = guild.me?.roles.highest).editable) ownRole.setColor('#dbad11').catch();
-	// console.log(ownRole);
-
-	// DataBase.guilds[guild.id] = Object.fromEntries(Object.entries(guild).filter(x => ['id', 'name', 'icon', 'joinedTimestamp'].includes(x[0]) && x[1] != null))
 	DataBase.guilds[guild.id] = {};
 	NewGuildSubrcibers.forEach(async ([fun, id], i) => {
 		const member = await guild.members.fetch(id).catch(e => null);
@@ -3706,7 +3442,6 @@ client.on("channelCreate", ({ guild }) =>
 	).then(MutedPermissions)
 );
 
-// client.on('message', async m => {
 client.on('messageCreate', async m => { //Not Prefixed
 	if (m.channel.type == 'DM') {
 		if (!m.author.bot) console.log(`DM recived:\nFrom ${m.author.tag}(${m.author.id})\n${m.cleanContent}`);
@@ -3724,20 +3459,17 @@ client.on('messageCreate', async m => { //Not Prefixed
 	if (!reaction) return;
 	reaction = GuildData.Reactions[reaction];
 	if (!reaction) return;
-	// console.log({ reaction });
 	/*undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/
 
 	let filterIndex = +reaction.f,
 		filterId;
 	if (reaction.f?.length > 2) {
 		filterId = reaction.f.substr(1)
-		// console.log('id:', filterId);
 		if (reaction.f.startsWith('u')) filterIndex = 4;
 		else if (reaction.f.startsWith('r')) filterIndex = 5;
 	}
 	if (!filterIndex) filterIndex = 0;
 
-	// console.log([filterIndex, filterId, ReactionFilters[filterIndex](m, filterId)]);
 	if (!ReactionFilters[filterIndex](m, filterId)) return;
 	let emojis = reaction.e;
 	if (!emojis) return;
@@ -3747,7 +3479,6 @@ client.on('messageCreate', async m => { //Not Prefixed
 	emojis.map(e => m.react(e).catch(e => null));
 
 	//Lägg Reactions sist
-
 });
 client.on('messageCreate', async m => { //Automod
 	if (!m.guild || !m.member || m.author.bot) return;
@@ -3812,7 +3543,7 @@ client.on('messageCreate', async m => { //Automod
 		m.delete();
 	m.channel.send({
 		embeds: [{
-			color: 'dbad11', //CssColors.red
+			color: 'dbad11',
 			description: reason
 		}]
 	});
@@ -3853,20 +3584,17 @@ client.on('messageCreate', async m => { //Prefixed
 	// try {
 	const GuildData = DataBase.guilds[m.guild.id] || {},
 
-		error = () => { // error = (...emojis) => {	m.delete({ timeout: 1e4, reason: 'Invalid Command' });emojis.map(e => e && m.react(e));}
+		error = () => {
 			setTimeout(() => m.delete(), 20e3);
 			m.react('❌');
 			console.trace('❌');
 		};
 
-	// if (!GuildData.Suggestions) GuildData.Suggestions = {};
 	if (!(m.content.startsWith(GuildData.prefix || DefaultPrefix))) return;
-
 
 	let textCommandList = GuildData.TextCommandRules?.map(x => x.command.toLowerCase()),
 		command = m.content.split(' ')[0].substr(1).toLowerCase();
 	if (textCommandList?.includes(command)) {
-		// console.log(1);
 		let rule = GuildData.TextCommandRules[textCommandList.indexOf(command)];
 		if (!rule.disabled && (!rule.roles || !rule.roles[0] || [...m.member.roles.cache.keys()].some(id => rule.roles.includes(id)) || m.member.permissions.has(8n))) {
 
@@ -3912,7 +3640,7 @@ client.on('messageCreate', async m => { //Prefixed
 			content = m.content.substr(2 + command.length),
 			[, memberID] = content.match(/^\s*<@!?(\d{16,19})>$/s) || content.match(/^\s*(\d{16,19})$/s) || [],
 			member = memberID && await guild.members.fetch(memberID).catch(e => client.users.fetch(memberID).catch(e => memberID));
-		// console.log(member);
+
 		if (!member) return error();
 		//member = Member | User | id
 		logs = ParseModLogs(logs, guild, member);
@@ -3928,7 +3656,6 @@ client.on('messageCreate', async m => { //Prefixed
 
 		if (sliced[0]) {
 			embed.author.name = `${displayTag}'s' infractions`;
-			// let fields = sliced.map(log => ({/*let action = log.dur ? 'temporarily ' : '';action += log.t;action = capital(action);if (log.dur) action += ' - ' + CleanDate(log.dur);*/name: capital(`${log.dur?'temporarily':''} ${log.t} ${log.dur?('- '+CleanDate(log.dur)):''}`),value: `${(log.r||'*No reason specified*').replace(/\n/g,' ')} - *${moment(log.d).fromNow()}*`.substr(0, 1024)})).map(log => `**${capital(log.name.trim())}:**\n⠀${log.value.trim()}`.trim()),
 			let fieldsLength = 0,
 				fields = sliced.map(log =>
 					`**${capital(`${log.dur?'temporarily':''} ${log.t} ${log.dur?('- '+CleanDate(log.dur)):''}`.trim())}:**\n` +
@@ -3941,7 +3668,7 @@ client.on('messageCreate', async m => { //Prefixed
 			if (last7 == -1) last7 = logs.length;
 			let displayNum = Math.min(10, logs.length),
 				displayLast = 10 > logs.length ? 'All' : 'Last';
-			// fields[0].name = '**Last 5 infractions**\n' + fields[0].name
+
 			embed.fields = [{
 					name: 'Last 24 hours',
 					value: `${last24} infractions`, //\n⠀
@@ -3955,18 +3682,12 @@ client.on('messageCreate', async m => { //Prefixed
 					value: `${logs.length} infractions`,
 					inline: true
 				},
-				// ...fields
 				{ name: `**${displayLast} ${displayNum} infractions**`, value: fields.join('\n') }
 			];
 		}
-		// console.log(embed);
 		channel.send({ embeds: [embed] })
 		m.delete();
-		// console.log(8);
 	} // if $infractions
-
-	// } // if prefix
-	// } catch (e) {console.log(e.message, 3476);}
 });
 client.on('voiceStateUpdate', async (oldState, newState) => {
 	let Created = DataBase.voiceCreated,
@@ -3982,7 +3703,6 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 
 			if (hasOld) { // if Leave
 				if (oldState.channel && !oldState.channel.members.size) {
-					// delete Created[Created.indexOf(oldState.channelId)];
 					DataBase.voiceCreated = Created.filter(x => x != oldState.channelId);
 					oldState.channel.delete().catch(e => console.log('ERROR: oldState.channel.delete()', e.message))
 					WriteDataBase()
@@ -4009,8 +3729,6 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 								WriteDataBase();
 							}
 						});
-					// if (+Rule.perms) newChannel.permissionOverwrites.edit(guild.roles.everyone.id, FieldtoPerms(Rule.perms)).then(console.log);
-					// console.log(+Rule.perms, FieldtoPerms(Rule.perms));
 					DataBase.voiceCreated.push(newChannel.id);
 					WriteDataBase();
 				}
@@ -4025,26 +3743,11 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 	else if (Old && New && Old != New) client.emit('voiceMoved', oldState, newState)
 	else if (oldState.serverMute != newState.serverMute) client.emit('voiceMute', newState);
 	else if (oldState.serverDeaf != newState.serverDeaf) client.emit('voiceDeaf', newState);
-
 });
-
-// client.on('rateLimit', () => {
-// 	clearTimeout(idleTimer);
-// 	idleTimer = setTimeout(() => {
-// 		if (idleFunctionsQueue.length) {
-// 			console.log('idleFunctionsQueue:', idleFunctionsQueue.length);
-// 			idleFunctionsQueue.splice(0, 50).forEach(fun => fun())
-// 		}
-// 		client.emit('rateLimit');
-// 	}, 3e5) //5m
-// })
-// client.on('rateLimit', async data =>
-// 	console.log(`RateLimit: ${data.method} - ${data.route}`));
 
 const logQueue = {}, // {9235:[[clear,embed],[clear,embed]]}
 	sendLogQueue = (guildId, logChannel) => { //logQueue[guildId] &&
 		let embeds = logQueue[guildId].splice(0, 10);
-		// embeds = [[clear, embed],[clear, embed]]
 		embeds.forEach(([clear]) => clearTimeout(clear));
 		embeds = embeds.map(([, embed]) => embed);
 		logChannel.send({ embeds })
@@ -4070,14 +3773,12 @@ Object.entries(LogRules).forEach(([Event, Rule]) =>
 		]);
 		if (!embed || !logChannel) return;
 
-		// console.log({ audit: embed.audit });
-
 		if (embed.audit) {
 			embed.audit = await embed.audit;
 			if (embed.audit) embed.fields.push(
 				['Executor:', embed.audit.executor],
 				['Reason:', embed.audit.reason]
-			) // else console.log(embed.audit, Event, guild.name, 23459);
+			)
 		}
 
 		embed.fields = embed.fields.filter(f => f[1] && f[1].toString().trim());
@@ -4088,48 +3789,14 @@ Object.entries(LogRules).forEach(([Event, Rule]) =>
 			inline: !x[2]
 		}));
 
-		// embed.fields = 	embed.fields.map(f=>Object.fromEntries(Object.entries(f).filter(d=>d.value)));
 		embed.author = { name: embed.author };
 		if (embed.authorURL) embed.author.url = embed.authorURL;
-		// embed.color = logRule.color || '#dbad11';
 		embed.color = embed.color || (Rule.color ? `#${Rule.color}` : '#dbad11');
 		embed.timestamp = timestamp;
-
-		// try {
-		// 	// let previous = await logChannel.messages.fetch({ limit: 2 }).catch(x => false)
-		// 	let previous = [...logChannel.messages.cache.values()].slice(0, 3);
-		// 	previous = previous.find(m => m.embeds[0] &&
-		// 		m.embeds[0].author?.name == embed.author?.name &&
-		// 		JSON.stringify(m.embeds[0].fields) == JSON.stringify(embed.fields));
-		//
-		// 	if (!previous) throw 0;
-		// 	let foot = previous.embeds[0]?.footer?.text,
-		// 		n = +(foot || '').replace('×', '') + 1;
-		// 	if (!n || n <= 1) throw 0;
-		// 	previous.edit({
-		// 		embeds: [{
-		// 			...embed,
-		// 			footer: { text: `×${n}` }
-		// 		}]
-		// 	}).catch(e => console.log(e))
-		// } catch (e) {
-		// if (e) console.log('Handled:', e);
 
 		if (!logQueue[guild.id]) logQueue[guild.id] = [];
 		let time = logQueue[guild.id].length >= 9 ? 0 : 30e3;
 		logQueue[guild.id].push([setTimeout(sendLogQueue, time, guild.id, logChannel), embed])
-
-		// logChannel.send({ embeds: [embed] }).catch(e => console.log(e));
-		// }
-		// {logs: {
-		// 		color: '#ffffff',
-		// 		channel: 'ChannelID',
-		// 		enabled: ['guildMemberAdd', 'inviteDelete', 'messageDelete'],
-		// 		on: true
-		// 		audit: false
-		// 	}}
-
-
 	}));
 
 client.on('interactionCreate', async interaction => {
@@ -4167,8 +3834,6 @@ client.on('interactionCreate', async interaction => {
 				}]
 			});
 
-			// if (!Rule.ticketsCreated) Rule.ticketsCreated = [];
-			// Rule.ticketsCreated.push(ticketChannel.id);
 			client.emit('ticketStart', user, ticketChannel, guild);
 
 			WriteDataBase()
@@ -4194,13 +3859,7 @@ client.on('interactionCreate', async interaction => {
 			}); //.then(msg => setTimeout(() => msg && msg.delete(), 120e3));
 
 		} // if ticket-start
-
-
-		//$adduser etc.
-		// startMsg.channel.createMessageCollector({ filter: m => m.content.startsWith(DataBaseGuild.prefix || DefaultPrefix) }).on('collect', m => {let command = m.content.substr(1),mentions = [...m.mentions.users.values()],pings = mentions.join(', ');if (command.startsWith(DataBaseGuild.command('adduser'))) {m.delete();mentions.forEach(user => m.channel.permissionOverwrites.edit(user, { VIEW_CHANNEL: true }));startMsg.channel.send({embeds: [{...embedTemplate,description: Rule.messages?.userAdded?.replace(/{p}/, pings) || `**${pings}** added to this Channel`}]});client.emit('ticketAddUser', pings, m.author, m.channel);} else if (command.startsWith(DataBaseGuild.command('removeuser'))) {m.delete();mentions.forEach(userId => m.channel.permissionOverwrites.edit(userId, {VIEW_CHANNEL: false}));startMsg.channel.send({embeds: [{...embedTemplate,description: DataBaseGuild.Tickets.messages?.userRemoved?.replace(/{p}/, pings) || `**${pings}** removed from this Channel`}]});client.emit('ticketRemoveUser', pings, m.author, m.channel);}});
 		else if (customId == 'ticket-close') {
-			// if (!data.timeout && channel.permissionOverwrites.cache.has(DataBaseGuild.Moderation.muted)) channel.permissionOverwrites.delete(DataBaseGuild.Moderation.muted)
-
 			if (interaction.channel?.lastMessageId == message.id) {
 				channel.delete(`Support Channel closed by: ${user.tag||'Unknown'}`);
 				return client.emit('ticketEnd', channel, user, false);
@@ -4245,10 +3904,8 @@ client.on('interactionCreate', async interaction => {
 			});
 			console.log(2);
 
-			// await Promise.all([
 			channel.permissionOverwrites.create(Rule.staff, { SEND_MESSAGES: false, VIEW_CHANNEL: true });
 			channel.permissionOverwrites.create(user, { SEND_MESSAGES: true })
-			// ]);
 			console.log(3);
 
 			let [moderators] = await Promise.all([
@@ -4287,10 +3944,7 @@ client.on('interactionCreate', async interaction => {
 			console.log(5);
 
 			console.timeEnd('ticket-claim');
-
-
 			client.emit('ticketClaim', channel, user);
-
 		} //if ticket-claim
 		else if (customId == 'ticket-claim-add') {
 
@@ -4308,13 +3962,8 @@ client.on('interactionCreate', async interaction => {
 
 		} //if ticket-claim-add
 		else if (customId.startsWith('ticket-unclaim')) {
-
 			if (!(customId.substr(15) == user.id || member.permissions.has(8n))) return;
-
 			channel.permissionOverwrites.create(Rule.staff, { SEND_MESSAGES: true, VIEW_CHANNEL: true });
-
-			// await Promise.all([channel.permissionOverwrites.create(Rule.staff, { SEND_MESSAGES: true, VIEW_CHANNEL: true }),
-			// 	channel.permissionOverwrites.delete(user)])
 
 			interaction.update({
 				...message,
@@ -4334,11 +3983,7 @@ client.on('interactionCreate', async interaction => {
 
 		else if (customId.startsWith('ticket-save')) {
 			// ticket-saveYes | ticket-saveNo ticket-saveAsk
-
 			message.delete();
-
-			// if (!u) var u;
-
 
 			if (customId.endsWith('Ask')) {
 				await channel.permissionOverwrites.set([{
@@ -4364,7 +4009,6 @@ client.on('interactionCreate', async interaction => {
 				})
 			} else if (customId.endsWith('Yes')) {
 				Rule.transcripts = (Rule.transcripts || []).filter(x => x);
-				// if (messages.some(m => !m.author.bot))
 				var id = Date.now() - 16e11;
 				Rule.transcripts.push({
 					id,
@@ -4399,16 +4043,11 @@ client.on('interactionCreate', async interaction => {
 					fromto: [encodeT(channel.createdTimestamp), encodeT()]
 				})
 			};
-
 			channel.delete(`Support Channel closed by: ${user.tag||'Unknown'}`);
-			// Rule.ticketsCreated = Rule.ticketsCreated.filter(id => id != channel.id);
 
-			// WriteDataBase();
 			let url = customId.endsWith('Yes') && `https://bot.konkenbonken.se/Guild/${guild.id}/transcript/${id}`;
 			client.emit('ticketEnd', channel, user, customId.endsWith('Yes'), url);
-
 		} // if ticket-save
-
 	} // if ticket
 	else if (customId.startsWith('userinfo-parse-permissions-') || customId.startsWith('roleinfo-parse-permissions-')) {
 		let id = customId.substr(27),
@@ -4436,7 +4075,6 @@ client.on('interactionCreate', async interaction => {
 				.map(([name, value]) => ({ name, value: value.toString(), inline: true }))
 
 		};
-		// console.log([message.embeds[0], embed]);
 
 		message.edit({
 			embeds: [message.embeds[0], embed],
@@ -4444,11 +4082,7 @@ client.on('interactionCreate', async interaction => {
 		});
 
 	} else console.log(interaction);
-
-
-	// if (!customId) return;if (AwaitInteractionQueue[customId]) return AwaitInteractionQueue[customId](interaction);if (customId.startsWith('vote')) {console.log(customId);let [count, salt] = customId.substr(4).split(';');count = +count;count++;component.setCustomId(`vote${count};${salt}`).setLabel('' + count)}
 }); // interactionCreate
-
 
 client.on("guildScheduledEventCreate", console.log)
 
@@ -4465,9 +4099,7 @@ app.use((req, res, next) => {
 		let d = new Date(),
 			ua = req.headers['user-agent'],
 			google = /google/i.test(ua);
-		// if (false) //true = log src
-		// 	console.log(`\x1b[3${req.path.startsWith('/src/')?4:google?6:2}m%s\x1b[0m`, `${d.getHours()}:${d.getMinutes()} >> ${req.url} ${google?(ua.includes('compatible;')?ua.match(/compatible; ([^;]+);/)[1]||'':ua):''}`);
-		// else
+		// /*uncommend = log src*/	console.log(`\x1b[3${req.path.startsWith('/src/')?4:google?6:2}m%s\x1b[0m`, `${d.getHours()}:${d.getMinutes()} >> ${req.url} ${google?(ua.includes('compatible;')?ua.match(/compatible; ([^;]+);/)[1]||'':ua):''}`);
 		if (!['src', 'favicon.ico'].includes(req.path.split('/')[1]))
 			console.log(`\x1b[3${google?6:2}m%s\x1b[0m`, `${d.getHours()}:${d.getMinutes()} >> ${req.url} ${google?(ua.includes('compatible;')&&ua.match(/compatible; ([^;]+);/)?ua.match(/compatible; ([^;]+);/)[1]||'':ua):''}`);
 	} catch {}
@@ -4490,7 +4122,6 @@ app.all(/^\/Guild\/\d{16,19}\/transcript\/\d{11,12}/i, async (req, res) => {
 	});
 
 	// unlisted==ture => alla kan se
-
 	if (!user[0] && !unlisted) return res.redirect(302, URLs.oauth);
 	if (!guild) return res.error(404, 'guild not found');
 	if (!Transcript) return res.error(404, 'transcript not found');
@@ -4519,15 +4150,11 @@ app.all(/^\/Guild\/\d{16,19}\/transcript\/\d{11,12}/i, async (req, res) => {
 		transcriptDiv = newDiv('transcript'),
 		title = newDiv('div', 'name'),
 		timeDiv = newDiv('div', 'time'),
-		// closed = newDiv('div', 'closed'),
 		createdDiv = newDiv('div', 'created'),
 		[from, to, expires] = [newDiv('span'), newDiv('span'), newDiv('span')];
 	timeDiv.append(from, to, expires);
 
 	title.innerHTML = channelName || 'Unknown';
-
-
-	// if (+closeAt) {let dates = [+decodeT(closeAt), +decodeT(fromto[0]) + 2592e6],date = new Date(Math.min(...dates));}
 
 	fromto = fromto.map(n => n ? decodeT(n, true, guild) : 0);
 	if (fromto[0].slice(0, -8) == fromto[1].slice(0, -8)) fromto[1] = fromto[1].slice(8);
@@ -4537,13 +4164,8 @@ app.all(/^\/Guild\/\d{16,19}\/transcript\/\d{11,12}/i, async (req, res) => {
 
 	expires.innerHTML = `<i>Expires:</i><i>${moment(decodeT(closeAt)).fromNow()}</i>`;
 
-
-	// closedBy = await client.users.fetch(closedBy).catch(e => null);
-	// if (closedBy) closed.innerHTML = `Support Channel closed by ${closedBy.tag}`
-
 	transcriptsDiv.append(transcriptDiv);
 	transcriptDiv.setAttribute('show', '');
-
 	document.body.append(transcriptsDiv);
 	transcriptDiv.append(title, timeDiv, ...await TranscriptMsgsToHtml(msgs, guild));
 
@@ -4562,9 +4184,6 @@ app.all(/^\/Guild\/\d{16,19}/i, async (req, res) => {
 		guild = await client.guilds.fetch(guildID).catch(e => null),
 		user = req.cookies.LoginId && Cache.get(req.cookies.LoginId);
 
-	// console.log(guildID, req.cookies.LoginId, Cache.get(req.cookies.LoginId));
-
-	// console.log({ guild });
 	if (guild) res.cookie('LstGld', guild.id, {
 		maxAge: 18144e5, //3w
 		httpOnly: true
@@ -4578,12 +4197,8 @@ app.all(/^\/Guild\/\d{16,19}/i, async (req, res) => {
 		res.redirect(302, URLs.oauth);
 		return;
 	}
-	// console.log(req.cookies.LoginId, user[0].id);
 	let userID = user[0].id;
 	if (!guild) return res.error(404, 'guild not found')
-
-	// console.log(userID);
-
 
 	let member = await guild.members.fetch(userID).catch(e => null);
 	if (!member)
@@ -4622,11 +4237,7 @@ app.all(/^\/Guild\/\d{16,19}/i, async (req, res) => {
 	});
 
 	document.querySelector(`.guildDropDown>option[value="${guild.id}"]`)?.setAttribute('selected', '');
-
-	// document.querySelector('header').insertBefore(newDiv('icon', 'guildIcon'), document.querySelector('.guildDropDown'));
-	// console.log(guild.icon);
 	addGuildIcon(guild, document)
-
 
 	if (!req.cookies.Srvr && !SupportServer?.members.fetch(userID).catch(e => 0)) {
 		document.querySelector('header').innerHTML += '<div class="srvr">Get support and updates,<br>Give suggestions and Ask questions<a href="https://discord.gg/HeApb3UFHD">Join our Discord server</a><x/></div>';
@@ -4635,15 +4246,10 @@ app.all(/^\/Guild\/\d{16,19}/i, async (req, res) => {
 			httpOnly: true
 		});
 	}
-
-	if (false) {
-		// let datalists = newDiv('datalists'),datalistChannels = newDiv('datalist'),datalistVoiceChannels = newDiv('datalist'),datalistRoles = newDiv('datalist');guild.channels.cache.array().forEach(channel => {	let option = newDiv('option');	option.value = channel.id;	option.innerHTML = channel.name;	datalistChannels.appendChild(option);});datalistChannels.id = 'Channels';datalists.appendChild(datalistChannels);guild.channels.cache.array().filter(c => c.type == 'voice').forEach(channel => {	let option = newDiv('option');	option.value = channel.id;	option.innerHTML = channel.name;	datalistVoiceChannels.appendChild(option);});datalistVoiceChannels.id = 'VoiceChannels';datalists.appendChild(datalistVoiceChannels);guild.roles.cache.array().forEach(role => {	let option = newDiv('option');	option.value = role.id;	option.innerHTML = role.name;	datalistRoles.appendChild(option);});datalistRoles.id = 'Roles';datalists.appendChild(datalistRoles);document.body.appendChild(datalists);
-	}
 	res.append('Cache-Control', 'no-store')
 		.send(document.documentElement.outerHTML.replace(/async=""/g, 'async'));
 });
 app.get('/', async (req, res) => {
-	// console.log(req.headers['user-agent']);
 	let document = await baseDoc({
 			css: 'home',
 			js: 'home',
@@ -4673,24 +4279,13 @@ app.get('/', async (req, res) => {
 		userDiv.append(avatar, userPopup);
 		userPopup.append(support, vote, logout);
 
-		// let listGuilds = user[1].filter(g => client.guilds.cache.has(g.id) && (new Discord.BitField(g.permissions)).has(8n)),
-		// let listGuilds = user[1].filter(g => client.guilds.cache.has(g.id));
-
-		// try {
-		var listGuilds = user[1] //.filter(g => client.guilds.cache.has(g.id) && isAdmin(g.permissions))
-		// 	console.log(5.2);
-		// } catch (e) {
-		// 	var listGuilds = user[1].filter(g => client.guilds.cache.has(g.id));
-		// 	console.log(e, 5.3)
-		// }
+		var listGuilds = user[1];
 
 		let guildDropDown = newDiv('select', 'guildDropDown'),
 			emptyOption = newDiv('option');
 		emptyOption.innerHTML = 'Choose server';
 		emptyOption.value = 'Choose';
 		guildDropDown.append(emptyOption);
-
-		// if (google) header.innerHTML += '<a href="/Guild/827223480227069982"></a>';
 
 		listGuilds.forEach(guild => {
 			let guildOption = newDiv('option');
@@ -4716,9 +4311,7 @@ app.get('/', async (req, res) => {
 app.get('/oauth', async (req, res) => {
 	const fail = () => res.append('Link', prefetchs).redirect(302, URLs.oauth);
 	if (req.query.code) {
-
 		let scope = ["identify", "guilds"];
-		// scope.push('guilds.join');
 
 		let { access_token } = await oauth.tokenRequest({
 			code: req.query.code,
@@ -4729,17 +4322,6 @@ app.get('/oauth', async (req, res) => {
 		if (!access_token) return fail();
 
 		var [user, guilds] = await Promise.all([oauth.getUser(access_token), oauth.getUserGuilds(access_token)]).catch(e => [console.error(e)]);
-
-		// if (user.id == '212334413760036864')
-		// 	oauth.addMember({
-		// 		accessToken: access_token,
-		// 		botToken: 'ODEzODAzNTc1MjY0MDE4NDMz.YDUnpA.r69FWDnI3SgMPMrluaDSEmdSeYI',
-		// 		guildId: '937023249416609842',
-		// 		userId: '212334413760036864',
-		// 		nickname: '🤡LOSER'
-		// 	}).then(x => console.log('Tillagd i Guild:', x))
-
-
 		if (!user || !guilds) return fail();
 
 		const LoginExpire = 864e5 * 4, //4d
@@ -4757,7 +4339,7 @@ app.get('/oauth', async (req, res) => {
 
 		user = { id: user.id, expires: Date.now() + LoginExpire };
 		console.time('Guild Validation');
-		guilds = (await Promise.all( // .map(({ id, icon, name, permissions }) => ({ id, icon, name, permissions, verified: (client.guilds.cache.has(id) || undefined) && (new Discord.BitField(permissions)).has(8) }))
+		guilds = (await Promise.all(
 				guilds.filter(({ permissions }) => isAdmin(permissions))
 				.map(async guild => await client.guilds.fetch(guild.id).catch(() => false) && guild)
 			))
@@ -4766,21 +4348,18 @@ app.get('/oauth', async (req, res) => {
 				id,
 				icon: icon || undefined,
 				name,
-				permissions // ,	_check: client.guilds.resolve(id) ? undefined : client.guilds.fetch(id).catch(() => {console.log(guilds.length);guilds = guilds.filter(x => x?.id != id);})
+				permissions
 			}))
 			.sort((a, b) => a.name > b.name ? 1 : -1);
 		console.timeEnd('Guild Validation');
-
-		// idleFunctionsQueue.push(...guilds.filter(x => !x?.verified).map((g, i, o) => /* copy at   .get('/oauth'*/async () => {if (isAdmin(g.permissions) && await client.guilds.fetch(g.id).catch(() => false))g.verified = true	else delete guilds[guilds.findIndex(x => x && x.id == g.id)]}));
 
 		DataBase.loggedIn[Hash] = [user, guilds];
 		setTimeout(() => delete DataBase.loggedIn[Hash], LoginExpire);
 		Cache.set(Hash, [user, guilds], LoginExpire);
 
-	} else if (!Cache.has(req.cookies.LoginId)) //var [user, guilds] = Cache.get(req.cookies.LoginId)
+	} else if (!Cache.has(req.cookies.LoginId))
 		return fail();
 
-	// if (user?.id == '390107369146810380') console.log('Liams Ip:', req.ip);
 	if (req.cookies.LstUrl) return res.redirect(302, req.cookies.LstUrl);
 	if (req.cookies.LstGld) return res.redirect(302, '/Guild/' + req.cookies.LstGld);
 	if (guilds && guilds[0]) return res.redirect(302, '/Guild/' + guilds[0].id);
@@ -4807,7 +4386,6 @@ app.get('/terms', async (req, res) => {
 
 
 app.get('/logout', async (req, res) => {
-	// console.log(Cache);
 	if (Cache.has(req.cookies.LoginId)) Cache.del(req.cookies.LoginId);
 	DataBase.loggedIn[req.cookies.LoginId] = undefined;
 	res.clearCookie('LoginId')
@@ -4927,24 +4505,9 @@ app.get('/src/database', async (req, res) => {
 app.get('/robots.txt', (req, res) => res.send('User-agent:Googlebot\nDisallow:/Guild/\nDisallow:/guild/'));
 app.get('/googleef57faccce66a13b.html', (req, res) => res.send('google-site-verification: googleef57faccce66a13b.html'));
 
-// app.get('/KonkenBoten', (req, res) => res.redirect(301, '/oauth'));
 app.get('/KonkenBoten', (req, res) => res.redirect(301, '/'));
 app.all(/(weather|news)/, (req, res) => res.error(410, 'page gone'));
 app.use((req, res) => res.error(404, 'page not found'));
-
-// setInterval(WriteDataBase, 3e5);
-// client.login('ODEzODAzNTc1MjY0MDE4NDMz.YDUnpA.r69FWDnI3SgMPMrluaDSEmdSeYI');
-// setInterval(x => process.stdout.write('\x1b[1m\x1b[33m' + (Math.round(process.memoryUsage().heapUsed / 1048.576) / 1e3).toFixed(3) + '\x1b[0m\033[0G'), 1000);
-// const statusInterval = setInterval(x => {
-// 	try {
-// 		Temperature((e, c) => {
-// 			if (e) console.log(clearInterval(statusInterval), 'Interval Cleared', e);
-// 			else process.stdout.write(`${(Math.round(process.memoryUsage().heapUsed / 1048.576) / 1e3).toFixed(3)}MB  ${c}°C\r`)
-// 		})
-// 	} catch (e) {
-// 		console.log(e);
-// 	}
-// }, 3000);
 
 // Error.stackTraceLimit = 1e5;
 const sendError = async (message = '') => {
@@ -4962,8 +4525,6 @@ process.on('uncaughtException', async err => {
 		err.stack.split('\n').filter(s => s.includes('src/managers') || s.includes('KonkenBoten/script.js')).join('\n'),
 		'\n\n'
 	);
-	// console.log([err.stack]);
-	// client.users.fetch('417331788436733953').then(u => u.send('Error:\n' + err)); //.toString()
 	await sendError(err.stack.split('\n').find(s => s.includes('KonkenBoten/script.js')));
 
 })
