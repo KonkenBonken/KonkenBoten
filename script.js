@@ -3537,13 +3537,10 @@ client.on('messageCreate', async m => { //Automod
 client.on('interactionCreate', async interaction => { // Slash-Commands
 	if (!(interaction.isCommand() && interaction.inCachedGuild())) return;
 
-	const error = (message, onlyLog = false) => {
-		if (!onlyLog) {
-			let content = 'An error occured';
-			if (message) content += '\n> ' + message;
-			interaction.reply({ content, ephemeral: true });
-		}
-		sendError(`Error in command: ${interaction.commandName}\nmessage:${message}`);
+	const error = message => {
+		let content = 'An error occured';
+		if (message) content += '\n> ' + message;
+		interaction.reply({ content, ephemeral: true });
 	};
 
 	const command = interaction.commandName, //Add support for custom commands
