@@ -2547,15 +2547,6 @@ io.on('connection', async socket => {
 		socket.on("disconnect", (reason) => sendLogLoad(false, 1));
 
 		socket.on('NewGuildSubrcibe', (x, fun) => NewGuildSubrcibers.push([fun, socket.discord.id]));
-		socket.on('GetPrefix', (x, fun) => fun(socket.GuildData?.prefix || DefaultPrefix, DefaultPrefix));
-		socket.on('SetPrefix', (newPrefix, fun) => {
-			if (/^\S$/i.test(newPrefix[0])) {
-				socket.GuildData.prefix = newPrefix[0];
-				fun(newPrefix[0]);
-				WriteDataBase();
-			} else fun(socket.GuildData.prefix || DefaultPrefix);
-			sendLogLoad('Prefix set to ' + socket.GuildData.prefix);
-		});
 		socket.on('Logout', (x, fun) => {
 			try {
 				if (Cache.has(socket.LoginId)) Cache.del(socket.LoginId);
