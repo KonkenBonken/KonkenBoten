@@ -2013,79 +2013,75 @@ const Page = {
 			const automodSettings = newDiv('automodsettings'),
 				automodTitle = newDiv('h2', 'tempautomod').Html('Auto Moderation');
 
-			if (dataBaseGuild.premium) try {
-				const Rule = dataBaseGuild.Moderation?.automod || {},
-					lastOptions = (properties = {}, type) => {
-						const { pnsh = 0, ignChn, ignRls, rsn } = properties;
-						return [
-							h6('Ignored Channels', 'Word use in these channels will be ignored'),
-							Multiple.Channel({ set: ignChn?.map(Snowflake.decode), guild }),
-							h6('Ignored Roles', 'Word use by users with one or more of these roles will be ignored'),
-							Multiple.Role({ set: ignRls?.map(Snowflake.decode), guild }),
-							h6('Action', 'What the bot should do when finding a message containing a foul'),
-							newRange(1, 3, +pnsh, 'action'),
-							h6('Reason', 'The reason to be provided when warning the member and to be sent in the current channel'),
-							newDiv('input', 'reason').Value(rsn || defaultReasons[type])
-						]
-					};
+			const Rule = dataBaseGuild.Moderation?.automod || {},
+				lastOptions = (properties = {}, type) => {
+					const { pnsh = 0, ignChn, ignRls, rsn } = properties;
+					return [
+						h6('Ignored Channels', 'Word use in these channels will be ignored'),
+						Multiple.Channel({ set: ignChn?.map(Snowflake.decode), guild }),
+						h6('Ignored Roles', 'Word use by users with one or more of these roles will be ignored'),
+						Multiple.Role({ set: ignRls?.map(Snowflake.decode), guild }),
+						h6('Action', 'What the bot should do when finding a message containing a foul'),
+						newRange(1, 3, +pnsh, 'action'),
+						h6('Reason', 'The reason to be provided when warning the member and to be sent in the current channel'),
+						newDiv('input', 'reason').Value(rsn || defaultReasons[type])
+					]
+				};
 
-				automodSettings.append(
-					newDiv('automod', 'words').Append(
-						h6('Word Filter', 'Detect blacklisted words'),
-						newToggle(Rule.words),
-						h6('Words', 'The words that will be blacklisted, You can add multiple words at a time by seperating them by a comma(<code>,</code>)'),
-						Multiple.String({ set: Rule.words?.words, guild, csv: true }),
-						...lastOptions(Rule.words, 'words')
-					),
-					newDiv('automod', 'links').Append(
-						h6('Link Filter', 'Detect links in messages'),
-						newToggle(Rule.links),
-						h6('Ignore Url', 'Ignore any link that starts with any of these urls. Example: <code>https://discord.com/</code> or <code>bot.konkenbonken.com/Guild/</code>'),
-						Multiple.String({ set: Rule.links?.ignDom, guild }).Attribute('url'),
-						h6('Ignore Message Links', 'Ignore links starting with <code>https://discord.com/channels/</code>'),
-						newToggle(Rule.links?.ignMsg, 'ignmsg'),
-						...lastOptions(Rule.links, 'links')
-					),
-					newDiv('automod', 'invites').Append(
-						h6('Invite Filter', 'Detect links starting with <code>https://discord.gg/</code> or <code>https://discord.com/invite/</code>'),
-						newToggle(Rule.invites),
-						...lastOptions(Rule.invites, 'invites')
-					),
-					newDiv('automod', 'spam').Append(
-						h6('Spam Filter', 'Detect repeating of identical messages in a row by the same user'),
-						newToggle(Rule.spam),
-						h6('Amount', 'The amount of messages needed'),
-						newRange(2, 10, Rule.spam?.num || 4),
-						...lastOptions(Rule.spam, 'spam')
-					),
-					newDiv('automod', 'caps').Append(
-						h6('Caps Filter', 'Detect usage of capital letters; only for messages longer than 4 letters'),
-						newToggle(Rule.caps),
-						h6('Amount', 'The percentage of messege that needs to be in upper case'),
-						newRange(20, 100, Rule.caps?.num || 70, 'percent'),
-						...lastOptions(Rule.caps, 'caps')
-					),
-					newDiv('automod', 'mentions').Append(
-						h6('Mentions Filter', 'Detect repeating of user mentions in one message'),
-						newToggle(Rule.mentions),
-						h6('Amount', 'The amount of mentions needed'),
-						newRange(2, 20, Rule.mentions?.num || 4),
-						...lastOptions(Rule.mentions, 'mentions')
-					),
-					newDiv('automod', 'zalgo').Append(
-						h6('Zalgo Filter', 'Detect any usage of z̴͕̮̣͔͊͂̔̈́͝a̴͖̩̣̙̬͑͗͑̐l̴̟̼͔̹̝̆ǵ̸̡̢̳̮͈͆̈́͒̇o̸̬̬͍͛'),
-						newToggle(Rule.zalgo),
-						...lastOptions(Rule.zalgo, 'zalgo')
-					)
+			automodSettings.append(
+				newDiv('automod', 'words').Append(
+					h6('Word Filter', 'Detect blacklisted words'),
+					newToggle(Rule.words),
+					h6('Words', 'The words that will be blacklisted, You can add multiple words at a time by seperating them by a comma(<code>,</code>)'),
+					Multiple.String({ set: Rule.words?.words, guild, csv: true }),
+					...lastOptions(Rule.words, 'words')
+				),
+				newDiv('automod', 'links').Append(
+					h6('Link Filter', 'Detect links in messages'),
+					newToggle(Rule.links),
+					h6('Ignore Url', 'Ignore any link that starts with any of these urls. Example: <code>https://discord.com/</code> or <code>bot.konkenbonken.com/Guild/</code>'),
+					Multiple.String({ set: Rule.links?.ignDom, guild }).Attribute('url'),
+					h6('Ignore Message Links', 'Ignore links starting with <code>https://discord.com/channels/</code>'),
+					newToggle(Rule.links?.ignMsg, 'ignmsg'),
+					...lastOptions(Rule.links, 'links')
+				),
+				newDiv('automod', 'invites').Append(
+					h6('Invite Filter', 'Detect links starting with <code>https://discord.gg/</code> or <code>https://discord.com/invite/</code>'),
+					newToggle(Rule.invites),
+					...lastOptions(Rule.invites, 'invites')
+				),
+				newDiv('automod', 'spam').Append(
+					h6('Spam Filter', 'Detect repeating of identical messages in a row by the same user'),
+					newToggle(Rule.spam),
+					h6('Amount', 'The amount of messages needed'),
+					newRange(2, 10, Rule.spam?.num || 4),
+					...lastOptions(Rule.spam, 'spam')
+				),
+				newDiv('automod', 'caps').Append(
+					h6('Caps Filter', 'Detect usage of capital letters; only for messages longer than 4 letters'),
+					newToggle(Rule.caps),
+					h6('Amount', 'The percentage of messege that needs to be in upper case'),
+					newRange(20, 100, Rule.caps?.num || 70, 'percent'),
+					...lastOptions(Rule.caps, 'caps')
+				),
+				newDiv('automod', 'mentions').Append(
+					h6('Mentions Filter', 'Detect repeating of user mentions in one message'),
+					newToggle(Rule.mentions),
+					h6('Amount', 'The amount of mentions needed'),
+					newRange(2, 20, Rule.mentions?.num || 4),
+					...lastOptions(Rule.mentions, 'mentions')
+				),
+				newDiv('automod', 'zalgo').Append(
+					h6('Zalgo Filter', 'Detect any usage of z̴͕̮̣͔͊͂̔̈́͝a̴͖̩̣̙̬͑͗͑̐l̴̟̼͔̹̝̆ǵ̸̡̢̳̮͈͆̈́͒̇o̸̬̬͍͛'),
+					newToggle(Rule.zalgo),
+					...lastOptions(Rule.zalgo, 'zalgo')
 				)
-			} catch (e) { console.log(e); };
+			)
 
 			page.append(
 				// prefixTitle, setPrefixDiv,
-				modTitle, modSettings
-			);
-			if (dataBaseGuild.premium) page.append(automodTitle, automodSettings);
-			page.append(
+				modTitle, modSettings,
+				automodTitle, automodSettings,
 				logsTitle, logSetting,
 				// ,commandsTitle, commandSettings
 				/* ModLogs; läggs till client-side */
@@ -3640,10 +3636,6 @@ io.on('connection', async socket => {
 		console.log({ discordID: socket.discordID, discord: socket.discord, clientUrl: socket.clientUrl, GuildID: socket.GuildID, Guild: socket.Guild, LoginId: socket.LoginId });
 	}
 });
-
-DataBase.guilds['785416126033035264'].premium = 1; //arcombe
-DataBase.guilds['702933462209790013'].premium = 1; //mello
-DataBase.guilds['703665426747621467'].premium = 1; //test
 
 if (!DataBase.temp) DataBase.temp = [];
 if (!DataBase.voiceCreated) DataBase.voiceCreated = [];
