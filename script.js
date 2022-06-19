@@ -82,7 +82,7 @@ const NewGuildSubrcibers = [],
 	},
 	oauth = new(Import_discordOauth2)({
 		clientId: ClientID,
-		clientSecret: "wn-BWF8mQv0xSkSDfNEG2HE7eos6caIM",
+		clientSecret: process.env.OAUTH,
 		redirectUri: RedirectTo.de
 	}),
 
