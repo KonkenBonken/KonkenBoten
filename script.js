@@ -2435,6 +2435,7 @@ const setGuildCustomCommands = guild => {
 				rule.content.ttl || rule.content.desc :
 				rule.content.substring(0, 100)) ||
 			'Custom Command',
+		defaultPermission: !rule.disabled,
 	})))
 };
 
@@ -3577,8 +3578,6 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 		return sendError(`Command not found: ${subCommand} ${interaction.commandName}`);
 
 	let rule = GuildData.TextCommandRules[textCommandList.indexOf(command)];
-
-	if (rule.disabled) return;
 
 	if (rule.roles?.length && [...m.member.roles.cache.keys()].some(id => rule.roles.includes(id)) || m.member.permissions.has(8n))
 		return error('You do not have permission to use this command');
