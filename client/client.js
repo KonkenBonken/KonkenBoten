@@ -673,13 +673,9 @@ let DebugTest; {
 			commandInput = newDiv('input', 'command'),
 			contentInput = newDiv('textarea', 'content'),
 			embedToggle = newDiv('input', 'embedtoggle'),
-			roles = newDiv('div', 'roles'),
-			addRoleH5 = newDiv('h5'),
-			addRole = newDiv('div', 'addrole'),
 			set = newDiv('div', 'set'),
 			channelSelect = newDiv('select'),
 			userLimit = newDiv('input', 'userlimit'),
-			Roles,
 			embed, authorText, authorImg, thumbnail, footerImg, image, title, footerText, colorDiv, color;
 
 		commandInput.placeholder = res.command || res.channelname || command || voice ? 'Channel name' : 'command';
@@ -720,8 +716,6 @@ let DebugTest; {
 			contentInput.value = res.content || '';
 			embedToggle.type = 'checkbox';
 			embedToggle.checked = !!res.embed;
-			addRoleH5.innerHTML = 'Allowed Roles';
-			addRoleH5.append(infoPopup('Only members with at least one of these roles can use this command'));
 
 			embed = newDiv('div', 'embed'),
 				authorText = newDiv('input', 'author'),
@@ -761,7 +755,7 @@ let DebugTest; {
 			color.addEventListener('input', setBorder);
 			setBorder();
 
-			editRule.append(commandInput, embed, embedToggle, addRoleH5, roles, set);
+			editRule.append(commandInput, embed, embedToggle, set);
 
 			[authorImg, thumbnail, image, footerImg].forEach(el => el.addEventListener('click', e => {
 				if (!e.target.matches('.urlInput,.urlInput *')) {
@@ -804,42 +798,6 @@ let DebugTest; {
 				[footerImg, res.content.ftr.img]
 			].forEach(([el, url]) => { if (url) el.style.setProperty('--img', `url(${el.imageURL = url})`) })
 
-
-			Roles = res.roles || [];
-			let idToRole = id => {
-					let role = newDiv('div', 'role'),
-						roleData = datalistRoles[id];
-					if (!roleData) return '';
-					role.innerHTML = roleData.name;
-					role.setAttribute('ttl', role.id = id);
-					if (roleData.color) role.style.setProperty('--clr', roleData.color);
-					role.addEventListener('click', e => {
-						delete Roles[Roles.indexOf(id)];
-						e.target.remove();
-					});
-					return role;
-				},
-				addRoleToList = id => {
-					roles.append(idToRole(id));
-					Roles.push(id);
-				};
-
-			roles.append(addRole, ...(Roles || []).map(idToRole));
-
-			addRole.addEventListener('click', () => awaitDatalists.then(() => {
-				if ((oldEl = addRole.q('.listSelector'))) return oldEl.remove();
-				let roleSelector = newDiv('div', 'listSelector');
-				roleSelector.append(...Object.values(datalistRoles).filter(r => !Roles.includes(r.id) && r.name != '@everyone').map(role => {
-					let roleDiv = newDiv('div');
-					roleDiv.setAttribute('ttl', roleDiv.id = role.id);
-					roleDiv.innerHTML = role.name;
-					if (role.color) roleDiv.style.setProperty('--clr', role.color);
-					roleDiv.addEventListener('click', e => { if (window.getSelection().type != "Range") addRoleToList(role.id) });
-					return roleDiv;
-				}));
-				addRole.append(roleSelector);
-			}));
-
 			let setCounter = () => image.setAttribute('counter', `${contentInput.value.length}/2000`);
 			setCounter();
 
@@ -872,7 +830,6 @@ let DebugTest; {
 			} else {
 				data = {
 					command: commandInput.value = commandInput.value.replace(/\s/g, '').substr(0, 30).toLowerCase(),
-					roles: Roles.filter(x => /^\d+$/.test(x)),
 					embed: embedToggle.checked || undefined
 				};
 				if (embedToggle.checked)

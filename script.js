@@ -3579,9 +3579,6 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 
 	let rule = GuildData.TextCommandRules[textCommandList.indexOf(command)];
 
-	if (rule.roles?.length && [...m.member.roles.cache.keys()].some(id => rule.roles.includes(id)) || m.member.permissions.has(8n))
-		return error('You do not have permission to use this command');
-
 	let message = rule.content;
 	if (rule.embed) message = {
 		embeds: [{
