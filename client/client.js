@@ -871,7 +871,7 @@ let DebugTest; {
 				};
 			} else {
 				data = {
-					command: commandInput.value = commandInput.value.replace(/\s/g, '').substr(0, 30),
+					command: commandInput.value = commandInput.value.replace(/\s/g, '').substr(0, 30).toLowerCase(),
 					roles: Roles.filter(x => /^\d+$/.test(x)),
 					embed: embedToggle.checked || undefined
 				};

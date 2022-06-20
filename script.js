@@ -2425,6 +2425,19 @@ const defaultReasons = {
 const isTicket = channel =>
 	c.topic?.startWith('Support Channel created by');
 
+const setGuildCustomCommands = guild => {
+	const TextCommandRules = DataBase.guilds[guild].TextCommandRules;
+	if (!TextCommandRules) return;
+
+	guild.commands.set(TextCommandRules.map(rule => ({
+		name: rule.command.substring(0, 32).toLowerCase(),
+		description: (rule.embed ?
+				rule.content.ttl || rule.content.desc :
+				rule.content.substring(0, 100)) ||
+			'Custom Command',
+	})))
+};
+
 const Snowflake = {
 	_alphabet: '0123456789!#$%&()*+,-./:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz|{}~¡¢£¤¥¦§¨©«°±´µ¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿĀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƞƟƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǁǂǃǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǴǵǶǷǸǹǺǻǼǽǾǿȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗșȚțȝȞȟȠȡȢȣȤȥȦȧȨȩȫȬȭȮȯȰȱȲȳȵȺȻȼȽȾȿɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏḂḃḊḋḞḟṀṁṖṗṠṡṪṫẀẁẂẃẄẅẛỲỳ',
 	encode: id => {
@@ -2738,7 +2751,7 @@ io.on('connection', async socket => {
 
 				functions[key](data);
 				if (!socket.GuildData.TextCommandRules.length) socket.GuildData.TextCommandRules = undefined;
-
+				else setGuildCustomCommands(socket.Guild)
 				WriteDataBase();
 			} catch (e) {
 				fun(null, e)
@@ -3389,6 +3402,8 @@ client.on('ready', async () => {
 			options: Object.entries(options).map(([name, option]) => ({ name, ...option })),
 		}))
 	);
+	for (var guild of client.guilds.cache.values())
+		setGuildCustomCommands(guild);
 });
 
 client.on("guildCreate", async guild => {
@@ -3543,69 +3558,53 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 		interaction.reply({ content, ephemeral: true });
 	};
 
-	const command = interaction.commandName, //Add support for custom commands
+	const command = interaction.commandName,
 		commandObj = commands.find(c => c.com == command);
 
-	if (!commandObj) return sendError(`Command not found: ${subCommand} ${interaction.commandName}`);
+	if (commandObj) {
+		var options = Object.fromEntries(Object.keys(commandObj.options || {}).map(name => {
+			const arg = interaction.options.get(name),
+				value = ['value', 'user', 'member', 'channel', 'role'].find(type => arg[type]);
+			return [name, value];
+		}))
 
-	var options = Object.fromEntries(Object.keys(commandObj.options || {}).map(name => {
-		const arg = interaction.options.get(name),
-			value = ['value', 'user', 'member', 'channel', 'role'].find(type => arg[type]);
-		return [name, value];
-	}))
+		return commandObj.handler(options, interaction, { error, GuildData /*,interaction*/ });
+	}
+	// Custom Commands
 
-	commandObj.handler(options, interaction, { error, GuildData /*,interaction*/ });
+	const textCommandList = GuildData.TextCommandRules?.map(x => x.command.toLowerCase());
+	if (!textCommandList?.includes(command))
+		return sendError(`Command not found: ${subCommand} ${interaction.commandName}`);
 
+	let rule = GuildData.TextCommandRules[textCommandList.indexOf(command)];
 
+	if (rule.disabled) return;
+
+	if (rule.roles?.length && [...m.member.roles.cache.keys()].some(id => rule.roles.includes(id)) || m.member.permissions.has(8n))
+		return error('You do not have permission to use this command');
+
+	let message = rule.content;
+	if (rule.embed) message = {
+		embeds: [{
+			author: {
+				name: rule.content.athr.nm,
+				iconURL: rule.content.athr.img
+			},
+			title: rule.content.ttl,
+			description: rule.content.desc,
+			footer: {
+				text: rule.content.ftr.nm,
+				iconURL: rule.content.ftr.img
+			},
+			thumbnail: { url: rule.content.thmb },
+			image: { url: rule.content.img },
+			color: `#${rule.content.clr||'dbad11'}`
+		}]
+	};
+
+	interaction.channel.send(message);
 }); // Slash-Commands
 
-
-client.on('messageCreate', async m => { //Prefixed
-	if (!m.guild) return;
-	// try {
-	const GuildData = DataBase.guilds[m.guild.id] || {},
-
-		error = () => {
-			setTimeout(() => m.delete(), 20e3);
-			m.react('❌');
-			console.trace('❌');
-		};
-
-	if (!(m.content.startsWith(GuildData.prefix || DefaultPrefix))) return;
-
-	let textCommandList = GuildData.TextCommandRules?.map(x => x.command.toLowerCase()),
-		command = m.content.split(' ')[0].substr(1).toLowerCase();
-	if (textCommandList?.includes(command)) {
-		let rule = GuildData.TextCommandRules[textCommandList.indexOf(command)];
-		if (!rule.disabled && (!rule.roles || !rule.roles[0] || [...m.member.roles.cache.keys()].some(id => rule.roles.includes(id)) || m.member.permissions.has(8n))) {
-
-			let message = rule.content;
-			if (rule.embed) message = {
-				embeds: [{
-					author: {
-						name: rule.content.athr.nm,
-						iconURL: rule.content.athr.img
-					},
-					title: rule.content.ttl,
-					description: rule.content.desc,
-					footer: {
-						text: rule.content.ftr.nm,
-						iconURL: rule.content.ftr.img
-					},
-					thumbnail: { url: rule.content.thmb },
-					image: { url: rule.content.img },
-					color: `#${rule.content.clr||'dbad11'}`
-				}]
-			};
-			// if (rule.embed && rule.content.pings) message.content = rule.content.pings.map(id => `<@&${id}>`).join()
-			// if (rule.embed && rule.content.ping) message.content = `<@&${rule.content.ping}>`;
-
-			m.channel.send(message).catch(e => console.log('\n\n', e, message, '013487\n\n'))
-			m.delete();
-			return;
-		}
-	} //if textCommand
-});
 client.on('voiceStateUpdate', async (oldState, newState) => {
 	let Created = DataBase.voiceCreated,
 		guild = (newState || oldState).guild,
