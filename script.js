@@ -2753,7 +2753,7 @@ io.on('connection', async socket => {
 
 				functions[key](data);
 				if (!socket.GuildData.TextCommandRules.length) socket.GuildData.TextCommandRules = undefined;
-				else setGuildCustomCommands(socket.Guild)
+				else if (key != 'get') setGuildCustomCommands(socket.Guild)
 				WriteDataBase();
 			} catch (e) {
 				fun(null, e)
