@@ -2436,6 +2436,7 @@ const setGuildCustomCommands = guild => {
 				rule.content.substring(0, 100)) ||
 			'Custom Command',
 		defaultPermission: !rule.disabled,
+		dm_permission: false
 	})))
 };
 
@@ -3395,11 +3396,12 @@ client.on('ready', async () => {
 	setInterval(setInvites, 72e5); //2h
 	setInterval(TopggSend, 864e5); //24h
 
-	await client.application.commands.set(
+	client.application.commands.set(
 		commands.map(({ com: name, des: description, options, default: defaultPermission }) => ({
 			name,
 			description,
 			defaultPermission,
+			dm_permission: false,
 			options: Object.entries(options).map(([name, option]) => ({ name, ...option })),
 		}))
 	);
