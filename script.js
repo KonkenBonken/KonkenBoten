@@ -2435,6 +2435,7 @@ const setGuildCustomCommands = guild => {
 				rule.content.ttl || rule.content.desc :
 				rule.content.substring(0, 100)) ||
 			'Custom Command',
+                options: [{name:'private', type:'BOOLEAN',description:'Only show output to the executor',required:false}],
 		defaultPermission: !rule.disabled,
 		dm_permission: false
 	})))
@@ -3597,7 +3598,8 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 			thumbnail: { url: rule.content.thmb },
 			image: { url: rule.content.img },
 			color: `#${rule.content.clr||'dbad11'}`
-		}]
+		}],
+                ephemeral: interaction.options.getBoolean('private')
 	};
 
 	interaction.channel.send(message);
