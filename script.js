@@ -3549,7 +3549,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 			return [name, arg[value]];
 		}))
 
-		return commandObj.handler(options, interaction, { error, GuildData /*,interaction*/ });
+		return commandObj.handler(options, interaction, { error, GuildData, reply: interaction.reply.bind(interaction) });
 	}
 	// Custom Commands
 
