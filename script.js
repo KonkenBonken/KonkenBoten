@@ -2531,7 +2531,9 @@ moment._ZoneLookup = { cs: 'CZ', da: 'DK', el: 'GR', hi: 'IN', ja: 'JP', ko: 'KP
 moment.ZoneLookup = locale => moment.tz._countries[
 	moment._ZoneLookup[locale] ?? locale.toUpperCase().replace(/^..-/, '')
 ]?.zones[0];
-moment().constructor.prototype.guild = guild => moment.tz(moment.ZoneLookup(guild.preferredLocale));
+moment().constructor.prototype.guild = function (guild) {
+	return this.tz(moment.ZoneLookup(guild.preferredLocale));
+};
 
 // Socket.io - socket
 
