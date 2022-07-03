@@ -3542,9 +3542,11 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 
 	if (commandObj) {
 		var options = Object.fromEntries(Object.keys(commandObj.options || {}).map(name => {
-			const arg = interaction.options.get(name),
-				value = ['value', 'user', 'member', 'channel', 'role'].find(type => arg[type]);
-			return [name, value];
+			const arg = interaction.options.get(name);
+			if (arg === null)
+				return [name, arg];
+			const value = ['value', 'user', 'member', 'channel', 'role'].find(type => arg[type]);
+			return [name, arg[value]];
 		}))
 
 		return commandObj.handler(options, interaction, { error, GuildData /*,interaction*/ });
