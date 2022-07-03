@@ -2174,46 +2174,10 @@ const Page = {
 			// 	// },
 			// 	// staff: '9476457896',
 			// }
-			resolver([page, title, id, 'suggestions']);
 			if (dataBaseGuild.Suggestions.isEmpty()) dataBaseGuild.Suggestions = undefined;
-		}),
-		levels: (guild, title, id) => new Promise(async resolver => {
-			const dataBaseGuild = DataBase.guilds[guild.id] || {};
-			dataBaseGuild.levels = dataBaseGuild.levels || {}
-			const Rule = dataBaseGuild.levels,
-				page = await basePage({ id, title }),
-				levelSettings = newDiv('suggestSettings');
 
-
-			suggestSettings.append(
-				newDiv('h5').Html('Toggle Levels'),
-				newToggle(Rule.enabled),
-				h6('Ignore Support Channels', 'If on, no experience will be gained from chatting in Support Channels'),
-				newToggle(Rule.ignTicket),
-				h6('Experience cooldown', 'A member will only gain experience once in this timeframe'),
-				newRange(1, 6, +Rule.interval || 3, 'cooldown'),
-				h6('Experience multiplier', 'A member will gain this much experience per sent message'),
-				newRange(1, 4, +Rule.multiplier || 1, 'multiplier')
-			);
-
-
-			// (levels: {
-			// 	enabled: true,
-			// 	ignTicket: true,
-			// 	roles: { "ƚȰơǜȩy": 1, "ƚȰơǜȩy": 10 }, // level memeber gets role
-			// 	interval: 1, // min cooldown // 1:10s, 2:30s, 3|undef:1m, 4:2m, 5:5m, 6:10m
-			// 	multiplier: 1,
-			// 	rank: { "ƚȰơǜȩy": 50, "ƚȰơǜȩy": 1 }
-			// })
-
-			page.append(
-				newDiv('h2').Html('Levels'),
-				suggestSettings
-			);
-
-			resolver([page, title, id, 'levels']);
-			if (dataBaseGuild.levels.isEmpty()) dataBaseGuild.levels = undefined;
-		}),
+			resolver([page, title, id, 'suggestions']);
+		})
 	},
 	encodeT = n => Math.round((n || Date.now()) / 6e4 - 271e5), // Date ->  T
 	decodeT = (n, parse = false, guild) => { // T   -> Date
