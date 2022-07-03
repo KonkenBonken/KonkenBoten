@@ -2390,7 +2390,7 @@ const isTicket = channel =>
 	c.topic?.startWith('Support Channel created by');
 
 const setGuildCustomCommands = guild => {
-	const TextCommandRules = DataBase.guilds[guild].TextCommandRules;
+	const TextCommandRules = DataBase.guilds[guild.id].TextCommandRules;
 	if (!TextCommandRules) return;
 
 	guild.commands.set(TextCommandRules.map(rule => ({
@@ -3378,7 +3378,8 @@ client.on('ready', async () => {
 		}))
 	);
 	for (var guild of client.guilds.cache.values())
-		setGuildCustomCommands(guild);
+		if (guild.id in DataBase.guilds)
+			setGuildCustomCommands(guild);
 });
 
 client.on("guildCreate", async guild => {
