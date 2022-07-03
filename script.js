@@ -2392,21 +2392,23 @@ const setGuildCustomCommands = guild => {
 	const TextCommandRules = DataBase.guilds[guild.id].TextCommandRules;
 	if (!TextCommandRules) return;
 
-	guild.commands.set(TextCommandRules.map(rule => ({
-		name: rule.command.substring(0, 32).toLowerCase(),
-		description: (rule.embed ?
-				rule.content.ttl || rule.content.desc :
-				rule.content.substring(0, 100)) ||
-			'Custom Command',
-		options: [{
-			name: 'private',
-			type: 'BOOLEAN',
-			description: 'Only show output to the executor',
-			required: false
-		}],
-		defaultPermission: !rule.disabled,
-		dm_permission: false
-	})))
+	for (const rule of TextCommandRules)
+		guild.commands.create({
+			name: rule.command.substring(0, 32).toLowerCase(),
+			description: (rule.embed ?
+					rule.content.ttl || rule.content.desc :
+					rule.content.substring(0, 100)) ||
+				'Custom Command',
+			options: [{
+				name: 'private',
+				type: 'BOOLEAN',
+				description: 'Only show output to the executor',
+				required: false
+			}],
+			defaultPermission: !rule.disabled,
+			dm_permission: false
+		})
+		.catch(() => console.log('No commands scope in', guild.name, guild.id))
 };
 
 const Snowflake = {
