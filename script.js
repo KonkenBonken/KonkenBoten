@@ -75,9 +75,8 @@ const NewGuildSubrcibers = [],
 	RedirectTo = { de: 'https://bot.konkenbonken.se/oauth', en: 'https%3A%2F%2Fbot.konkenbonken.se%2Foauth' },
 	URLs = {
 		oauth: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&redirect_uri=${RedirectTo.en}&scope=identify%20guilds&response_type=code`,
-		/*%20guilds.join*/
-		bot: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&permissions=8&scope=bot`,
-		botRedirect: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&redirect_uri=${RedirectTo.en}&permissions=8&scope=bot&response_type=code`
+		bot: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&permissions=8&scope=bot%20applications.commands`,
+		botRedirect: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&redirect_uri=${RedirectTo.en}&permissions=8&scope=bot%20applications.commands&response_type=code`
 	},
 	oauth = new(Import_discordOauth2)({
 		clientId: ClientID,
@@ -4380,6 +4379,8 @@ app.get('/src/database', async (req, res) => {
 	if (userid == '417331788436733953') res.json(DataBase)
 	else res.error(403, 'no permissions');
 });
+
+app.get('/allow-commands', (req, res) => res.redirect(301, `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&scope=applications.commands`));
 
 app.get('/robots.txt', (req, res) => res.send('User-agent:Googlebot\nDisallow:/Guild/\nDisallow:/guild/'));
 app.get('/googleef57faccce66a13b.html', (req, res) => res.send('google-site-verification: googleef57faccce66a13b.html'));
