@@ -3529,6 +3529,8 @@ client.on('messageCreate', async m => { //Automod
 client.on('interactionCreate', async interaction => { // Slash-Commands
 	if (!(interaction.isCommand() && interaction.inCachedGuild())) return;
 
+	const GuildData = DataBase.guilds[interaction.guildId];
+
 	const error = message => {
 		let content = 'An error occured';
 		if (message) content += '\n> ' + message;
