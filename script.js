@@ -3403,10 +3403,10 @@ client.on('ready', async () => {
 	setInterval(TopggSend, 864e5); //24h
 
 	client.application.commands.set(
-		commands.map(({ com: name, des: description, options, default: defaultPermission }) => ({
+		commands.map(({ com: name, des: description, options }) => ({
 			name,
 			description,
-			defaultPermission,
+			defaultPermission: false,
 			dm_permission: false,
 			options: Object.entries(options).map(([name, option]) => ({ name, ...option })),
 		}))
