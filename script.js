@@ -2435,7 +2435,7 @@ const setGuildCustomCommands = guild => {
 				rule.content.ttl || rule.content.desc :
 				rule.content.substring(0, 100)) ||
 			'Custom Command',
-                options: [{
+		options: [{
 			name: 'private',
 			type: 'BOOLEAN',
 			description: 'Only show output to the executor',
@@ -3604,7 +3604,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 			image: { url: rule.content.img },
 			color: `#${rule.content.clr||'dbad11'}`
 		}],
-                ephemeral: !!interaction.options.getBoolean('private')
+		ephemeral: !!interaction.options.getBoolean('private')
 	};
 
 	interaction.channel.send(message);
