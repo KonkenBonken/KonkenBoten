@@ -3545,7 +3545,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 			const arg = interaction.options.get(name);
 			if (arg === null)
 				return [name, arg];
-			const value = ['value', 'user', 'member', 'channel', 'role'].find(type => arg[type]);
+			const value = ['user', 'member', 'channel', 'role', 'value'].find(type => arg[type]);
 			return [name, arg[value]];
 		}))
 
