@@ -2615,23 +2615,22 @@ const moderationCommands = { // logs.push -> { type, reason, staff, member, date
 				//responseType == ['approve', 'deny', 'consider']
 				try {
 					if (!(guild && reason && +index && responseType)) throw 1;
-					// console.log(12);
+
 					let Rule = DataBase.guilds[guild.id].Suggestions,
 						suggestion = Rule.suggestions[index],
 						channel = await client.channels.fetch(Rule.channels.response).catch(() => false),
-						member = await guild.members.fetch(suggestion.user).catch(() => false);
+						suggestionUser = await client.users.fetch(suggestion.user).catch(() => undefined);
 
-					if (!(channel && member)) return reject(536342);
+					if (!channel) return reject('Channel not found');
 
 					reason = reason.substr(0, 1024);
 
-					// console.log(13);
 					let [msg, suggestChannel] = await Promise.all([channel.send({
 							embeds: [{
 								color: parseInt(Rule.embed.colors[responseType], 16),
 								author: {
-									iconURL: member?.user.displayAvatarURL(),
-									name: member?.user.tag || 'Unknown'
+									iconURL: suggestionUser?.displayAvatarURL(),
+									name: suggestionUser?.tag || 'Unknown'
 								},
 								title: `${Rule.embed.suggestion} #${index} ${Rule.embed[responseType]}`,
 								description: suggestion.suggestion,
@@ -2643,9 +2642,7 @@ const moderationCommands = { // logs.push -> { type, reason, staff, member, date
 						}).catch(e => null),
 						client.channels.fetch(Rule.channels.suggest).catch(e => null)
 					]), suggestionMsg = await suggestChannel.messages.fetch(suggestion.msg).catch(e => null);
-					// suggestChannel = await client.channels.fetch(Rule.channels.suggest).catch(e => null),
-					// suggestionMsg = await suggestChannel.messages.fetch(suggestion.msg).catch(e => null);
-					// console.log(14);
+
 					if (!(msg && suggestChannel && suggestionMsg)) throw 2;
 
 					suggestChannel.messages.edit(suggestionMsg, {
