@@ -2481,7 +2481,7 @@ Object.entries(DataBase.loggedIn).forEach(([id, data]) => {
 
 })
 
-const commands = Import_commands({ client, Duration, CleanDate, capital, moment, ParseModLogs, ObjectMerge, MutedPermissions, encodeT, DataBase, WriteDataBase, newDiv });
+const commands = Import_commands({ client, Duration, CleanDate, capital, moment, ParseModLogs, ObjectMerge, MutedPermissions, encodeT, DataBase, WriteDataBase, newDiv, SuggestRespond });
 
 app.response.error = async function (code, message) { // wont return response | not chainable
 	const document = await baseDoc({
