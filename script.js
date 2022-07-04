@@ -3559,6 +3559,8 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 
 	let rule = GuildData.TextCommandRules[textCommandList.indexOf(command)];
 
+	const priv = !!interaction.options.getBoolean('private');
+
 	let message = rule.content;
 	if (rule.embed) message = {
 		embeds: [{
@@ -3576,10 +3578,18 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 			image: { url: rule.content.img },
 			color: `#${rule.content.clr||'dbad11'}`
 		}],
-		ephemeral: !!interaction.options.getBoolean('private')
+		ephemeral: priv
 	};
 
-	interaction.channel.send(message);
+	if (priv)
+		interaction.reply(message);
+	else {
+		interaction.channel.send(message);
+		interaction.reply({
+			content: 'Successfully sent',
+			ephemeral: true
+		});
+	}
 }); // Slash-Commands
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
