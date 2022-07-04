@@ -2241,8 +2241,10 @@ const AllMessages = channel => new Promise(async resolver => {
 			//responseType == 'approve'|'deny'|'consider'
 			if (!(guild && user && reason && +index && responseType)) return reject('Unknown error');
 			let Rule = DataBase.guilds[guild.id].Suggestions,
-				suggestion = Rule.suggestions[index],
-				channel = await client.channels.fetch(Rule.channels.response).catch(() => false),
+				suggestion = Rule.suggestions[index];
+			if (!suggestion) return reject('Suggestion not found');
+
+			let channel = await client.channels.fetch(Rule.channels.response).catch(() => false),
 				member = await guild.members.fetch(suggestion.user).catch(() => false);
 
 			if (!channel) return reject('Response Channel not found');
