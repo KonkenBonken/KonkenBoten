@@ -2407,7 +2407,7 @@ const setGuildCustomCommands = guild => {
 				description: 'Only show output to the executor',
 				required: false
 			}],
-			defaultPermission: !rule.disabled,
+			defaultPermission: false,
 			dm_permission: false
 		})
 		.catch(() => console.log('No commands scope in', guild.name, guild.id))
