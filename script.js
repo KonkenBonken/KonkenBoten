@@ -1410,11 +1410,11 @@ const Page = {
 			create.innerHTML = 'Add a Custom Command';
 
 			if (dataBaseGuild.TextCommandRules.length)
-				rules.append(...dataBaseGuild.TextCommandRules.map(({ command, content, embed, disabled }) =>
+				rules.append(...dataBaseGuild.TextCommandRules.map(({ command, content, embed }) =>
 					newDiv('rule').Append(
 						newDiv('h1').Html(command),
 						newDiv('h2').Html((embed ? [content.ttl, content.desc, content.ftr?.nm].filter(x => x).join(' - ') : content).substr(0, 90)),
-						newToggle(!disabled), newDiv('edit'), newDiv('remove')
+						newDiv('edit'), newDiv('remove')
 					)
 				));
 			rules.append(newDiv('empty'));
@@ -1425,7 +1425,7 @@ const Page = {
 			// 	content: 'pong',
 			// 	content: { athr: { img: 'url', nm: '' }, ttl: '', desc: '', clr: 'ff00ff', thmb: 'url', img: 'url', ftr: { img: 'url', nm: '' } }, //if embed
 			// 	roles: ['9764897', '925646'],
-			// 	disabled: false,
+			// 	// 	disabled: false,
 			// 	planned: [{ c: '934787687', d: 1625590757 }] //sec | Math.floor(Date.now()/6e4)
 			// }
 
@@ -2717,12 +2717,6 @@ io.on('connection', async socket => {
 						let removed = len - Rules.length;
 						fun(removed > 0);
 						sendLogLoad('Custom Command deleted: ' + socket.GuildData.prefix + command)
-					},
-					toggle: (command) => {
-						let rule = Rules.map((x, i) => [x, i]).find(x => x[0].command == command);
-						if (rule) Rules[rule[1]].disabled = !Rules[rule[1]].disabled;
-						fun(!Rules[rule[1]].disabled);
-						sendLogLoad('Custom Command ' + (Rules[rule[1]].disabled ? 'disabled: ' : 'enabled: ') + socket.GuildData.prefix + command)
 					}
 				};
 

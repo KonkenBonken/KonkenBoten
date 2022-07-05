@@ -662,10 +662,8 @@ let DebugTest; {
 			if (err) { alert('An error occurred'); return console.debug(err) };
 			if (!res) {
 				alert(emit + ' not found');
-				// openSetCommand();
 				return resolver(console.debug({ res }))
 			};
-			// console.log(res);
 		}
 
 		let editRule = newDiv('editrule'),
@@ -875,7 +873,7 @@ let DebugTest; {
 
 							edit.addEventListener('click', e => commandsEditEvent(edit, voice));
 							remove.addEventListener('click', e => commandsRemoveEvent(remove, voice));
-							toggle.firstChild.addEventListener('change', e => commandsToggleEvent(toggle.firstChild, voice));
+							if (voice) toggle.firstChild.addEventListener('change', e => commandsToggleEvent(toggle.firstChild));
 							querySelector((voice ? '#voice' : '#commands') + '>rules').append(ruleDiv);
 							stopLoad('New ' + (voice ? 'Dynamic Voice Channel' : 'Custom Command') + ' set')
 						}
@@ -902,18 +900,18 @@ let DebugTest; {
 				setTimeout(() => remove.removeAttribute('sure'), 2000);
 			}
 		},
-		commandsToggleEvent = (toggle, voice) => {
+		commandsToggleEvent = toggle => {
 			let stopLoad = logLoad();
-			socket.emit(voice ? 'Voice' : 'Command', ['toggle', toggle.parentElement.parentElement.q(voice ? 'h2' : 'h1').innerHTML], (enabled, err) => {
+			socket.emit('Voice', ['toggle', toggle.parentElement.parentElement.q('h2').innerHTML], (enabled, err) => {
 				if (err) console.debug(err, alert('An error occurred'));
 				if (enabled != null) toggle.checked = enabled;
-				stopLoad((voice ? 'Dynamic Voice Channel' : 'Custom Command') + (enabled ? ' enabled' : ' disabled'))
+				stopLoad('Dynamic Voice Channel ' + (enabled ? 'enabled' : 'disabled'))
 			});
 		};
 	awaitLoad.then(() => {
 		[...querySelectorAll(':is(#commands,#voice) edit')].forEach(edit => edit.addEventListener('click', e => commandsEditEvent(edit, edit.matches('#voice *'))));
 		[...querySelectorAll(':is(#commands,#voice) remove')].forEach(remove => remove.addEventListener('click', e => commandsRemoveEvent(remove, remove.matches('#voice *'))));
-		[...querySelectorAll(':is(#commands,#voice) label>input')].forEach(toggle => toggle.addEventListener('change', e => commandsToggleEvent(toggle, toggle.matches('#voice *'))));
+		[...querySelectorAll(':is(#voice) label>input')].forEach(toggle => toggle.addEventListener('change', e => commandsToggleEvent(toggle)));
 	});
 
 	// DebugTest = () =>
