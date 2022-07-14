@@ -1432,7 +1432,7 @@ const Page = {
 			let commandSettings = newDiv('commandSettings'),
 				commandsTitle = newDiv('h2'),
 				commandList = newDiv('div', 'commandList');
-			commandsTitle.innerHTML = 'Command Settings';
+			commandsTitle.innerHTML = 'Commands';
 			commandSettings.append(commandList);
 
 			commandList.append(...commands.map(({ com, des, /*beUsed,*/ format = '' }) => {
