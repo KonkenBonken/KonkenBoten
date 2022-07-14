@@ -1437,17 +1437,16 @@ const Page = {
 
 			commandList.append(...commands.map(({ com, des, /*beUsed,*/ format = '' }) => {
 				let commandsItem = newDiv(),
-					input = newDiv('input'),
-					original = newDiv('h3'),
+					span = newDiv('span'),
 					details = newDiv('details'),
 					sum = newDiv('summary');
-				commandsItem.id = original.innerHTML = com;
-				input.setAttribute('value', dataBaseGuild.command(com));
-				[commandsItem, sum, original].map(e => e.setAttribute('prefix', ''));
-				commandsItem.append(input, newDiv('div', 'set'), original);
+				commandsItem.id = com;
+				span.innerHTML = com;
+				[commandsItem, sum].map(e => e.setAttribute('prefix', ''));
+				commandsItem.append(span);
 
 				if (des) commandsItem.append(details);
-				sum.innerHTML = `${dataBaseGuild.command(com)} ${format}`.trim();
+				sum.innerHTML = `${com} ${format}`.trim();
 				details.append(sum, des);
 
 				return commandsItem;
@@ -1831,7 +1830,7 @@ const Page = {
 						return
 						newDiv('div', 'comsetting').Attribute('shw', defaultObj.txt1).Attribute('prefix').Id(x)
 							.Append(
-								newDiv('div', 'command').Html(dataBaseGuild.command(x)),
+								newDiv('div', 'command').Html(x),
 								newDiv('div', 'doc').Attribute('prefix').Html(`<span>${x}</span> ${commandObj.format}`),
 								newDiv('div', 'txt').Append(
 									RandomUser(),
@@ -2450,9 +2449,6 @@ console.timeEnd('Consts');
 let MaybeGuild, SupportServer, idleTimer;
 
 Object.defineProperty(Array.prototype, 'filterX', { get: function () { return this.filter(Boolean) } });
-Object.prototype.command = function (cmd) {
-	return this.commands?.[cmd] || cmd
-}
 Object.prototype.isEmpty = function () {
 	return !Object.keys(this).length || Object.values(this).every(x => x === undefined)
 }

@@ -1617,7 +1617,7 @@ logsettings {
   }
 }
 
-:is(.commandList, .logList) {
+.logList {
   details {
     font-size: 1rem;
     color: $color7;
@@ -1632,7 +1632,11 @@ logsettings {
     }
   }
 }
-// :is(.comsetting, .commandList)
+
+.commandList > div > span {
+  height: 4vh;
+  display: inline-block;
+}
 
 .argel {
   background: rgba($discord, .77);
@@ -1668,18 +1672,6 @@ logsettings {
     max-width: 70%;
   }
   // &[optional]::before {content: '?';}
-}
-
-:is(.commandList, .logList) > div > input {
-  font-size: inherit;
-  padding-left: 0;
-  margin-bottom: 0;
-  color: $white;
-  width: calc(94% - 3.7rem);
-  // background-color: #0000;
-  &:is(:focus, :hover) {
-    background-color: $color2;
-  }
 }
 
 .logList h1 {
