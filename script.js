@@ -1863,7 +1863,7 @@ const Page = {
 					h6('Moderator Role', ("Every member with this role and everyone with admin permission can call every moderator command")),
 					Select.Role({ set: Rule.staff, hint: ['staff', 'mod', 'admin'], guild }),
 
-					h6('Toggle Moderation Logs', ("If enabled, the bot will log every moderation action and show it here on the website. [Coming soon; the logs will be saved but you cannot display them yet]")),
+					h6('Toggle Moderation Logs', ("If enabled, the bot will log every moderation action and show it here on the website")),
 					newToggle(Rule.logsEnabled, 'toggle', 'log'),
 
 					h6('Ban-Message', ("Whenever a user is banned, this message will be sent as a description in an embeded direct message after the messege containing the reason. Tip: This can be used to send out a form that a banned user can fill in if they think they were banned wrongly. Discord formatting does apply")),
