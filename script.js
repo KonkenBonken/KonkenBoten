@@ -14,7 +14,7 @@ import lightRandom from 'light-random';
 import Fetch from 'node-fetch';
 import cookieParser from 'cookie-parser';
 import moment from 'moment-timezone';
-import { parse as Duration, stringify as CleanDate } from 'simple-duration';
+import { stringify as CleanDate } from 'simple-duration';
 import ObjectMerge from 'deepmerge';
 import express from 'express';
 import { Server as socketIo } from 'socket.io';
@@ -2466,7 +2466,7 @@ Object.entries(DataBase.loggedIn).forEach(([id, data]) => {
 
 })
 
-const commands = Import_commands({ client, Duration, CleanDate, capital, moment, ParseModLogs, ObjectMerge, MutedPermissions, encodeT, DataBase, WriteDataBase, newDiv, SuggestRespond });
+const commands = Import_commands({ client, CleanDate, capital, moment, ParseModLogs, ObjectMerge, MutedPermissions, encodeT, DataBase, WriteDataBase, newDiv, SuggestRespond });
 
 app.response.error = async function (code, message) { // wont return response | not chainable
 	const document = await baseDoc({
