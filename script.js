@@ -2053,8 +2053,7 @@ const Page = {
 
 			suggestSettings.append(toggleTitle, onoff, innerSettings);
 
-			let staffSelect = Select.Role({ set: Rule.staff, hint: ['staff', 'mod'], guild }),
-				suggestChannelSelect = newDiv('select'),
+			let suggestChannelSelect = newDiv('select'),
 				responseChannelSelect = newDiv('select');
 
 			let selected = false,
@@ -2074,7 +2073,6 @@ const Page = {
 			suggestChannelSelect.append(...channels('suggest'));
 			responseChannelSelect.append(...channels('response'));
 
-			staffSelect.name = 'staff';
 			suggestChannelSelect.name = 'suggestChannel';
 			responseChannelSelect.name = 'responseChannel';
 
@@ -2138,8 +2136,6 @@ const Page = {
 			}));
 
 			innerSettings.append(
-				h6('Support Team Role', ('The role that will be able to delete and respond to suggestions')),
-				staffSelect,
 				h6('Suggest Channel', ('The channel where the members will be able to submit their suggestions. This is also where members will be able to vote on what suggestions they think should be approved')),
 				suggestChannelSelect,
 				h6('Respond Channel', ('The channel where the Support Team will be able to submit their responds. This is where the Support Team\'s responses will be sent')),
@@ -2169,8 +2165,7 @@ const Page = {
 			// 	// channels: {
 			// 	// 	suggest: '83730873837',
 			// 	// 	response: '83730873874'
-			// 	// },
-			// 	// staff: '9476457896',
+			// 	// }
 			// }
 			if (dataBaseGuild.Suggestions.isEmpty()) dataBaseGuild.Suggestions = undefined;
 
@@ -2783,7 +2778,6 @@ io.on('connection', async socket => {
 						[
 							[obj.channels, 'suggest', 19],
 							[obj.channels, 'response', 19],
-							[obj, 'staff', 19],
 							[obj.embed, 'suggestion', 40],
 							[obj.embed, 'reasonFrom', 40],
 							[obj.embed, 'approve', 40],
@@ -3420,7 +3414,7 @@ client.on('messageCreate', async m => { //Not Prefixed
 
 	const GuildData = DataBase.guilds[m.guild.id] || {};
 
-	if (Object.values(GuildData.Suggestions?.channels || {}).includes(m.channel.id) && m.author.id != ClientID && !m.member.roles.resolve(GuildData.Suggestions?.staff))
+	if (Object.values(GuildData.Suggestions?.channels || {}).includes(m.channel.id) && m.author.id != ClientID)
 		return setTimeout(() => m.delete(), 10e3);
 
 	let reaction = GuildData.Reactions && Object.keys(GuildData.Reactions || {}).find(x => x == m.channel.id);
