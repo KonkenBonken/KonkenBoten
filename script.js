@@ -1776,7 +1776,7 @@ const Page = {
 				messageFrom.setAttribute('value', Rule.text?.messageFrom || `Message from ${guild.name}:`);
 				messageFrom.placeholder = `Message from ${guild.name}:`;
 
-				// toggle,logToggle,dmToggle,inviteToggle,channelSelect,staffSelect,
+				// toggle,logToggle,dmToggle,inviteToggle,channelSelect,
 
 				modTitle.innerHTML = 'Moderation';
 
@@ -1859,9 +1859,6 @@ const Page = {
 
 					h6('Records Channel', ("The channel where all penalties will be displayed")),
 					Select.Channel({ set: Rule.channel, hint: ['crime', 'regist', 'penalt', 'straff', 'brott'], guild }),
-
-					h6('Moderator Role', ("Every member with this role and everyone with admin permission can call every moderator command")),
-					Select.Role({ set: Rule.staff, hint: ['staff', 'mod', 'admin'], guild }),
 
 					h6('Toggle Moderation Logs', ("If enabled, the bot will log every moderation action and show it here on the website")),
 					newToggle(Rule.logsEnabled, 'toggle', 'log'),

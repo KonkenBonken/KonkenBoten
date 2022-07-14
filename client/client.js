@@ -1009,7 +1009,6 @@ let DebugTest; {
 				data = {
 					enabled: +!!modsettings.q('label:first-of-type>input').checked,
 					channel: modsettings.q('.channelSelect').value,
-					staff: modsettings.q('.roleSelect').value,
 					text: {
 						hasBeen: hasBeen.value = hasBeen.value.substr(0, 100),
 						by: byInput.value = byInput.value.substr(0, 100),
