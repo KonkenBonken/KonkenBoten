@@ -1518,7 +1518,7 @@ const Page = {
 				channelSelect,
 				h6('Parent Category', 'This is where the created support channel will be put'),
 				parentSelect,
-				h6("Ticket Name<i>Use <code>{u}</code> for the members's username</i>", 'The name the created channel will be given'),
+				h6("Channel Name<i>Use <code>{u}</code> for the members's username</i>", 'The name the created channel will be given'),
 				ticketName,
 				h6("Claimable Channels", 'If enabled, moderators will be able to claim a support channel. Then no other moderators will be able to write in the channel. The moderator is able to unclaim the channel and admins will always be able to write'),
 				newToggle(dataBaseGuild.Tickets.claim, 'claim', 'toggle'),
