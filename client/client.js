@@ -866,7 +866,9 @@ let DebugTest; {
 								edit = newDiv('edit'),
 								remove = newDiv('remove'),
 								toggle = newToggle(true);
-							ruleDiv.append(commandDiv, previewDiv, toggle, edit, remove);
+							ruleDiv.append(commandDiv, previewDiv);
+							if (voice) ruleDiv.append(toggle);
+							ruleDiv.append(edit, remove);
 
 							commandDiv.innerHTML = data.channelname || data.command;
 							previewDiv.innerHTML = data.channel || content;
