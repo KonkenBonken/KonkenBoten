@@ -3359,7 +3359,7 @@ client.on('ready', async () => {
 
 		if (process.argv[2] != 'announce') continue;
 
-		if (false && guild.systemChannel)
+		if (guild.systemChannel)
 			guild.systemChannel.send({
 				embeds: [{
 					color: 0xdbad11,
