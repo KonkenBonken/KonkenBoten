@@ -3357,6 +3357,8 @@ client.on('ready', async () => {
 		if (!GuildData) continue;
 		setGuildCustomCommands(guild);
 
+		if (process.argv[2] != 'announce') continue;
+
 		if (false && guild.systemChannel)
 			guild.systemChannel.send({
 				embeds: [{
@@ -3390,7 +3392,8 @@ client.on('ready', async () => {
 				}]
 			})
 			.then(() => console.log(`Sent in ${guild.name} - ${guild.id}`))
-
+	}
+	if (process.argv[2] == 'announce')
 		(await client.channels.fetch('829487658883481610')).send({
 			embeds: [{
 				color: 0xdbad11,
@@ -3412,7 +3415,6 @@ client.on('ready', async () => {
 				footer: { text: 'Thank you!' }
 			}]
 		})
-	}
 });
 
 client.on("guildCreate", async guild => {
