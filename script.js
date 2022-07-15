@@ -3359,7 +3359,7 @@ client.on('ready', async () => {
 
 		if (process.argv[2] != 'announce') continue;
 
-		if (guild.systemChannel)
+		if (guild.systemChannel && !(Array.isArray(GuildData.TextCommandRules) && GuildData.TextCommandRules.length))
 			guild.systemChannel.send({
 				embeds: [{
 					color: 0xdbad11,
@@ -3383,12 +3383,6 @@ client.on('ready', async () => {
 							'If you have any further questions, feel free to [join the **KonkenBoten Server**](https://discord.gg/27j5fnX3jX)\nThere will all updates and outages also be posted',
 					}],
 					footer: { text: 'Thank you!' }
-				}],
-				components: [{
-					components: [
-						Array.isArray(GuildData.TextCommandRules) && GuildData.TextCommandRules.length && { label: "Click after you've enabled Slash Commands", customId: 'enable-custom-commands', type: 2, style: 1 },
-					].filter(Boolean),
-					type: 1
 				}]
 			})
 			.then(() => console.log(`Sent in ${guild.name} - ${guild.id}`))
