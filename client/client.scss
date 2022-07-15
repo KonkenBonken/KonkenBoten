@@ -366,7 +366,7 @@ page {
 }
 
 :is(.displayPrefix, [prefix], #commands rule > h1)::before {
-  content: var(--prefix, "/");
+  content: '/';
 }
 
 newrule {
@@ -469,7 +469,7 @@ rule {
 }
 
 #commands editrule::before {
-  content: var(--prefix, "/");
+  content: '/';
   position: absolute;
   z-index: 1;
   left: 1.2ch;
