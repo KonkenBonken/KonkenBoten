@@ -2194,14 +2194,15 @@ const AllMessages = channel => new Promise(async resolver => {
 		}
 	}),
 
-	TicketSetup = async guildID => {
+	TicketSetup = async (guildID, oldChannelId) => {
 			let DataBaseGuild = DataBase.guilds[guildID],
 				Rule = DataBaseGuild.Tickets;
 			try {
 				var guild = await client.guilds.fetch(guildID),
+					oldChannel = oldChannelId && await client.channels.fetch(oldChannelId).catch(x => false),
 					channel = await client.channels.fetch(Rule.channel);
 			} catch { return }
-			let reactMessage = Rule.existingMessage ? await channel.messages.fetch(Rule.existingMessage).catch(x => false) : false,
+			let reactMessage = Rule.existingMessage ? await (oldChannel || channel).messages.fetch(Rule.existingMessage).catch(x => false) : false,
 				// reactFilter = e => ({ filter: (r, u) => !u.bot && [...e].includes(r.emoji.name) }),
 				reactMessageObj = {
 					embeds: [{
@@ -2589,6 +2590,8 @@ io.on('connection', async socket => {
 
 			data.save = ['always', undefined, 'never'][+data.save]
 
+			const oldChannelId = socket.GuildData.Tickets.channel;
+
 			socket.GuildData.Tickets = {
 				...socket.GuildData.Tickets,
 				...data
@@ -2627,7 +2630,7 @@ io.on('connection', async socket => {
 
 			fun(data);
 
-			TicketSetup(socket.GuildID);
+			TicketSetup(socket.GuildID, oldChannelId);
 			sendLogLoad('Support Channel settings set');
 			if (socket.GuildData.Tickets.isEmpty()) socket.GuildData.Tickets = undefined;
 			WriteDataBase();
