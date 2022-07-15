@@ -1647,6 +1647,7 @@ logsettings {
 
   &::after {
     content: attr(arg);
+    white-space: nowrap;
   }
 
   &+span {
