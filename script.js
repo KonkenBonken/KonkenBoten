@@ -3557,7 +3557,25 @@ client.on('messageCreate', async m => { //Automod
 	});
 });
 
+client.on('messageCreate', async m => { //deprecated commands warning
+	if (!m.guild) return;
+	const GuildData = DataBase.guilds[m.guild.id] ?? {};
 
+	if (!(
+			[...commands, ...Object.values(GuildData.commands || {})]
+			.some(({ com }) => m.content.startsWith((GuildData.prefix || '$') + com)) ||
+			m.content.startsWith('<@813803575264018433>')
+		)) return;
+
+	m.reply({
+		embeds: [{
+			color: 0xdbad11,
+			description: `**KonkenBoten has switched to [Slash Commands](https://support.discord.com/hc/sv/articles/1500000368501-Slash-Commands-FAQ) and prefixed(${GuildData.prefix || '$'}) chat-commands will no longer work**`
+		}]
+	}).then(
+		m => setTimeout(() => m.delete(), 10e3)
+	)
+});
 client.on('interactionCreate', async interaction => { // Slash-Commands
 	if (!(interaction.isCommand() && interaction.inCachedGuild())) return;
 
