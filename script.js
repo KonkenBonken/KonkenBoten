@@ -3390,6 +3390,27 @@ client.on('ready', async () => {
 				}]
 			})
 			.then(() => console.log(`Sent in ${guild.name} - ${guild.id}`))
+
+		(await client.channels.fetch('829487658883481610')).send({
+			embeds: [{
+				color: 0xdbad11,
+				title: 'Introducing Slash Commands',
+				author: {
+					name: 'KonkenBoten',
+					icon_url: 'https://cdn.discordapp.com/icons/827687377224728629/8f41a5cc0bf50322aa28e2600ae7fc69.webp?size=512',
+				},
+				description: `The time has come\n**KonkenBoten** is switching to **Slash Commands**`,
+				fields: [{
+					name: 'What happens now?',
+					value: `From now on, all *normal* prefixed($) commands are disabled and instead, you'll use the forward-slash(/) as prefix\n\n` +
+						`This allow easier and more advanced command-specific permissions to be set\nTo prevent abuse, all **Slash Commands** is disabled by default and need to be enabled manually by Server Admins\n\n` +
+						'To get started with **Slash Commands**, click\n> [Enable Slash Commands](https://discord.com/api/oauth2/authorize?client_id=813803575264018433&scope=applications.commands)\nwhen authorized, go to\n> `Server Settings` ⮕ `Interactions` ⮕ `KonkenBoten`\nto set the permissions\n\n' +
+						'Want to learn more? Read these articles:\n> [Slash Commands FAQ](https://support.discord.com/hc/sv/articles/1500000368501-Slash-Commands-FAQ)\n> [How to set Permissions](https://discord.com/blog/slash-commands-permissions-discord-apps-bots)\n\n' +
+						'If you have any further questions, feel free to ask in <#827687378113396798> or <#827687717454217277>',
+				}],
+				footer: { text: 'Thank you!' }
+			}]
+		})
 	}
 });
 
