@@ -3534,7 +3534,10 @@ client.on('messageCreate', async m => { //Automod
 	reason = fault.rsn || reason
 
 	if (fault.pnsh >= 2) { //if 2 || 3
-		if (GuildData.Moderation.logsEnabled && !GuildData.Moderation.logs[ClientID]) GuildData.Moderation.logs[ClientID] = [];
+		if (GuildData.Moderation.logsEnabled) {
+			if (!GuildData.Moderation.logs) GuildData.Moderation.logs = {}
+			if (!GuildData.Moderation.logs[ClientID]) GuildData.Moderation.logs[ClientID] = [];
+		}
 		moderationCommands.warn({
 			member: m.member,
 			reason,
