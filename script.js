@@ -14,7 +14,7 @@ import lightRandom from 'light-random';
 import Fetch from 'node-fetch';
 import cookieParser from 'cookie-parser';
 import moment from 'moment-timezone';
-import { parse as Duration, stringify as CleanDate } from 'simple-duration';
+import { stringify as CleanDate } from 'simple-duration';
 import ObjectMerge from 'deepmerge';
 import express from 'express';
 import { Server as socketIo } from 'socket.io';
@@ -24,7 +24,7 @@ import Import_http from 'http';
 import Import_discordOauth2 from "discord-oauth2";
 import Import_topGgSdk from '@top-gg/sdk';
 import Import_nodeCache from 'node-cache';
-
+import Import_commands from './lib/commands.js';
 import EmojiList from './src/emojis.js';
 console.timeEnd('Packages');
 console.time('Consts');
@@ -64,7 +64,6 @@ const app = express(),
 		pingTimeout: 120e3,
 	}),
 	port = 80,
-	DefaultPrefix = '$',
 	PageTitle = 'KonkenBoten - The Ultimate Discord Bot',
 	DataBase = JSON.parse(fsSync.readFileSync('DataBase.json', 'utf8').trim().replace(/Ã¤/g, 'ä').replace(/Ã¥/g, 'å').replace(/Ã¶/g, 'ö')),
 	topggApi = new(Import_topGgSdk.Api)('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMzgwMzU3NTI2NDAxODQzMyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4NjYzNDU4fQ.gqGp-wnvzaFk69HGOohqYPlJ2J4bEjL7RRAvWFCroMQ'),
@@ -184,6 +183,7 @@ const NewGuildSubrcibers = [],
 			.Append(set && newDiv().Attribute('list', set))
 			.Append(Select.Role({ guild }))
 	};
+
 const RandomUser = () => 'User#' + Math.floor(Math.random() * 8999 + 1000),
 	FieldtoPerms = (bitfield = 0n) => {
 		try {
@@ -1401,11 +1401,8 @@ const Page = {
 			dataBaseGuild.TextCommandRules = dataBaseGuild.TextCommandRules || [];
 			dataBaseGuild.TextCommandRules = dataBaseGuild.TextCommandRules.filter(r => r.command && r.content);
 			let page = await basePage({ id, title }),
-				// prefix = dataBaseGuild.prefix || DefaultPrefix,
 				rules = newDiv('rules'),
 				create = newDiv('create');
-
-			// 	,prefixTitle = newDiv('h2'),	setPrefixDiv = newDiv('setPrefix'),	setPrefixInput = newDiv('input'),	setPrefixButton = newDiv('div', 'set');prefixTitle.innerHTML = 'Prefix';setPrefixInput.placeholder = prefix;setPrefixInput.setAttribute('value', prefix);setPrefixInput.setAttribute('maxlength', 1);setPrefixDiv.append(setPrefixInput, setPrefixButton);page.append(prefixTitle, setPrefixDiv);
 
 			const rulesTitle = newDiv('h2');
 			rulesTitle.innerHTML = 'Custom Commands';
@@ -1413,24 +1410,13 @@ const Page = {
 			create.innerHTML = 'Add a Custom Command';
 
 			if (dataBaseGuild.TextCommandRules.length)
-				rules.append(...dataBaseGuild.TextCommandRules.map(rule => {
-					let { command, content, embed, disabled } = rule,
-					ruleDiv = newDiv('rule'),
-						commandDiv = newDiv('h1'),
-						previewDiv = newDiv('h2'),
-						edit = newDiv('edit'),
-						remove = newDiv('remove'),
-						toggle = newToggle(!disabled);
-
-					ruleDiv.append(commandDiv, previewDiv, toggle, edit, remove);
-
-					// ruleDiv.setAttribute('type', embed ? 'embed' : 'text');
-					// if (disabled) ruleDiv.setAttribute('disabled', '');
-					commandDiv.innerHTML = command;
-					previewDiv.innerHTML = (embed ? [rule.content.ttl, rule.content.desc, rule.content.ftr?.nm].filter(x => x).join(' - ') : content).substr(0, 90);
-
-					return ruleDiv;
-				}));
+				rules.append(...dataBaseGuild.TextCommandRules.map(({ command, content, embed }) =>
+					newDiv('rule').Append(
+						newDiv('h1').Html(command),
+						newDiv('h2').Html((embed ? [content.ttl, content.desc, content.ftr?.nm].filter(x => x).join(' - ') : content).substr(0, 90)),
+						newDiv('edit'), newDiv('remove')
+					)
+				));
 			rules.append(newDiv('empty'));
 			// TextCommandRules = {
 			// 	embed: false,
@@ -1439,45 +1425,32 @@ const Page = {
 			// 	content: 'pong',
 			// 	content: { athr: { img: 'url', nm: '' }, ttl: '', desc: '', clr: 'ff00ff', thmb: 'url', img: 'url', ftr: { img: 'url', nm: '' } }, //if embed
 			// 	roles: ['9764897', '925646'],
-			// 	disabled: false,
+			// 	// 	disabled: false,
 			// 	planned: [{ c: '934787687', d: 1625590757 }] //sec | Math.floor(Date.now()/6e4)
 			// }
 
 			let commandSettings = newDiv('commandSettings'),
 				commandsTitle = newDiv('h2'),
 				commandList = newDiv('div', 'commandList');
-			commandsTitle.innerHTML = 'Command Settings';
+			commandsTitle.innerHTML = 'Commands';
 			commandSettings.append(commandList);
 
 			commandList.append(...commands.map(({ com, des, /*beUsed,*/ format = '' }) => {
 				let commandsItem = newDiv(),
-					input = newDiv('input'),
-					original = newDiv('h3'),
+					span = newDiv('span'),
 					details = newDiv('details'),
 					sum = newDiv('summary');
-				commandsItem.id = original.innerHTML = com;
-				input.setAttribute('value', dataBaseGuild.command(com));
-				[commandsItem, sum, original].map(e => e.setAttribute('prefix', ''));
-				commandsItem.append(input, newDiv('div', 'set'), original);
+				commandsItem.id = com;
+				span.innerHTML = com;
+				[commandsItem, sum].map(e => e.setAttribute('prefix', ''));
+				commandsItem.append(span);
 
 				if (des) commandsItem.append(details);
-				sum.innerHTML = `${dataBaseGuild.command(com)} ${format}`.trim();
+				sum.innerHTML = `${com} ${format}`.trim();
 				details.append(sum, des);
 
 				return commandsItem;
 			}));
-
-			const prefix = dataBaseGuild.prefix || DefaultPrefix,
-				prefixTitle = newDiv('h2'),
-				setPrefixDiv = newDiv('setPrefix'),
-				setPrefixInput = newDiv('input'),
-				setPrefixButton = newDiv('div', 'set');
-			prefixTitle.innerHTML = 'Prefix';
-			setPrefixInput.placeholder = prefix;
-			setPrefixInput.setAttribute('value', prefix);
-			setPrefixInput.setAttribute('maxlength', 1);
-			setPrefixDiv.append(setPrefixInput, setPrefixButton);
-
 
 			if (!dataBaseGuild.Reactions) dataBaseGuild.Reactions = {};
 			let reactions = dataBaseGuild.Reactions;
@@ -1499,7 +1472,6 @@ const Page = {
 			// }}
 
 			page.append(
-				prefixTitle, setPrefixDiv,
 				reactTitle, reactDiv,
 				commandsTitle, commandSettings,
 				rulesTitle, rules, create
@@ -1510,8 +1482,7 @@ const Page = {
 		support: (guild, title, id) => new Promise(async resolver => {
 			let dataBaseGuild = DataBase.guilds[guild.id] || {};
 			if (!dataBaseGuild.Tickets) dataBaseGuild.Tickets = {};
-			let prefix = dataBaseGuild.prefix || DefaultPrefix,
-				page = await basePage({ id, title }),
+			let page = await basePage({ id, title }),
 				ticketTitle = newDiv('h2'),
 				ticketSettings = newDiv('ticketSettings', 'inputField'),
 				onoff = newToggle(dataBaseGuild.Tickets?.enabled),
@@ -1727,13 +1698,12 @@ const Page = {
 			if (!dataBaseGuild.logs.enabled) dataBaseGuild.logs.enabled = [];
 			let page = await basePage({ id, title }),
 				logSetting = newDiv('logSettings'),
-				logsTitle = newDiv('h2'),
+				logsTitle = newDiv('h2').Html('Logs'),
 				channelSelect = newDiv('select', 'channelSelect'),
 				logList = newDiv('div', 'logList'),
 				toggle = newToggle(dataBaseGuild.logs.on, 'toggle'),
 				auditToggle = newToggle(dataBaseGuild.logs.audit, 'toggle', 'audit');
 
-			logsTitle.innerHTML = 'Logs';
 			let selected = false;
 			[...guild.channels.cache.values()].filter(c => ['GUILD_TEXT', 'GUILD_NEWS'].includes(c.type)).sort((a, b) => a.rawPosition - b.rawPosition).forEach(c => {
 				let option = newDiv('option');
@@ -1806,7 +1776,7 @@ const Page = {
 				messageFrom.setAttribute('value', Rule.text?.messageFrom || `Message from ${guild.name}:`);
 				messageFrom.placeholder = `Message from ${guild.name}:`;
 
-				// toggle,logToggle,dmToggle,inviteToggle,channelSelect,staffSelect,
+				// toggle,logToggle,dmToggle,inviteToggle,channelSelect,
 
 				modTitle.innerHTML = 'Moderation';
 
@@ -1852,53 +1822,22 @@ const Page = {
 				if (Rule.banMessage) banMessage.innerHTML = Rule.banMessage;
 				banMessage.setAttribute('maxlength', 4096);
 
-				const comSettings = newDiv('div', 'comsettings'),
-					comDivs = ['warn', 'kick', 'ban', 'unban', 'tempban', 'mute', 'unmute', 'tempmute'].map(x => {
+				const comSettings = newDiv('div', 'comsettings').Attribute('shw', 1)
+					.Append(...['warn', 'kick', 'ban', 'unban', 'tempban', 'mute', 'unmute', 'tempmute'].map(x => {
 						let defaultObj = commands.find(c => c.com == x),
-							commandObj = ObjectMerge(defaultObj, (Rule.coms && Rule.coms[x]) || {}),
-							div = newDiv('div', 'comsetting'),
-							input = newDiv('input', 'command'),
-							role = Select.Role({ set: (Rule.coms && Rule.coms[x]?.role), hint: ['staff', 'mod', 'admin'], guild }),
-							defaultRole = newDiv('option'),
-							// roleH6 = h6('Moderator Role', infoPopup(`Every member with this role and everyone with admin permission can call the<y>${dataBaseGuild.prefix||DefaultPrefix}${x}</y>command. The default role is the role specified above; if a role is selected here, the Moderator role abouve will be ignored.`)),
-							roleH6 = h6('Moderator Role', ((dataBaseGuild.prefix || DefaultPrefix) + x)),
-							// txtH6 = h6('Action Name', infoPopup((dataBaseGuild.prefix || DefaultPrefix) + x)),
-							doc = newDiv('div', 'doc'),
-							// txt1 = newDiv('input', 'txt', 'txt1'),
-							txt = newDiv('div', 'txt'),
-							txtInput = newDiv('input', 'txtinput');
-						// console.log({ commandObj, coms: Rule.coms });
+							commandObj = ObjectMerge(defaultObj, (Rule.coms && Rule.coms[x]) || {});
 
-						defaultRole.value = '0';
-						defaultRole.innerHTML = 'Default Role';
-						if (!(Rule.coms && Rule.coms[x]?.role)) {
-							[...role.selectedOptions].forEach(o => o.removeAttribute('selected'));;
-							defaultRole.setAttribute('selected', '');
-						}
-						role.prepend(defaultRole);
-
-						// txt1.innerHTML = commandObj.txt1;
-						txtInput.setAttribute('value', commandObj.txt);
-						// txt1.placeholder = defaultObj.txt1;
-						txtInput.placeholder = defaultObj.txt;
-
-						div.setAttribute('shw', defaultObj.txt1);
-
-						txt.append(
-							RandomUser(),
-							hasBeen.cloneNode(),
-							txtInput
-						);
-						div.append(input, doc, roleH6, role, txt); // txt1,
-						input.setAttribute('value', dataBaseGuild.command(x));
-						doc.innerHTML = `<span>${x}</span> ${commandObj.format}`;
-						div.id = input.placeholder = x;
-						doc.setAttribute('prefix', '');
-						div.setAttribute('prefix', '');
-						return div;
-					});
-				comSettings.append(...comDivs)
-				comSettings.setAttribute('shw', 1);
+						return
+						newDiv('div', 'comsetting').Attribute('shw', defaultObj.txt1).Attribute('prefix').Id(x)
+							.Append(
+								newDiv('div', 'command').Html(x),
+								newDiv('div', 'doc').Attribute('prefix').Html(`<span>${x}</span> ${commandObj.format}`),
+								newDiv('div', 'txt').Append(
+									RandomUser(),
+									hasBeen.cloneNode(),
+									newDiv('input', 'txtinput').Attribute('value', commandObj.txt).Attribute('placeholder', defaultObj.txt)
+								));
+					}))
 
 				let scrollbar = newDiv('div', 'scrollbar'),
 					scrollItems = ['warn', 'kick', 'ban', 'un ban', 'temp ban', 'mute', 'un mute', 'temp mute'].map(x => {
@@ -1920,9 +1859,6 @@ const Page = {
 
 					h6('Records Channel', ("The channel where all penalties will be displayed")),
 					Select.Channel({ set: Rule.channel, hint: ['crime', 'regist', 'penalt', 'straff', 'brott'], guild }),
-
-					h6('Moderator Role', ("Every member with this role and everyone with admin permission can call every moderator command")),
-					Select.Role({ set: Rule.staff, hint: ['staff', 'mod', 'admin'], guild }),
 
 					h6('Toggle Moderation Logs', ("If enabled, the bot will log every moderation action and show it here on the website")),
 					newToggle(Rule.logsEnabled, 'toggle', 'log'),
@@ -2078,11 +2014,9 @@ const Page = {
 			)
 
 			page.append(
-				// prefixTitle, setPrefixDiv,
 				modTitle, modSettings,
 				automodTitle, automodSettings,
 				logsTitle, logSetting,
-				// ,commandsTitle, commandSettings
 				/* ModLogs; läggs till client-side */
 			);
 
@@ -2111,8 +2045,7 @@ const Page = {
 
 			suggestSettings.append(toggleTitle, onoff, innerSettings);
 
-			let staffSelect = Select.Role({ set: Rule.staff, hint: ['staff', 'mod'], guild }),
-				suggestChannelSelect = newDiv('select'),
+			let suggestChannelSelect = newDiv('select'),
 				responseChannelSelect = newDiv('select');
 
 			let selected = false,
@@ -2132,7 +2065,6 @@ const Page = {
 			suggestChannelSelect.append(...channels('suggest'));
 			responseChannelSelect.append(...channels('response'));
 
-			staffSelect.name = 'staff';
 			suggestChannelSelect.name = 'suggestChannel';
 			responseChannelSelect.name = 'responseChannel';
 
@@ -2196,8 +2128,6 @@ const Page = {
 			}));
 
 			innerSettings.append(
-				h6('Support Team Role', ('The role that will be able to delete and respond to suggestions')),
-				staffSelect,
 				h6('Suggest Channel', ('The channel where the members will be able to submit their suggestions. This is also where members will be able to vote on what suggestions they think should be approved')),
 				suggestChannelSelect,
 				h6('Respond Channel', ('The channel where the Support Team will be able to submit their responds. This is where the Support Team\'s responses will be sent')),
@@ -2227,129 +2157,13 @@ const Page = {
 			// 	// channels: {
 			// 	// 	suggest: '83730873837',
 			// 	// 	response: '83730873874'
-			// 	// },
-			// 	// staff: '9476457896',
+			// 	// }
 			// }
 			if (dataBaseGuild.Suggestions.isEmpty()) dataBaseGuild.Suggestions = undefined;
 
 			resolver([page, title, id, 'suggestions']);
 		})
 	},
-	argEl = (arg, des) => `<span class="argel" arg="${arg}"><span>${des}</span></span>`,
-	commands = [
-		/*{
-			com: 'adduser',
-			des: 'Used by staff to Add a user to a Support Channel',
-			beUsed: 'in support channels if enabled', //  "Can be used " + beUsed  -  default = 'anywhere'
-			format: argEl('@user') // prefix + command + format
-		}, {
-			com: 'removeuser',
-			des: 'Used by staff to Remove a user from a Support Channel',
-			beUsed: 'in support channels if enabled',
-			format: argEl('@user')
-		},*/
-		{
-			com: 'suggest',
-			des: 'Used by member to submit a Suggestion',
-			// beUsed: 'in the suggestion channels if enabled',
-			format: argEl('suggestion', 'text; max 4096 characters')
-		}, {
-			com: 'approve',
-			des: 'Used by moderator to approve a Suggestion',
-			// beUsed: 'in the suggestion channels if enabled',
-			format: argEl('index', 'number') + argEl('reason', 'text; max 1024  characters')
-		}, {
-			com: 'deny',
-			des: 'Used by moderator to deny a Suggestion',
-			// beUsed: 'in the suggestion channels if enabled',
-			format: argEl('index', 'number') + argEl('reason', 'text; max 1024  characters')
-		}, {
-			com: 'consider',
-			des: 'Used by moderator to consider a Suggestion',
-			// beUsed: 'in the suggestion channels if enabled',
-			format: argEl('index', 'number') + argEl('reason', 'text; max 1024  characters')
-		}, {
-			com: 'echo',
-			des: 'Used by admin to send message through the bot; The bot copies what you say',
-			format: argEl('message', 'text; max 4000 characters')
-		}, {
-			com: 'slowmode',
-			des: 'Used by moderator to set the slowmode of the current channel; Use command without arguments to disable slowmode',
-			format: argEl('?duration', 'number of seconds or duration; possible units are d, h, m, s; example: 2h30m = 2 hours and 30 minutes; max 21600 seconds; optional')
-		}, {
-			com: 'clear',
-			des: 'Used by moderator to delete an amount of messages in the current channel',
-			format: argEl('amount', 'number; max 499')
-		},
-
-		{
-			com: 'userinfo',
-			des: 'Used by moderator to get info about a member',
-			format: argEl('@user', 'user-tag or id')
-		}, {
-			com: 'serverinfo',
-			des: 'Used by moderator to get info about the current server',
-			// format:
-		}, {
-			com: 'roleinfo',
-			des: 'Used by moderator to get info about a role',
-			format: argEl('@role', 'role-tag or id')
-		},
-
-		{
-			com: 'infractions',
-			des: 'Used by moderator to get a member\'s last logged infractions',
-			format: argEl('@user', 'user-tag or id')
-		}, {
-			com: 'warn',
-			des: 'Used by command-specific role or admin to warn a member',
-			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'), //ban reason is limiting, otherwise 512
-			txt1: 'warn',
-			txt: 'warned'
-		}, {
-			com: 'kick',
-			des: 'Used by command-specific role or admin to kick a member',
-			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'),
-			txt1: 'kick',
-			txt: 'kicked'
-		}, {
-			com: 'ban',
-			des: 'Used by command-specific role or admin to ban a member',
-			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'),
-			txt1: 'ban',
-			txt: 'banned'
-		}, {
-			com: 'unban',
-			des: 'Used by command-specific role or admin to unban a member',
-			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'),
-			txt1: 'unban',
-			txt: 'unbanned'
-		}, {
-			com: 'tempban',
-			des: 'Used by command-specific role or admin to temporarily ban a member',
-			format: argEl('@user', 'user-tag or id') + argEl('duration', 'duration; possible units are d, h, m, s; example: 2h30m = 2 hours and 30 minutes') + argEl('?reason', 'text; max 512 characters'),
-			txt1: 'temporarily ban',
-			txt: 'temporarily banned'
-		}, {
-			com: 'mute',
-			des: 'Used by command-specific role or admin to mute a member',
-			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'),
-			txt1: 'mute',
-			txt: 'muted'
-		}, {
-			com: 'unmute',
-			des: 'Used by command-specific role or admin to unmute a member',
-			format: argEl('@user', 'user-tag or id') + argEl('?reason', 'text; max 512 characters'),
-			txt1: 'unmute',
-			txt: 'unmuted'
-		}, {
-			com: 'tempmute',
-			des: 'Used by command-specific role or admin to temporarily mute a member',
-			format: argEl('@user', 'user-tag or id') + argEl('duration', 'duration; possible units are d, h, m, s; example: 2h30m = 2 hours and 30 minutes') + argEl('?reason', 'text; max 512 characters'),
-			txt1: 'temporarily mute',
-			txt: 'temporarily muted'
-		}
-	],
 	encodeT = n => Math.round((n || Date.now()) / 6e4 - 271e5), // Date ->  T
 	decodeT = (n, parse = false, guild) => { // T   -> Date
 		n = new Date((n + 271e5) * 6e4);
@@ -2364,164 +2178,7 @@ const Page = {
 	encryptString = s => nextChar(s, 3),
 	decryptString = s => nextChar(s, -3);
 
-const moderationEmbed = (action, member, Reason, { reason, hasBeen, duration, color, txt, until }, Duration, Until) => {
-		let { user = member } = member; // user = User | Id;  member = Member | Id
-		let embed = {
-			author: { name: `${user.tag||user} ${hasBeen} ${txt}`, iconURL: user.tag && user.displayAvatarURL() },
-			fields: Reason ? [{ name: reason, value: Reason }] : [],
-			color: parseInt(color, 16) || 14396689,
-		};
-		if (Until) {
-			embed.footer = { text: `${capital(txt.split(" ").pop())} ${until}` };
-			embed.timestamp = Until;
-			if (Duration) embed.fields.push({ name: duration, value: CleanDate(Duration) }) //  moment(until).toNow(true)
-		};
-		return ({ embeds: [embed] });
-	},
-	moderationDmEmbed = async (action, { text, reason, member, tellWho, staff, guild, banMessage, dmInvite }, ftrTxt, timestamp) => ({
-		content: dmInvite,
-		embeds: [{
-				author: { name: `${(member.user?.tag||member.tag)||member} ${text.hasBeen} ${text.txt} ${tellWho? `${text.by} ${staff?.user?.tag}`:''}` },
-				description: reason,
-				// fields: banMessage && { name: text.messageFrom, value: banMessage },
-				color: parseInt(text.color, 16) || 14396689,
-				footer: { text: ftrTxt || guild.name, iconURL: guild.iconURL() },
-				timestamp
-			},
-			banMessage && {
-				author: { name: text.messageFrom },
-				description: banMessage,
-				color: parseInt(text.color, 16) || 14396689
-			}
-		].filter(x => x)
-	});
-// moderationEmbed(action, member, reason, text, duration)
-
-const moderationCommands = { // logs.push -> { type, reason, staff, member, date, duration }
-		//  {
-		// 	member,	reason, channel,
-		//  staff, logs, text, guild,
-		//  dmInvite, dmAll, banMessage, tellWho,
-		// duration, until,
-		// ?muted, ?duration
-		// 	}
-		warn: async ({ member, reason, channel, staff, logs, text, guild, dmAll, banMessage, tellWho }) => {
-			try {
-				logs.push({ t: 'warn', s: staff.id, r: reason, m: member.id, d: encodeT() });
-				channel.send(moderationEmbed(text.txt, member, reason, text));
-				await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }));
-			} catch (e) {
-				console.log(moderationEmbed(text.txt, member, reason, text),
-					text, 38163);
-			}
-		},
-		kick: async ({ member, reason, channel, staff, logs, text, dmInvite, guild, banMessage, tellWho }) => {
-			await member.kick(reason);
-			logs.push({ t: 'kick', s: staff.id, r: reason, m: member.id, d: encodeT() });
-			channel.send(moderationEmbed(text.txt, member, reason, text));
-			await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage, dmInvite }));
-		},
-		ban: async ({ member, reason, channel, staff, logs, text, guild, banMessage, tellWho }) => {
-			//member = Member|id
-			let banMember = await guild.members.ban(member, { reason }); // Any: Member|User|Id
-			if (!(member instanceof Discord.GuildMember)) {
-				member = banMember;
-				if (typeof member == "string")
-					member = await client.users.fetch(member)
-					.then(user => ({ user, id: user.id, send: user.send }))
-					.catch(() => ({ id: member, user: member, send: () => console.error('Banned member not found') }))
-				if (member instanceof Discord.User)
-					member = { user: member, id: member.id };
-				member.send = member.send || member.user?.send;
-			}
-
-			// await member.ban({ reason });
-			logs.push({ t: 'ban', s: staff.id, r: reason, m: member.id, d: encodeT() });
-			channel.send(moderationEmbed(text.txt, member, reason, text));
-			try {
-				await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage }));
-			} catch (e) { console.error(e.message) }
-		},
-		unban: async ({ member, reason, channel, staff, logs, text, dmInvite, guild, banMessage, tellWho }) => {
-			//member = id
-			let user = await guild.members.unban(member, reason);
-			// member = await guild.members.fetch(member);
-
-			channel.send(moderationEmbed(text.txt, { user }, reason, text));
-			logs.push({ t: 'unban', s: staff.id, r: reason, m: user.id, d: encodeT() });
-			await user.send(await moderationDmEmbed(text.txt, { text, reason, member: user, tellWho, staff, guild, banMessage, dmInvite }));
-		},
-		tempban: async ({ member, reason, channel, staff, logs, text, dmInvite, guild, dmAll, banMessage, duration, until, tellWho }) => {
-			//member = Member|id
-			let banMember = await guild.members.ban(member, { reason }), // Any: Member|User|Id
-				tempIndex = DataBase.temp.push({ g: guild.id, m: member.id, type: 'ban', until: +until }) - 1;
-			if (duration * 1000 <= 2147483647) setTimeout(() => //var timeoutIndex =
-				guild.members.unban(member.id, 'Temporarily ban expired' + (reason ? ` - reason: ${reason}` : ''))
-				.then(() => delete DataBase.temp[tempIndex]),
-				duration * 1000);
-
-			// if(user instanceof Discord.GuildMember)
-			if (!(member instanceof Discord.GuildMember)) {
-				if (typeof member == "string")
-					member = await client.users.fetch(member)
-					.then(user => ({ user, id: user.id }))
-					.catch(e => ({ id: member, user: member, send: () => console.error('Banned member not found') }))
-				if (member instanceof Discord.User)
-					member = { user: member, id: member.id };
-				member.send = member.send || member.user?.send;
-			}
-			// await member.ban({ reason });
-			channel.send(moderationEmbed(text.txt, member, reason, text, duration, until));
-			logs.push({ t: 'ban', s: staff.id, r: reason, m: member.id, d: encodeT(), dur: duration, unt: encodeT(until) }); //, timeoutIndex: () => timeoutIndex
-			try {
-				await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage, dmInvite }, 'Banned until', until));
-			} catch (e) { console.error(e.message) }
-		},
-		mute: async ({ member, reason, channel, staff, logs, muted, text, guild, dmAll, banMessage, tellWho, timeout }) => {
-			// console.log({ timeout, fn: member.timeout });
-			let dur = [];
-			if (timeout) {
-				await member.timeout(24192e5, reason); //28d
-				dur[1] = Date.now() + 24192e5;
-			} else
-				await member.roles.add(muted, reason);
-
-			channel.send(moderationEmbed(text.txt, member, reason, text, ...dur));
-			logs.push({ t: 'mute', s: staff.id, r: reason, m: member.id, d: encodeT() });
-			await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }));
-		},
-		unmute: async ({ member, reason, channel, staff, logs, muted, text, guild, dmAll, banMessage, tellWho, timeout }) => {
-			if (timeout)
-				await member.timeout(null, reason);
-			else
-				await member.roles.remove(muted, reason);
-
-			channel.send(moderationEmbed(text.txt, member, reason, text));
-			logs.push({ t: 'unmute', s: staff.id, r: reason, m: member.id, d: encodeT() });
-			await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }));
-		},
-		tempmute: async ({ member, reason, channel, staff, logs, muted, text, guild, dmAll, banMessage, duration, until, tellWho, timeout }) => {
-			let d = encodeT();
-			if (timeout)
-				await member.timeout(Math.min(duration * 1000, 24192e5), reason); //28d
-			else {
-				await member.roles.add(muted, reason);
-				let tempIndex = DataBase.temp.push({ g: guild.id, m: member.id, type: 'mute', until: +until, role: muted, key: [staff.id, d, (reason || '*').replace(/\W/g, '').substr(0, 20)].join('-') }) - 1;
-				if (duration * 1000 <= 2147483647) setTimeout(() => { //var timeoutIndex =
-						member.roles.remove(muted, 'Temporarily mute expired' + (reason ? ` - Mute reason: ${reason}` : ''))
-							.then(() => delete DataBase.temp[tempIndex]);
-					},
-					duration * 1000);
-			}
-
-			channel.send(moderationEmbed(text.txt, member, reason, text, duration, until));
-			logs.push({ t: 'mute', s: staff.id, r: reason, m: member.id, d, dur: duration, unt: encodeT(until) }); //, timeoutIndex: () => timeoutIndex
-			await member.send(await moderationDmEmbed(text.txt, { text, reason, member, tellWho, staff, guild, banMessage: dmAll && banMessage }, 'Muted until', until)).catch(console.log);
-		}
-	},
-	// GetPopup = (obj, Preset) => { /*Preset: {<name>: {type: <attr>, value: <value>}}*/	let form = newDiv('form');	if (obj.displayPrefix) form.setAttribute('prefix', '');	if (obj.id) form.id = obj.id;	if (obj.title) {		let title = newDiv('h1');		title.innerHTML = obj.title;		form.append(title);	}	obj.fields.forEach(fieldObj => {		let field = newDiv(fieldObj.type || 'input', ...(fieldObj.classList || []));		if (fieldObj.name) field.name = fieldObj.name;		if (fieldObj.placeholder) field.placeholder = fieldObj.placeholder;		if (fieldObj.value) field.setAttribute('value', fieldObj.value);		if (fieldObj.innerHTML) field.innerHTML = fieldObj.innerHTML;		if (fieldObj.append) field.append(fieldObj.append);		if (fieldObj && fieldObj.attributes && fieldObj.attributes[0] && fieldObj.attributes[0][0])			fieldObj.attributes.forEach(attr => field.setAttribute(attr[0], attr[1] || ''));		if (Preset && fieldObj.name && Object.keys(Preset).includes(fieldObj.name)) {			let value = Preset[fieldObj.name];			field[value.type || 'value'] = value.value || value;			field.setAttribute(value.type || 'value', value.value || value);		}		form.append(field);	});	return form;},
-	// Startcollector = {},
-	AllMessages = channel => new Promise(async resolver => {
+const AllMessages = channel => new Promise(async resolver => {
 		try {
 			let messages = [],
 				temp;
@@ -2566,106 +2223,59 @@ const moderationCommands = { // logs.push -> { type, reason, staff, member, date
 			// "enabled": true,"channel": "798590264511037450","staff": "825378302579048448","author": "tesst au2","content": "By clicking 💬 tesst3","emoji": "","color": "#5dac79","existingMessage": "827248807896809542"
 		}, //TicketSetup
 
-		Suggest = {
-			//	Suggestions: { enabled: true, channels: { suggest: '83730873837', response: '83730873874' }, staff: '9476457896', index: 4, embed: { suggestion: 'Suggestion', reasonFrom: 'Reason from', approve: 'Approved', deny: 'Denied', consider: 'Considered', up: '⬆️', /*upvote*/ down: '⬇️', /*downvote*/ colors: { pending: CssColors.gray, approve: CssColors.green, deny: CssColors.red, consider: CssColors.yellow } }, suggestions: { 1: { user: '83730873837', /*member ID*/ suggestion: '', msg: '97697567046', /*msg ID*/ answer: { user: '97697567046', /*staffmember ID*/ reason: '', status: 'consider' / 'approve' / 'deny' } } } },
-			suggest: (guild, member, suggestion) => new Promise(async (resolver, reject) => {
-				try {
-					if (!(guild && member && suggestion)) throw 1;
-					let Rule = DataBase.guilds[guild.id].Suggestions,
-						index = +Rule.index || 1,
-						channel = await client.channels.fetch(Rule.channels.suggest)
-					// .catch(e => null);	if (!channel) throw 2;
+		SuggestRespond = (guild, user, reason, index, responseType) => new Promise(async (resolver, reject) => {
+			//responseType == 'approve'|'deny'|'consider'
+			if (!(guild && user && reason && +index && responseType)) return reject('Unknown error');
+			let Rule = DataBase.guilds[guild.id].Suggestions,
+				suggestion = Rule.suggestions[index];
+			if (!suggestion) return reject('Suggestion not found');
 
-					suggestion = suggestion.substr(0, 4096);
+			let channel = await client.channels.fetch(Rule.channels.response).catch(() => false),
+				member = await guild.members.fetch(suggestion.user).catch(() => false);
 
-					let msg = await channel.send({
+			if (!channel) return reject('Response Channel not found');
+			if (!member) return reject('Member not found');
+
+			reason = reason.substr(0, 1024);
+
+			let [msg, suggestChannel] = await Promise.all([channel.send({
 						embeds: [{
-							color: parseInt(Rule.embed.colors.pending, 16),
+							color: parseInt(Rule.embed.colors[responseType], 16),
 							author: {
 								iconURL: member.displayAvatarURL(),
-								name: member.tag
+								name: member.user.tag
 							},
-							title: `${Rule.embed.suggestion} #${index}`,
-							description: suggestion
-						}]
-					});
-
-					msg.react(Rule.embed.up || '⬆️').then(() => msg.react(Rule.embed.down || '⬇️')
-						.catch(console.error)).catch(console.error);
-
-					Rule.suggestions = Rule.suggestions || {};
-					Rule.suggestions[index] = {
-						user: member.id,
-						msg: msg.id,
-						suggestion
-					}
-
-					Rule.index = ++index;
-
-					resolver(msg);
-					WriteDataBase();
-
-				} catch (e) {
-					reject(e);
-				}
-			}),
-			respond: (guild, user, reason, index, responseType) => new Promise(async (resolver, reject) => {
-				// console.log(11);
-				//responseType == ['approve', 'deny', 'consider']
-				try {
-					if (!(guild && reason && +index && responseType)) throw 1;
-
-					let Rule = DataBase.guilds[guild.id].Suggestions,
-						suggestion = Rule.suggestions[index],
-						channel = await client.channels.fetch(Rule.channels.response).catch(() => false),
-						suggestionUser = await client.users.fetch(suggestion.user).catch(() => undefined);
-
-					if (!channel) return reject('Channel not found');
-
-					reason = reason.substr(0, 1024);
-
-					let [msg, suggestChannel] = await Promise.all([channel.send({
-							embeds: [{
-								color: parseInt(Rule.embed.colors[responseType], 16),
-								author: {
-									iconURL: suggestionUser?.displayAvatarURL(),
-									name: suggestionUser?.tag || 'Unknown'
-								},
-								title: `${Rule.embed.suggestion} #${index} ${Rule.embed[responseType]}`,
-								description: suggestion.suggestion,
-								fields: [{
-									name: `${Rule.embed.reasonFrom} ${user.tag}:`,
-									value: reason,
-								}]
+							title: `${Rule.embed.suggestion} #${index} ${Rule.embed[responseType]}`,
+							description: suggestion.suggestion,
+							fields: [{
+								name: `${Rule.embed.reasonFrom} ${user.tag}:`,
+								value: reason,
 							}]
-						}).catch(e => null),
-						client.channels.fetch(Rule.channels.suggest).catch(e => null)
-					]), suggestionMsg = await suggestChannel.messages.fetch(suggestion.msg).catch(e => null);
-
-					if (!(msg && suggestChannel && suggestionMsg)) throw 2;
-
-					suggestChannel.messages.edit(suggestionMsg, {
-						embeds: [{
-							...suggestionMsg.embeds[0].toJSON(),
-							color: parseInt(Rule.embed.colors[responseType], 16)
 						}]
-					}).catch(e => console.log(e.message));
-					// console.log(15);
-					suggestion.answer = {
-						type: responseType,
-						user: user.id,
-						reason
-					}
+					}).catch(e => false),
+					client.channels.fetch(Rule.channels.suggest).catch(e => false)
+				]),
+				suggestionMsg = await suggestChannel.messages.fetch(suggestion.msg).catch(e => false);
 
-					resolver(msg);
-					WriteDataBase();
-					// console.log(16);
-				} catch (e) {
-					reject(e);
-					console.log(17, e);
-				}
-			})
-		},
+			if (!msg) return reject('Could not send message');
+			if (!suggestChannel) return reject('Suggestion Channel not found');
+
+			suggestChannel.messages.edit(suggestionMsg, {
+				embeds: [{
+					...suggestionMsg.embeds[0].toJSON(),
+					color: parseInt(Rule.embed.colors[responseType], 16)
+				}]
+			}).catch(() => false);
+
+			suggestion.answer = {
+				type: responseType,
+				user: user.id,
+				reason
+			}
+
+			resolver(msg);
+			WriteDataBase();
+		}),
 		MutedPermissions = async role => {
 			try {
 				if (role && role instanceof Discord.Role) {
@@ -2766,6 +2376,29 @@ const defaultReasons = {
 const isTicket = channel =>
 	c.topic?.startWith('Support Channel created by');
 
+const setGuildCustomCommands = guild => {
+	const TextCommandRules = DataBase.guilds[guild.id].TextCommandRules;
+	if (!TextCommandRules) return;
+
+	for (const rule of TextCommandRules)
+		return guild.commands.create({
+				name: rule.command.substring(0, 32).toLowerCase(),
+				description: (rule.embed ?
+						rule.content.ttl || rule.content.desc :
+						rule.content.substring(0, 100)) ||
+					'Custom Command',
+				options: [{
+					name: 'private',
+					type: 'BOOLEAN',
+					description: 'Only show output to the executor',
+					required: false
+				}],
+				defaultPermission: false,
+				dm_permission: false
+			})
+			.catch(() => console.log('No commands scope in', guild.name, guild.id))
+};
+
 const Snowflake = {
 	_alphabet: '0123456789!#$%&()*+,-./:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz|{}~¡¢£¤¥¦§¨©«°±´µ¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿĀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƞƟƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǁǂǃǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǴǵǶǷǸǹǺǻǼǽǾǿȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗșȚțȝȞȟȠȡȢȣȤȥȦȧȨȩȫȬȭȮȯȰȱȲȳȵȺȻȼȽȾȿɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏḂḃḊḋḞḟṀṁṖṗṠṡṪṫẀẁẂẃẄẅẛỲỳ',
 	encode: id => {
@@ -2803,9 +2436,6 @@ console.timeEnd('Consts');
 let MaybeGuild, SupportServer, idleTimer;
 
 Object.defineProperty(Array.prototype, 'filterX', { get: function () { return this.filter(Boolean) } });
-Object.prototype.command = function (cmd) {
-	return this.commands?.[cmd] || cmd
-}
 Object.prototype.isEmpty = function () {
 	return !Object.keys(this).length || Object.values(this).every(x => x === undefined)
 }
@@ -2835,6 +2465,8 @@ Object.entries(DataBase.loggedIn).forEach(([id, data]) => {
 	// }
 
 })
+
+const commands = Import_commands({ client, CleanDate, capital, moment, ParseModLogs, ObjectMerge, MutedPermissions, encodeT, DataBase, WriteDataBase, newDiv, SuggestRespond });
 
 app.response.error = async function (code, message) { // wont return response | not chainable
 	const document = await baseDoc({
@@ -2887,15 +2519,6 @@ io.on('connection', async socket => {
 		socket.on("disconnect", (reason) => sendLogLoad(false, 1));
 
 		socket.on('NewGuildSubrcibe', (x, fun) => NewGuildSubrcibers.push([fun, socket.discord.id]));
-		socket.on('GetPrefix', (x, fun) => fun(socket.GuildData?.prefix || DefaultPrefix, DefaultPrefix));
-		socket.on('SetPrefix', (newPrefix, fun) => {
-			if (/^\S$/i.test(newPrefix[0])) {
-				socket.GuildData.prefix = newPrefix[0];
-				fun(newPrefix[0]);
-				WriteDataBase();
-			} else fun(socket.GuildData.prefix || DefaultPrefix);
-			sendLogLoad('Prefix set to ' + socket.GuildData.prefix);
-		});
 		socket.on('Logout', (x, fun) => {
 			try {
 				if (Cache.has(socket.LoginId)) Cache.del(socket.LoginId);
@@ -3051,17 +2674,6 @@ io.on('connection', async socket => {
 			if (socket.GuildData.logs.isEmpty()) socket.GuildData.logs = undefined;
 			WriteDataBase();
 		});
-		socket.on('SetCommand', (data, fun) => {
-			if (!socket.GuildData.commands) socket.GuildData.commands = {};
-			if (commands.map(c => c.com).includes(data.ori)) {
-				socket.GuildData.commands[data.ori] = data.new.substr(0, 50);
-
-				fun(socket.GuildData.commands[data.ori]);
-				sendLogLoad(socket.GuildData.prefix + data.ori + ' command set to ' + socket.GuildData.prefix + data.new)
-				if (socket.GuildData.commands.isEmpty()) socket.GuildData.commands = undefined;
-				WriteDataBase();
-			} else throw 'Invalid Command'
-		});
 		socket.on('Command', ([key, data], fun) => { //Custom text command
 			try {
 				if (!socket.GuildData.TextCommandRules) socket.GuildData.TextCommandRules = [];
@@ -3088,18 +2700,12 @@ io.on('connection', async socket => {
 						let removed = len - Rules.length;
 						fun(removed > 0);
 						sendLogLoad('Custom Command deleted: ' + socket.GuildData.prefix + command)
-					},
-					toggle: (command) => {
-						let rule = Rules.map((x, i) => [x, i]).find(x => x[0].command == command);
-						if (rule) Rules[rule[1]].disabled = !Rules[rule[1]].disabled;
-						fun(!Rules[rule[1]].disabled);
-						sendLogLoad('Custom Command ' + (Rules[rule[1]].disabled ? 'disabled: ' : 'enabled: ') + socket.GuildData.prefix + command)
 					}
 				};
 
 				functions[key](data);
 				if (!socket.GuildData.TextCommandRules.length) socket.GuildData.TextCommandRules = undefined;
-
+				else if (key != 'get') setGuildCustomCommands(socket.Guild)
 				WriteDataBase();
 			} catch (e) {
 				fun(null, e)
@@ -3164,7 +2770,6 @@ io.on('connection', async socket => {
 						[
 							[obj.channels, 'suggest', 19],
 							[obj.channels, 'response', 19],
-							[obj, 'staff', 19],
 							[obj.embed, 'suggestion', 40],
 							[obj.embed, 'reasonFrom', 40],
 							[obj.embed, 'approve', 40],
@@ -3268,7 +2873,7 @@ io.on('connection', async socket => {
 						reason = reason.substr(0, 1024);
 						let member = await socket.Guild.members.fetch(socket.discordID);
 						if (reason && +index && responseType)
-							Suggest.respond(socket.Guild, socket.discord, reason, +index, responseType)
+							SuggestRespond(socket.Guild, socket.discord, reason, +index, responseType)
 							.catch(e => fun(null, e))
 							.then(() => fun({
 								reason,
@@ -3309,7 +2914,7 @@ io.on('connection', async socket => {
 							resultsDiv.append(transcriptsTitle, transcriptsDiv);
 							transcriptsDiv.append(...await Promise.all(Transcripts.map(async ({ id, channelName, closedBy, msgs, closeAt, fromto }, i) => {
 								let Transcript = Transcripts[i],
-									div = newDiv('transcript'),
+									div = newDiv('transcript').Id(id),
 									name = newDiv('div', 'name'),
 									timeDiv = newDiv('div', 'time'),
 									closed = newDiv('div', 'closed'),
@@ -3317,7 +2922,6 @@ io.on('connection', async socket => {
 
 								timeDiv.append(from, to, expires);
 
-								div.id = id
 								name.innerHTML = channelName || 'Unknown';
 								expires.innerHTML = `<i>Expires:</i><i>${moment(decodeT(closeAt)).fromNow()}</i>`;
 								try {
@@ -3420,8 +3024,7 @@ io.on('connection', async socket => {
 						else if (Cache.has(cacheLable))
 							fun(Cache.get(cacheLable))
 						else {
-							let resultsDiv = newDiv(),
-								modlogsDiv = newDiv('modlogs');
+							let modlogsDiv = newDiv('modlogs');
 
 							// ({
 							// 		t: 'ban',
@@ -3714,7 +3317,7 @@ client.on('ready', async () => {
 	WriteDataBase();
 
 	Object.entries(DataBase.guilds).filter(x => x[1]?.Tickets?.enabled)
-		.forEach(([guildID, { Tickets }]) =>
+		.forEach(([guildID]) =>
 			TicketSetup(guildID)
 		);
 
@@ -3740,6 +3343,78 @@ client.on('ready', async () => {
 	setInterval(setInvites, 72e5); //2h
 	setInterval(TopggSend, 864e5); //24h
 
+	client.application.commands.set(
+		commands.map(({ com: name, des: description, options }) => ({
+			name,
+			description,
+			defaultPermission: false,
+			dm_permission: false,
+			options: Object.entries(options).map(([name, option]) => ({ name, ...option })),
+		}))
+	);
+	for (var guild of client.guilds.cache.values()) {
+		const GuildData = DataBase.guilds[guild.id]
+		if (!GuildData) continue;
+		setGuildCustomCommands(guild);
+
+		if (process.argv[2] != 'announce') continue;
+
+		if (false && guild.systemChannel)
+			guild.systemChannel.send({
+				embeds: [{
+					color: 0xdbad11,
+					title: 'Introducing Slash Commands',
+					author: {
+						name: 'KonkenBoten',
+						icon_url: 'https://cdn.discordapp.com/icons/827687377224728629/8f41a5cc0bf50322aa28e2600ae7fc69.webp?size=512',
+						url: 'https://bot.konkenbonken.se/Guild/' + guild.id,
+					},
+					description: `The time has come\n**KonkenBoten** is switching to **Slash Commands**`,
+					fields: [{
+						name: 'What happens now?',
+						value: `From now on, all *normal* ` +
+							(GuildData.prefix == '/' ?
+								`in-chat commands are disabled and instead, you'll use **Slash Commands**; these will still` :
+								`prefixed(${GuildData.prefix ?? '$'}) commands are disabled and instead, you'll`) +
+							` use the forward-slash(/) as prefix\n\n` +
+							`This allow easier and more advanced command-specific permissions to be set\nTo prevent abuse, all **Slash Commands** is disabled by default and need to be enabled manually by Server Admins\n\n` +
+							'To get started with **Slash Commands**, click\n> [Enable Slash Commands](https://discord.com/api/oauth2/authorize?client_id=813803575264018433&scope=applications.commands)\nwhen authorized, go to\n> `Server Settings` ⮕ `Interactions` ⮕ `KonkenBoten`\nto set the permissions\n\n' +
+							'Want to learn more? Read these articles:\n> [Slash Commands FAQ](https://support.discord.com/hc/sv/articles/1500000368501-Slash-Commands-FAQ)\n> [How to set Permissions](https://discord.com/blog/slash-commands-permissions-discord-apps-bots)\n\n' +
+							'If you have any further questions, feel free to [join the **KonkenBoten Server**](https://discord.gg/27j5fnX3jX)\nThere will all updates and outages also be posted',
+					}],
+					footer: { text: 'Thank you!' }
+				}],
+				components: [{
+					components: [
+						Array.isArray(GuildData.TextCommandRules) && GuildData.TextCommandRules.length && { label: "Click after you've enabled Slash Commands", customId: 'enable-custom-commands', type: 2, style: 1 },
+					].filter(Boolean),
+					type: 1
+				}]
+			})
+			.then(() => console.log(`Sent in ${guild.name} - ${guild.id}`))
+	}
+	if (process.argv[2] == 'announce')
+		(await client.channels.fetch('829487658883481610')).send({
+			embeds: [{
+				color: 0xdbad11,
+				title: 'Introducing Slash Commands',
+				author: {
+					name: 'KonkenBoten',
+					icon_url: 'https://cdn.discordapp.com/icons/827687377224728629/8f41a5cc0bf50322aa28e2600ae7fc69.webp?size=512',
+				},
+				description: `The time has come\n**KonkenBoten** is switching to **Slash Commands**`,
+				fields: [{
+					name: 'What happens now?',
+					value: `From now on, all *normal* prefixed($) commands are disabled and instead, you'll use the forward-slash(/) as prefix\n` +
+						`**Slash Commands** is mandatory for bots to use as of August this year\n\n` +
+						`This allow easier and more advanced command-specific permissions to be set\nTo prevent abuse, all **Slash Commands** is disabled by default and need to be enabled manually by Server Admins\n\n` +
+						'To get started with **Slash Commands**, click\n> [Enable Slash Commands](https://discord.com/api/oauth2/authorize?client_id=813803575264018433&scope=applications.commands)\nwhen authorized, go to\n> `Server Settings` ⮕ `Interactions` ⮕ `KonkenBoten`\nto set the permissions\n\n' +
+						'Want to learn more? Read these articles:\n> [Slash Commands FAQ](https://support.discord.com/hc/sv/articles/1500000368501-Slash-Commands-FAQ)\n> [How to set Permissions](https://discord.com/blog/slash-commands-permissions-discord-apps-bots)\n\n' +
+						'If you have any further questions, feel free to ask in <#827687378113396798> or <#827687717454217277>',
+				}],
+				footer: { text: 'Thank you!' }
+			}]
+		})
 });
 
 client.on("guildCreate", async guild => {
@@ -3787,7 +3462,7 @@ client.on('messageCreate', async m => { //Not Prefixed
 
 	const GuildData = DataBase.guilds[m.guild.id] || {};
 
-	if (Object.values(GuildData.Suggestions?.channels || {}).includes(m.channel.id) && m.author.id != ClientID && !m.member.roles.resolve(GuildData.Suggestions?.staff))
+	if (Object.values(GuildData.Suggestions?.channels || {}).includes(m.channel.id) && m.author.id != ClientID)
 		return setTimeout(() => m.delete(), 10e3);
 
 	let reaction = GuildData.Reactions && Object.keys(GuildData.Reactions || {}).find(x => x == m.channel.id);
@@ -3886,435 +3561,92 @@ client.on('messageCreate', async m => { //Automod
 		}]
 	});
 });
-client.on('messageCreate', async m => { //Prefixed
+
+client.on('messageCreate', async m => { //deprecated commands warning
 	if (!m.guild) return;
-	// try {
-	const GuildData = DataBase.guilds[m.guild.id] || {},
+	const GuildData = DataBase.guilds[m.guild.id] ?? {};
 
-		error = () => {
-			setTimeout(() => m.delete(), 20e3);
-			m.react('❌');
-			console.trace('❌');
-		};
+	if (!(
+			[...commands, ...Object.values(GuildData.commands || {})]
+			.some(({ com }) => m.content.startsWith((GuildData.prefix || '$') + com)) ||
+			m.content.startsWith('<@813803575264018433>')
+		)) return;
 
-	if (!(m.content.startsWith(GuildData.prefix || DefaultPrefix))) return;
-
-	let textCommandList = GuildData.TextCommandRules?.map(x => x.command.toLowerCase()),
-		command = m.content.split(' ')[0].substr(1).toLowerCase();
-	if (textCommandList?.includes(command)) {
-		let rule = GuildData.TextCommandRules[textCommandList.indexOf(command)];
-		if (!rule.disabled && (!rule.roles || !rule.roles[0] || [...m.member.roles.cache.keys()].some(id => rule.roles.includes(id)) || m.member.permissions.has(8n))) {
-
-			let message = rule.content;
-			if (rule.embed) message = {
-				embeds: [{
-					author: {
-						name: rule.content.athr.nm,
-						iconURL: rule.content.athr.img
-					},
-					title: rule.content.ttl,
-					description: rule.content.desc,
-					footer: {
-						text: rule.content.ftr.nm,
-						iconURL: rule.content.ftr.img
-					},
-					thumbnail: { url: rule.content.thmb },
-					image: { url: rule.content.img },
-					color: `#${rule.content.clr||'dbad11'}`
-				}]
-			};
-			// if (rule.embed && rule.content.pings) message.content = rule.content.pings.map(id => `<@&${id}>`).join()
-			// if (rule.embed && rule.content.ping) message.content = `<@&${rule.content.ping}>`;
-
-			m.channel.send(message).catch(e => console.log('\n\n', e, message, '013487\n\n'))
-			m.delete();
-			return;
-		}
-	} //if textCommand
-	else if (command == GuildData.command('echo') && m.member.permissions.has(8n)) {
-		// console.log(2);
-		let content = m.content.substr(2 + command.length);
-		if (!content) return;
-		if (content.length > 2000) {
-			m.channel.send(content.substr(0, 2000));
-			content = content.substr(2000)
-		}
-		m.channel.send(content);
-		m.delete()
-		return;
-	} else if (GuildData?.Suggestions?.channels && Object.values(GuildData.Suggestions.channels).includes(m.channel.id)) {
-		// console.log(3);
-		let responseTypes = {
-			approve: GuildData.command('approve'),
-			deny: GuildData.command('deny'),
-			consider: GuildData.command('consider')
-		};
-		// console.log({				m,				suggest: GuildData.command('suggest'),				command			});
-
-		// console.log([command == GuildData.command('suggest'), [Object.values(responseTypes).includes(command), m.member.roles.cache.get(GuildData.Suggestions.staff), m.member.roles.cache.has(GuildData.Suggestions.staff)]]);
-		// console.log([m.member.roles.cache]);
-		try {
-			if (command == GuildData.command('suggest'))
-				Suggest.suggest(m.guild, m.author, m.content.substr(2 + command.length))
-				.then(() => m.delete()).catch(error)
-
-			else if (Object.values(responseTypes).includes(command) && m.member.roles.resolve(GuildData.Suggestions.staff))
-				Suggest.respond(
-					m.guild, m.author,
-					m.content.match(/^.\S+\s+\d+\s+(.*)/)[1],
-					m.content.match(/^.\S+\s+(\d+)/)[1],
-					Object.fromEntries(Object.entries(responseTypes).map(x => x.reverse()))[command],
-				).then(() => m.delete()).catch(error)
-			else error();
-		} catch { error() }
-		return;
-	}
-
-	let modCommand = Object.keys(moderationCommands).find(c => command == GuildData.command(c));
-	// modCommand -> Originalnamnet på kommandot
-	if (modCommand) {
-		if (m.author.bot) return error();
-
-		if (!GuildData.Moderation) GuildData.Moderation = {};
-		if (GuildData.Moderation.logsEnabled && !GuildData.Moderation.logs) GuildData.Moderation.logs = {};
-		if (!GuildData.Moderation.coms) GuildData.Moderation.coms = {};
-
-		let activeRole = GuildData.Moderation.coms[modCommand]?.role;
-		if (!+activeRole) activeRole = GuildData.Moderation.staff;
-		if (!(m.member.roles.cache.has(activeRole) || m.member.permissions.has(8n))) return; // !if has role OR admin
-		const content = m.content.substr(2 + command.length);
-		let [, memberID, reason] = content.match(/^\s*<@!?(\d{16,19})>\s*(.*)$/s) || content.match(/^\s*(\d{16,19})\s*(.*)$/s) || [];
-		// console.log({ memberID, reason, content });
-		if (!(memberID)) return error();
-		if (GuildData.Moderation.logsEnabled && !GuildData.Moderation.logs[m.author.id]) GuildData.Moderation.logs[m.author.id] = [];
-
-		const [member, channel, mutedRole] = await Promise.all([
-			modCommand == 'unban' ? memberID : m.guild.members.fetch(memberID).catch(e => modCommand.includes('ban') ? memberID : error()),
-			client.channels.fetch(GuildData.Moderation.channel),
-			new Promise(async resolve => {
-				if (!modCommand.includes('mute') || GuildData.Moderation.timeout) return resolve(false);
-
-				let role = GuildData.Moderation.muted && await m.guild.roles.fetch(GuildData.Moderation.muted).catch(e => false)
-				if (role) return resolve(role);
-
-				role = await m.guild.roles.create({
-					name: 'Muted',
-					color: 7895160, // #787878
-					position: m.guild.roles.botRoleFor(client.user).position,
-					// position: m.guild.me.roles.highest.position, //- 1
-					// permissions: 0n,
-					// unicodeEmoji: '🔇',
-					mentionable: false,
-					reason: 'Muted Role created'
-				}).catch(e => console.error(e, 2756));
-
-				MutedPermissions(role);
-				GuildData.Moderation.muted = role.id;
-
-				return resolve(role);
-			})
-		]).catch(e => [
-			console.error(e, 89684),
-			error()
-		]);
-
-		if (!(member && channel)) return;
-
-		// console.log([m.member.roles.highest.name, member.roles.highest.name], m.member.roles.highest.comparePositionTo(member.roles.highest), m.member.roles.highest.comparePositionTo(member.roles.highest) < 0, m.guild.ownerId == m.member.id);
-
-		if (GuildData.Moderation.dmInvite && ['tempban', 'kick', 'unban'].includes(modCommand)) {
-			let invites = await m.guild.invites.fetch().catch(e => null);
-			var dmInvite =
-				invites && [...invites.values()].find(i => i.inviter?.id == client.user.id && i.channel.id == channel.id) ||
-				await channel.createInvite({ maxAge: 0, unique: true, reason: 'Created an Invite for inviting tempbanned or kicked members' }).catch(e => console.error('Cant create Invite:', e));
-		}
-		if (modCommand != 'unban' && m.guild.ownerId != m.member.id && (!member.roles || m.member.roles.highest.comparePositionTo(member.roles.highest) <= 0)) return error();
-		if (modCommand.includes('mute') && mutedRole && m.guild.me.roles.highest.comparePositionTo(mutedRole) <= 0) return error();
-
-		let durationString;
-		if (modCommand.startsWith('temp')) try {
-			[, durationString, reason] = (reason + ' ').match(/^\s*(\w+)\s+(.*)$/s);
-			var duration = Duration(durationString),
-				until = new Date(Date.now() + duration * 1000); // console.log({ duration });
-		} catch (e) { console.error(e); return error() }
-		const args = {
-			member, //Member  if unban: id
-			channel, //Channel
-			reason: reason.trim().substr(0, 512) || undefined, //string
-			guild: m.guild, //Guild
-			staff: m.member, //Member
-			logs: GuildData.Moderation.logsEnabled ? GuildData.Moderation.logs[m.author.id] : [], //array
-			muted: GuildData.Moderation.muted, //id
-			duration, //seconds
-			until, //Date
-			text: {
-				...ObjectMerge({ reason: 'Reason:', hasBeen: 'has been', by: 'by', duration: 'Duration:', messageFrom: `Message from ${m.guild.name}:`, until: 'until', color: 'dbad11' }, GuildData.Moderation.text || {}),
-				...ObjectMerge(commands.find(c => c.com == modCommand) || {},
-					GuildData.Moderation.coms && GuildData.Moderation.coms[modCommand] || {})
-			},
-			dmInvite: dmInvite && dmInvite.toString(), //Invite
-			dmAll: !!GuildData.Moderation.dmAll, //bool
-			banMessage: GuildData.Moderation.banMessage, //string
-			tellWho: !!GuildData.Moderation.tellWho, //bool
-			timeout: !!GuildData.Moderation.timeout && !!m.member.timeout //bool
-		};
-		// console.log(args.text);
-		// if (!(member && channel)) return error();
-		await moderationCommands[modCommand](args).catch(e => e);
-		// if (duration && m.guild.id == '785416126033035264') m.guild.channels.fetch('933099574866886706').then(c => c.send(`${member} borde un${modCommand.includes('ban')?'bannas':'mutas'} <t:${Math.floor(until/1e3)}:R>`))
-		// if (duration && m.guild.id == '702933462209790013') m.guild.channels.fetch('933101963074232320').then(c => c.send(`${member} borde un${modCommand.includes('ban')?'bannas':'mutas'} <t:${Math.floor(until/1e3)}:R>`))
-		m.delete();
-		WriteDataBase();
-		setTimeout(WriteDataBase, 4e3);
-		// console.log(6.3);
-		return;
-	}
-
-	// ({Moderation: {enabled: 0, /* 0=false; 1=true */channel: '8578', /*brottsregistret*/staff: '874647', /*staffroll*/text: { reason: 'Reason:', hasBeen: 'has been', by: 'by', duration: 'Duration:', messageFrom: `Message from ${m.guild.name}:`, until: 'until', color: 'dbad11' },dmInvite: 0,dmAll: 0, /*false = only dm banned/tempbanned*/banMessage: 'text', /*empty if disabled*/tellWho: 0,logsEnabled: 0,muted: '938733', /*mutedroll*/logs: {"03298450": /*staffID*/[{ type: 'ban', reason: '', staff: '5645', member: '873', expires: 'parseT', duration: 'seconds' }]},coms: {warn: { txt: 'warned', role: '8578' }, /*txt1: 'warn',*/kick: { txt: 'kicked', role: '8578' }, /*txt1: 'kick',*/ban: { txt: 'banned', role: '8578' }, /*txt1: 'ban',*/unban: { txt: 'unbanned', role: '8578' }, /*txt1: 'unban',*/tempban: { txt: 'temporarily banned', role: '8578' },/*txt1: 'temporarily ban',*/mute: { txt: 'muted', role: '8578' }, /*txt1: 'mute',*/unmute: { txt: 'unmuted' }, /*txt1: 'unmute',*/tempmute: { txt: 'temporarily muted', role: '8578' }, /*txt1: 'temporarily mute',*/}}})
-	else if (command == GuildData.command('infractions')) {
-		if (!(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n))) return error();
-		if (!GuildData.Moderation?.logs || !Object.keys(GuildData.Moderation.logs).length) {
-			m.channel.send({
-				embeds: [{
-					color: parseInt(GuildData.Moderation?.text?.color || 'dbad11', 16),
-					author: { name: `This server has no saved infractions`, iconURL: m.guild.iconURL() }
-				}]
-			})
-			return m.delete();
-		}
-
-		let { guild, member: staff, channel } = m, { logs } = GuildData.Moderation,
-			content = m.content.substr(2 + command.length),
-			[, memberID] = content.match(/^\s*<@!?(\d{16,19})>$/s) || content.match(/^\s*(\d{16,19})$/s) || [],
-			member = memberID && await guild.members.fetch(memberID).catch(e => client.users.fetch(memberID).catch(e => memberID));
-
-		if (!member) return error();
-		//member = Member | User | id
-		logs = ParseModLogs(logs, guild, member);
-		let sliced = logs.slice(0, 10),
-			user = member.user || member.tag && member, // User | undefined
-			displayTag = user?.tag || member, // tag | id
-			displayIcon = user && user.displayAvatarURL(),
-			embed = {
-				color: member.displayColor || parseInt(GuildData.Moderation.text?.color || 'dbad11', 16),
-				author: { name: `${displayTag} has no infractions`, iconURL: displayIcon },
-				footer: { text: `Requested by: ${m.author.tag} | ${m.author.id}`, iconURL: m.member.displayAvatarURL() }
-			};
-
-		if (sliced[0]) {
-			embed.author.name = `${displayTag}'s' infractions`;
-			let fieldsLength = 0,
-				fields = sliced.map(log =>
-					`**${capital(`${log.dur?'temporarily':''} ${log.t} ${log.dur?('- '+CleanDate(log.dur)):''}`.trim())}:**\n` +
-					`⠀${(log.r||'*No reason specified*').replace(/\n/g,' ')} - *${moment(log.d).fromNow()}*`)
-				.filter(log => (fieldsLength += log.length) <= 1024)
-
-			let last24 = logs.findIndex(log => log.d < Date.now() - 864e5),
-				last7 = logs.findIndex(log => log.d < Date.now() - 6048e5);
-			if (last24 == -1) last24 = logs.length;
-			if (last7 == -1) last7 = logs.length;
-			let displayNum = Math.min(10, logs.length),
-				displayLast = 10 > logs.length ? 'All' : 'Last';
-
-			embed.fields = [{
-					name: 'Last 24 hours',
-					value: `${last24} infractions`, //\n⠀
-					inline: true
-				}, {
-					name: 'Last 7 days',
-					value: `${last7} infractions`,
-					inline: true
-				}, {
-					name: 'Total',
-					value: `${logs.length} infractions`,
-					inline: true
-				},
-				{ name: `**${displayLast} ${displayNum} infractions**`, value: fields.join('\n') }
-			];
-		}
-		channel.send({ embeds: [embed] })
-		m.delete();
-	} // if $infractions
-	else if (command == GuildData.command('slowmode')) {
-		let sec = m.content.substr(2 + command.length);
-		if (sec == 'off' || !sec || sec == 0) sec = 0;
-		else if (!isNaN(+sec)) sec = +sec;
-		else
-			try {
-				sec = Duration(sec);
-				var durFormat = true;
-			} catch (e) { return error(); }
-
-		if (!m.channel.setRateLimitPerUser || !(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
-			return error();
-
-		if (sec == 0) var description = `Slowmode disabled`;
-		else if (isNaN(sec) || sec > 21600) return error();
-		else if (durFormat) var description = `Slowmode set to ${CleanDate(sec)}`
-		else var description = `Slowmode set to ${sec} seconds`
-
-		await m.channel.setRateLimitPerUser(sec, `${description} by ${m.author.tag}`)
-		m.delete();
-		m.channel.send({
-			embeds: [{
-				color: 'dbad11',
-				description
-			}]
-		}).then(msg => setTimeout(() => msg.delete(), 5e3));
-
-	} else if (command == GuildData.command('clear')) {
-		let amt = +m.content.substr(2 + command.length)
-		if (!amt || !m.channel.bulkDelete || !(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
-			return error();
-
-		amt++;
-		amt = Math.min(amt, 500)
-		let hundreds = [...Array(Math.floor(amt / 100)).fill(100), amt % 100].filter(x => x);
-
-		let messages = [],
-			before = (BigInt(m.id) + 1n).toString();
-		for (const limit of hundreds) {
-			let msgs = await m.channel.messages.fetch({ limit, before });
-			before = msgs.lastKey();
-			messages.push([...msgs.keys()]);
-		}
-		let deleted = await Promise.all(messages.map(x => m.channel.bulkDelete(x, true)));
-
-		deleted = deleted.map(x => x.size || 1).reduce((a, b) => a + b) - 1;
-
-		m.channel.send({
-			embeds: [{
-				color: 'dbad11',
-				description: `Deleted ${deleted} messages`
-			}]
-		}).then(msg => setTimeout(() => msg.delete(), 5e3));
-
-
-		client.emit('messageClear', deleted, m.channel, m.member)
-	} else if (command == GuildData.command('userinfo')) {
-		const content = m.content.substr(2 + command.length),
-			[, memberID] = content.match(/^\s*<@!?(\d{16,19})>$/s) || content.match(/^\s*(\d{16,19})$/s) || [],
-			member = await m.guild.members.fetch(memberID).catch(() => false);
-
-		if (!member || !member.user || !(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
-			return error();
-
-		let fieldsLength = 0,
-			embed = {
-				footer: { text: `Requested by: ${m.author.tag} | ${m.author.id}`, iconURL: m.member.displayAvatarURL() },
-				author: { name: `Info about ${member.displayName}` },
-				color: member.displayColor || 'dbad11',
-				thumbnail: { url: member.displayAvatarURL() },
-				fields: [
-						['Id:', member.id],
-						['Username:', member.user.tag],
-						['Bot:', member.user.bot ? 'Yes' : 'No'],
-						['Boosted:', member.premiumSince ? 'Since ' + moment(member.premiumSince).guild(m.guild).format('D/M-YYYY - HH:mm') : 'No'],
-						['Muted:', (GuildData.Moderation.timout ? member.isCommunicationDisabled() : member.roles.cache.has(GuildData.Moderation.muted)) ? 'Yes' : 'No'],
-						['Permissions', member.permissions.bitfield], // Object.entries(member.permissions.serialize()).filter(([, v]) => v).map(([k]) => k)
-						['Joined server at:', moment(member.joinedAt).guild(m.guild).format('D/M-YYYY - HH:mm')], // ['⠀', '⠀'],
-						['Joined Discord at:', moment(member.user.createdAt).guild(m.guild).format('D/M-YYYY - HH:mm')],
-						['Recent infractions:', ParseModLogs(GuildData.Moderation.logs, m.guild, member).slice(0, 3).map(log =>
-							`**${capital(`${log.dur?'temporarily':''} ${log.t} ${log.dur?('- '+CleanDate(log.dur)):''}`.trim())}:**\n⠀${(log.r||'*No reason specified*').replace(/\n/g,' ')} - *${moment(log.d).fromNow()}*`).filter(log => (fieldsLength += log.length) <= 1024).join('\n') || undefined, true],
-					]
-					.filter(([, value]) => value != undefined /*&&value.toString()*/ )
-					.map(([name, value, inline]) => ({ name, value: value.toString(), inline: !inline }))
-			};
-
-		m.channel.send({
-			embeds: [embed],
-			components: [{
-				components: [{ label: 'Parse Permissions', customId: 'userinfo-parse-permissions-' + memberID, type: 2, style: 1 }],
-				type: 1
-			}]
-		});
-		return m.delete()
-	}
-	if (command == GuildData.command('serverinfo')) {
-		if (!(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
-			return error();
-		const { guild } = m,
-		[channels, { threads }] = await Promise.all([guild.channels.fetch(), guild.channels.fetchActiveThreads()]);
-
-		let embed = {
-			footer: { text: `Requested by: ${m.author.tag} | ${m.author.id}`, iconURL: m.member.displayAvatarURL() },
-			author: { name: `Info about ${guild.name}` },
-			color: 'dbad11',
-			thumbnail: { url: guild.iconURL() },
-			image: { url: guild.discoverySplashURL({ size: 512 }) },
-			fields: [
-					['Id:', guild.id],
-					['Owner:', `<@${guild.ownerId}>`],
-					['Created at:', moment(guild.createdAt).guild(m.guild).format('D/M-YYYY - HH:mm')],
-
-					['Members:', guild.memberCount],
-					['Channels:', channels.size],
-					['Roles:', guild.roles.cache.size],
-
-					['Text Channels:', channels.filter(c => c.isText()).size],
-					['Voice Channels:', channels.filter(c => c.isVoice()).size],
-					['Thread Channels:', threads.size],
-
-					['Boosts:', guild.premiumSubscriptionCount],
-					['Description:', guild.description],
-					['Total Infractions:', Object.values(GuildData.Moderation?.logs || {}).flat().length || undefined],
-					// ['Ban count:', guild.bans.cache.size],
-
-				]
-				.filter(([, value]) => value != undefined /*&&value.toString()*/ )
-				.map(([name, value, inline]) => ({ name, value: value.toString(), inline: !inline }))
-		};
-
-		m.channel.send({
-			embeds: [embed]
-		});
-		return m.delete()
-	}
-	if (command == GuildData.command('roleinfo')) {
-		const content = m.content.substr(2 + command.length),
-			[, roleID] = content.match(/^\s*<@&!?(\d{16,19})>$/s) || content.match(/^\s*(\d{16,19})$/s) || [],
-			[role, cached] = await Promise.all([m.guild.roles.fetch(roleID).catch(() => false), m.guild.members.fetch()]);
-
-		if (!role || !(m.member.roles.cache.has(GuildData.Moderation?.staff) || m.member.permissions.has(8n)))
-			return error();
-
-		let columns = Array(3).fill();
-		if (role.members) {
-			var members = role.members.map(m => m.toString());
-			if (members.length <= 5)
-				columns[0] = members.join(',\n')
-			else
-				columns = columns.map((x, i) => members.splice(0, i == 2 ? 7 : Math.round(Math.min(7, members.length / 3))).join(',\n'))
-		}
-
-		let embed = {
-			footer: { text: `Requested by: ${m.author.tag} | ${m.author.id}`, iconURL: m.member.displayAvatarURL() },
-			author: { name: `Info about ${role.name}` },
-			color: role.color || 'dbad11',
-			thumbnail: { url: role.iconURL() },
-			fields: [
-					['Id:', role.id],
-					['Displayed separately:', role.hoist ? 'Yes' : 'No'],
-					// ['Muted:', GuildData.Moderation.timout ? (GuildData.Moderation.muted ? 'Yes' : 'No') : undefined],
-					['Created at:', moment(role.createdAt).guild(m.guild).format('D/M-YYYY - HH:mm')],
-					['Members:', columns[0]],
-					['⠀', columns[1]],
-					['⠀', columns[2]],
-				]
-				.filter(([, value]) => value /*&&value.toString()*/ )
-				.map(([name, value, inline]) => ({ name, value: value.toString(), inline: !inline }))
-		};
-
-		m.channel.send({
-			embeds: [embed],
-			components: [{
-				components: [{ label: 'Parse Permissions', customId: 'roleinfo-parse-permissions-' + roleID, type: 2, style: 1 }],
-				type: 1
-			}]
-		});
-		return m.delete()
-	}
+	m.reply({
+		embeds: [{
+			color: 0xdbad11,
+			description: `**KonkenBoten has switched to [Slash Commands](https://support.discord.com/hc/sv/articles/1500000368501-Slash-Commands-FAQ) and prefixed(${GuildData.prefix || '$'}) chat-commands will no longer work**`
+		}]
+	}).then(
+		m => setTimeout(() => m.delete(), 10e3)
+	)
 });
+client.on('interactionCreate', async interaction => { // Slash-Commands
+	if (!(interaction.isCommand() && interaction.inCachedGuild())) return;
+
+	const GuildData = DataBase.guilds[interaction.guildId];
+
+	const error = message => {
+		let content = 'An error occured';
+		if (message) content += '\n> ' + message;
+		interaction.reply({ content, ephemeral: true });
+	};
+
+	const command = interaction.commandName,
+		commandObj = commands.find(c => c.com == command);
+
+	if (commandObj) {
+		var options = Object.fromEntries(Object.keys(commandObj.options || {}).map(name => {
+			const arg = interaction.options.get(name);
+			if (arg === null)
+				return [name, arg];
+			const value = ['user', 'member', 'channel', 'role', 'value'].find(type => arg[type]);
+			return [name, arg[value]];
+		}))
+
+		return commandObj.handler(options, interaction, { error, GuildData, reply: interaction.reply.bind(interaction) });
+	}
+	// Custom Commands
+
+	const textCommandList = GuildData.TextCommandRules?.map(x => x.command.toLowerCase());
+	if (!textCommandList?.includes(command))
+		return sendError(`Command not found: ${subCommand} ${interaction.commandName}`);
+
+	let rule = GuildData.TextCommandRules[textCommandList.indexOf(command)];
+
+	const priv = !!interaction.options.getBoolean('private');
+
+	let message = rule.content;
+	if (rule.embed) message = {
+		embeds: [{
+			author: {
+				name: rule.content.athr.nm,
+				iconURL: rule.content.athr.img
+			},
+			title: rule.content.ttl,
+			description: rule.content.desc,
+			footer: {
+				text: rule.content.ftr.nm,
+				iconURL: rule.content.ftr.img
+			},
+			thumbnail: { url: rule.content.thmb },
+			image: { url: rule.content.img },
+			color: `#${rule.content.clr||'dbad11'}`
+		}],
+		ephemeral: priv
+	};
+
+	if (priv)
+		interaction.reply(message);
+	else {
+		interaction.channel.send(message);
+		interaction.reply({
+			content: 'Successfully sent',
+			ephemeral: true
+		});
+	}
+}); // Slash-Commands
+
 client.on('voiceStateUpdate', async (oldState, newState) => {
 	let Created = DataBase.voiceCreated,
 		guild = (newState || oldState).guild,
@@ -4327,13 +3659,12 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 			hasNew = RulesIDs.includes(newState.channelId);
 		if (hasOld || hasNew) {
 
-			if (hasOld) { // if Leave
+			if (hasOld) // if Leave
 				if (oldState.channel && !oldState.channel.members.size) {
 					DataBase.voiceCreated = Created.filter(x => x != oldState.channelId);
 					oldState.channel.delete().catch(e => console.log('ERROR: oldState.channel.delete()', e.message))
 					WriteDataBase()
 				}
-			}
 
 			if (hasNew) { // if Join
 				let Rule = Rules[RulesIDs.indexOf(newState.channelId)];
@@ -4515,8 +3846,6 @@ client.on('interactionCreate', async interaction => {
 			console.time('ticket-claim');
 			if (!(member.roles.cache.has(Rule.staff) || member.permissions.has(8n))) return;
 
-			console.log(1);
-
 			let updatePromise = interaction.update({
 				...message,
 				nonce: undefined,
@@ -4528,11 +3857,9 @@ client.on('interactionCreate', async interaction => {
 					type: 1
 				}]
 			});
-			console.log(2);
 
 			channel.permissionOverwrites.create(Rule.staff, { SEND_MESSAGES: false, VIEW_CHANNEL: true });
 			channel.permissionOverwrites.create(user, { SEND_MESSAGES: true })
-			console.log(3);
 
 			let [moderators] = await Promise.all([
 				guild.roles.fetch(Rule.staff).catch(e => undefined),
@@ -4546,7 +3873,6 @@ client.on('interactionCreate', async interaction => {
 					value: member.id,
 					description: `${member.user.tag} | ${member.id}`
 				}));
-			console.log(4);
 
 			await updatePromise;
 			interaction.followUp({
@@ -4567,7 +3893,6 @@ client.on('interactionCreate', async interaction => {
 					type: 1
 				}] : undefined
 			})
-			console.log(5);
 
 			console.timeEnd('ticket-claim');
 			client.emit('ticketClaim', channel, user);
@@ -4707,7 +4032,20 @@ client.on('interactionCreate', async interaction => {
 			components: []
 		});
 
-	} else console.log(interaction);
+	} else if (customId == 'enable-custom-commands') {
+		;
+		interaction.reply({
+			ephemeral: true,
+			embeds: [{
+				color: 0xdbad11,
+				description: await setGuildCustomCommands(guild)
+					.then(
+						() => 'Setup done',
+						() => 'An error occured\nYou\'ll need to `Enable Slash Commands` before clicking'
+					)
+			}]
+		})
+	};
 }); // interactionCreate
 
 client.on("guildScheduledEventCreate", console.log)
@@ -4946,8 +4284,7 @@ app.get('/oauth', async (req, res) => {
 		}).catch(e => fail() && {});
 
 		if (!access_token) return fail();
-
-		var [user, guilds] = await Promise.all([oauth.getUser(access_token), oauth.getUserGuilds(access_token)]).catch(e => [console.error(e)]);
+		var [user, guilds] = await Promise.all([oauth.getUser(access_token), oauth.getUserGuilds(access_token)]);
 		if (!user || !guilds) return fail();
 
 		const LoginExpire = 864e5 * 4, //4d
@@ -5154,11 +4491,5 @@ process.on('uncaughtException', async err => {
 	);
 	await sendError(err.stack.split('\n').find(s => s.includes('KonkenBoten/script.js')), err);
 
-	let channel = await client.channels.fetch('927875941127045180').catch(e => false);
-	if (!channel) channel = await client.guilds.fetch('703665426747621467').then(guild => guild.channels.fetch('927875941127045180')).catch(e => false);
-
-	if (channel) channel.send(
-		`${err}\n		${err.stack.split('\n').find(s => s.includes('KonkenBoten/script.js'))||''}`
-	)
 })
 console.timeEnd('Load');

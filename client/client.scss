@@ -366,7 +366,7 @@ page {
 }
 
 :is(.displayPrefix, [prefix], #commands rule > h1)::before {
-  content: var(--prefix, "$");
+  content: var(--prefix, "/");
 }
 
 newrule {
@@ -394,7 +394,6 @@ newrule {
 // transcripts,
 
 commandSettings,
-setprefix,
 ticketsettings {
   @include blockElement;
 }
@@ -470,7 +469,7 @@ rule {
 }
 
 #commands editrule::before {
-  content: var(--prefix, "$");
+  content: var(--prefix, "/");
   position: absolute;
   z-index: 1;
   left: 1.2ch;
@@ -988,9 +987,8 @@ form {
   font-size: .7rem;
   margin-left: 3ch;
 }
-// :is(commandSettings, ticketSettings) input:not([type*=c]),editrule > input:not([type^=c], [type^=r]),
 
-input:not([type^=c], [type^=r], :is(suggestsettings, setprefix, modsettings) *),
+input:not([type^=c], [type^=r], :is(suggestsettings, modsettings) *),
 select {
   background-color: $color3;
   height: 4vh;
@@ -1174,15 +1172,6 @@ input.saveOption {
 //   font-size: 1em;
 //   margin-left: 1ch;
 // }
-
-setPrefix > input {
-  background-color: $color3;
-  height: 2rem;
-  width: 10ch;
-  border-radius: .5rem;
-  color: $white;
-  padding-left: 2ch;
-}
 
 .set {
   background-color: $accent1;
@@ -1628,7 +1617,7 @@ logsettings {
   }
 }
 
-:is(.commandList, .logList) {
+.logList {
   details {
     font-size: 1rem;
     color: $color7;
@@ -1643,7 +1632,11 @@ logsettings {
     }
   }
 }
-// :is(.comsetting, .commandList)
+
+.commandList > div > span {
+  height: 4vh;
+  display: inline-block;
+}
 
 .argel {
   background: rgba($discord, .77);
@@ -1679,19 +1672,6 @@ logsettings {
     max-width: 70%;
   }
   // &[optional]::before {content: '?';}
-}
-// :is(.comsetting, .commandList, .logList) input:not([type="checkbox"]) {
-
-:is(.commandList, .logList) > div > input {
-  font-size: inherit;
-  padding-left: 0;
-  margin-bottom: 0;
-  color: $white;
-  width: calc(94% - 3.7rem);
-  // background-color: #0000;
-  &:is(:focus, :hover) {
-    background-color: $color2;
-  }
 }
 
 .logList h1 {
@@ -1927,10 +1907,6 @@ modsettings {
   padding: .3em 2ch;
   transition: background-color .5s ease-out;
   // transition-property: background-color, opacity;
-  &::before {
-    color: $yellowish;
-  }
-
   &::after {
     content: attr(shw);
     color: $white;
@@ -1943,10 +1919,8 @@ modsettings {
   }
 
   > .command {
-    @include dashedInput;
-    background: none;
     font-weight: 600;
-    margin: 0 !important;
+    height: 1.2em;
   }
 
   > .doc {

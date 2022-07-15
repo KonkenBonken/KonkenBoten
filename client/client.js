@@ -53,8 +53,7 @@ let DebugTest; {
 			input.addEventListener('input', update);
 			update();
 		};
-	let prefix = '$',
-		datalistText, datalistRoles, datalistVoice,
+	let datalistText, datalistRoles, datalistVoice,
 		logLoadIndex = 0,
 		resolveDatalists,
 		awaitDatalists = new Promise(r => resolveDatalists = r),
@@ -145,12 +144,6 @@ let DebugTest; {
 	Element.prototype.q = function (a) { return this.querySelector(a) }
 	Element.prototype.qa = function (a) { return Array.from(this.querySelectorAll(a)) }
 
-	socket.emit('GetPrefix', 0, (res, defaultPrefix) => {
-		if (res != defaultPrefix) {
-			prefix = res;
-			document.documentElement.style.setProperty('--prefix', `"${res}"`);
-		}
-	});
 	let GetAllTime = {};
 	GetAllTime.datalists = Date.now();
 
@@ -209,22 +202,6 @@ let DebugTest; {
 				socket.emit('NewGuildSubrcibe', 0, id => window.open(`/Guild/${id}`, "_self"));
 			} else window.open(`/Guild/${value}`, "_self")
 		});
-
-
-		querySelector('setprefix>div').addEventListener('click', e => {
-			let stopLoad = logLoad(),
-				button = e.target,
-				input = button.parentElement.q('input'),
-				newPrefix = input.value;
-			if (newPrefix != prefix) socket.emit('SetPrefix', newPrefix, newPrefix => {
-				prefix = newPrefix;
-				document.documentElement.style.setProperty('--prefix', `"${newPrefix}"`);
-				input.value = newPrefix;
-				stopLoad('Prefix set to ' + newPrefix);
-			})
-			else stopLoad('Prefix already set');
-		});
-
 
 		querySelector("ticketsettings>label>input").addEventListener('change', e => {
 			let stopLoad = logLoad();
@@ -523,24 +500,6 @@ let DebugTest; {
 
 		if (srvr = querySelector('header>.srvr')) srvr.q('x')?.addEventListener('click', () => srvr.remove());
 
-		qa('.commandList>div').forEach(item => {
-			let set = item.q('.set'),
-				input = item.q('input'),
-				original = item.q('h3').innerHTML,
-				before = input.value;
-			set.addEventListener('click', () => {
-				let stopLoad = logLoad();
-				if ((value = input.value) == before) return stopLoad('Command already set');
-				socket.emit('SetCommand', { ori: original, new: value }, (value, err) => {
-					before = value;
-					if (err) console.debug(err, alert('An error occurred'))
-					else input.value = value;
-					stopLoad(prefix + original + ' command set to ' + prefix + value);
-				})
-			});
-		});
-
-
 		let suggestsettings = querySelector('suggestsettings'),
 			setButton = suggestsettings.q('.set');
 		setButton.addEventListener('click', e => {
@@ -703,10 +662,8 @@ let DebugTest; {
 			if (err) { alert('An error occurred'); return console.debug(err) };
 			if (!res) {
 				alert(emit + ' not found');
-				// openSetCommand();
 				return resolver(console.debug({ res }))
 			};
-			// console.log(res);
 		}
 
 		let editRule = newDiv('editrule'),
@@ -714,13 +671,9 @@ let DebugTest; {
 			commandInput = newDiv('input', 'command'),
 			contentInput = newDiv('textarea', 'content'),
 			embedToggle = newDiv('input', 'embedtoggle'),
-			roles = newDiv('div', 'roles'),
-			addRoleH5 = newDiv('h5'),
-			addRole = newDiv('div', 'addrole'),
 			set = newDiv('div', 'set'),
 			channelSelect = newDiv('select'),
 			userLimit = newDiv('input', 'userlimit'),
-			Roles,
 			embed, authorText, authorImg, thumbnail, footerImg, image, title, footerText, colorDiv, color;
 
 		commandInput.placeholder = res.command || res.channelname || command || voice ? 'Channel name' : 'command';
@@ -761,8 +714,6 @@ let DebugTest; {
 			contentInput.value = res.content || '';
 			embedToggle.type = 'checkbox';
 			embedToggle.checked = !!res.embed;
-			addRoleH5.innerHTML = 'Allowed Roles';
-			addRoleH5.append(infoPopup('Only members with at least one of these roles can use this command'));
 
 			embed = newDiv('div', 'embed'),
 				authorText = newDiv('input', 'author'),
@@ -802,7 +753,7 @@ let DebugTest; {
 			color.addEventListener('input', setBorder);
 			setBorder();
 
-			editRule.append(commandInput, embed, embedToggle, addRoleH5, roles, set);
+			editRule.append(commandInput, embed, embedToggle, set);
 
 			[authorImg, thumbnail, image, footerImg].forEach(el => el.addEventListener('click', e => {
 				if (!e.target.matches('.urlInput,.urlInput *')) {
@@ -845,42 +796,6 @@ let DebugTest; {
 				[footerImg, res.content.ftr.img]
 			].forEach(([el, url]) => { if (url) el.style.setProperty('--img', `url(${el.imageURL = url})`) })
 
-
-			Roles = res.roles || [];
-			let idToRole = id => {
-					let role = newDiv('div', 'role'),
-						roleData = datalistRoles[id];
-					if (!roleData) return '';
-					role.innerHTML = roleData.name;
-					role.setAttribute('ttl', role.id = id);
-					if (roleData.color) role.style.setProperty('--clr', roleData.color);
-					role.addEventListener('click', e => {
-						delete Roles[Roles.indexOf(id)];
-						e.target.remove();
-					});
-					return role;
-				},
-				addRoleToList = id => {
-					roles.append(idToRole(id));
-					Roles.push(id);
-				};
-
-			roles.append(addRole, ...(Roles || []).map(idToRole));
-
-			addRole.addEventListener('click', () => awaitDatalists.then(() => {
-				if ((oldEl = addRole.q('.listSelector'))) return oldEl.remove();
-				let roleSelector = newDiv('div', 'listSelector');
-				roleSelector.append(...Object.values(datalistRoles).filter(r => !Roles.includes(r.id) && r.name != '@everyone').map(role => {
-					let roleDiv = newDiv('div');
-					roleDiv.setAttribute('ttl', roleDiv.id = role.id);
-					roleDiv.innerHTML = role.name;
-					if (role.color) roleDiv.style.setProperty('--clr', role.color);
-					roleDiv.addEventListener('click', e => { if (window.getSelection().type != "Range") addRoleToList(role.id) });
-					return roleDiv;
-				}));
-				addRole.append(roleSelector);
-			}));
-
 			let setCounter = () => image.setAttribute('counter', `${contentInput.value.length}/2000`);
 			setCounter();
 
@@ -912,8 +827,7 @@ let DebugTest; {
 				};
 			} else {
 				data = {
-					command: commandInput.value = commandInput.value.replace(/\s/g, '').substr(0, 30),
-					roles: Roles.filter(x => /^\d+$/.test(x)),
+					command: commandInput.value = commandInput.value.replace(/\s/g, '').substr(0, 30).toLowerCase(),
 					embed: embedToggle.checked || undefined
 				};
 				if (embedToggle.checked)
@@ -959,7 +873,7 @@ let DebugTest; {
 
 							edit.addEventListener('click', e => commandsEditEvent(edit, voice));
 							remove.addEventListener('click', e => commandsRemoveEvent(remove, voice));
-							toggle.firstChild.addEventListener('change', e => commandsToggleEvent(toggle.firstChild, voice));
+							if (voice) toggle.firstChild.addEventListener('change', e => commandsToggleEvent(toggle.firstChild));
 							querySelector((voice ? '#voice' : '#commands') + '>rules').append(ruleDiv);
 							stopLoad('New ' + (voice ? 'Dynamic Voice Channel' : 'Custom Command') + ' set')
 						}
@@ -986,18 +900,18 @@ let DebugTest; {
 				setTimeout(() => remove.removeAttribute('sure'), 2000);
 			}
 		},
-		commandsToggleEvent = (toggle, voice) => {
+		commandsToggleEvent = toggle => {
 			let stopLoad = logLoad();
-			socket.emit(voice ? 'Voice' : 'Command', ['toggle', toggle.parentElement.parentElement.q(voice ? 'h2' : 'h1').innerHTML], (enabled, err) => {
+			socket.emit('Voice', ['toggle', toggle.parentElement.parentElement.q('h2').innerHTML], (enabled, err) => {
 				if (err) console.debug(err, alert('An error occurred'));
 				if (enabled != null) toggle.checked = enabled;
-				stopLoad((voice ? 'Dynamic Voice Channel' : 'Custom Command') + (enabled ? ' enabled' : ' disabled'))
+				stopLoad('Dynamic Voice Channel ' + (enabled ? 'enabled' : 'disabled'))
 			});
 		};
 	awaitLoad.then(() => {
 		[...querySelectorAll(':is(#commands,#voice) edit')].forEach(edit => edit.addEventListener('click', e => commandsEditEvent(edit, edit.matches('#voice *'))));
 		[...querySelectorAll(':is(#commands,#voice) remove')].forEach(remove => remove.addEventListener('click', e => commandsRemoveEvent(remove, remove.matches('#voice *'))));
-		[...querySelectorAll(':is(#commands,#voice) label>input')].forEach(toggle => toggle.addEventListener('change', e => commandsToggleEvent(toggle, toggle.matches('#voice *'))));
+		[...querySelectorAll(':is(#voice) label>input')].forEach(toggle => toggle.addEventListener('change', e => commandsToggleEvent(toggle)));
 	});
 
 	// DebugTest = () =>
@@ -1060,17 +974,8 @@ let DebugTest; {
 		let comsettings = modsettings.q('.comsettings'),
 			scrollItems = modsettings.qa('.scrollbar>*:not(.scrollarrow)'),
 			scrollArrows = modsettings.qa('.scrollbar>.scrollarrow'),
-			txtinputs = comsettings.qa('.txtinput'),
-			commandInputs = comsettings.qa('.command');
+			txtinputs = comsettings.qa('.txtinput');
 		// docs = comsettings.qa('.doc');
-
-		comsettings.qa('.info>*>*').forEach(info =>
-			info.innerHTML = `Every member with this role and everyone with admin permission can call the<y>${info.innerHTML}</y>command. The default role is the role specified above; if a role is selected here, the Moderator role abouve will be ignored.`
-		);
-
-		commandInputs.forEach(el => el.addEventListener('input', () =>
-			el.nextSibling.firstChild.innerHTML = el.value || el.placeholder
-		));
 
 		scrollItems.forEach((item, i) => item.addEventListener('click', () =>
 			comsettings.setAttribute('shw', i + 1)));
@@ -1083,7 +988,7 @@ let DebugTest; {
 		}));
 
 
-		[reason, ...hasBeens, duration, ...txtinputs, ...commandInputs, byInput, messageFrom, until].forEach(el => {
+		[reason, ...hasBeens, duration, ...txtinputs, byInput, messageFrom, until].forEach(el => {
 			sizeFun(el, true);
 			// setTimeout(() => sizeFun(el, true), 2e3);
 			el.addEventListener('keydown', e => sizeFun(el, true));
@@ -1104,7 +1009,6 @@ let DebugTest; {
 				data = {
 					enabled: +!!modsettings.q('label:first-of-type>input').checked,
 					channel: modsettings.q('.channelSelect').value,
-					staff: modsettings.q('.roleSelect').value,
 					text: {
 						hasBeen: hasBeen.value = hasBeen.value.substr(0, 100),
 						by: byInput.value = byInput.value.substr(0, 100),
@@ -1133,27 +1037,10 @@ let DebugTest; {
 			// console.debug(data);
 
 			textAreaSizeFun(banMessage);
-			commandInputs.forEach(el => el.addEventListener('input', () =>
-				q(`.commandList>#${el.placeholder}>input`).innerHTML = el.value || el.placeholder
-			));
 
 			socket.emit('Moderation', ['set', data], (res, err) => {
 				if (err) console.debug(err, alert('An error occurred'));
 				if (res) stopLoad('Moderation settings set')
-			})
-
-
-			commandInputs.forEach(el => {
-				// const stopLoadCom = logLoad();
-				// console.log([el.parentElement.id, el.value]);
-				if (el.parentElement.id != el.value) socket.emit('SetCommand', {
-					ori: el.parentElement.id,
-					new: el.value
-				}, (value, err) => {
-					if (err) console.debug(err)
-					// stopLoadCom();
-				})
-				// else stopLoadCom();
 			})
 		})
 	});
