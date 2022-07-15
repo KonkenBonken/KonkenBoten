@@ -2215,8 +2215,14 @@ const AllMessages = channel => new Promise(async resolver => {
 					}]
 				};
 
-			if (reactMessage) reactMessage.edit(reactMessageObj);
-			else reactMessage = await channel.send(reactMessageObj).catch(e => console.log(e, 4927));
+			if (reactMessage) {
+				if (Rule.channel == reactMessage.channel.id)
+					reactMessage.edit(reactMessageObj);
+				else {
+					reactMessage.delete();
+					reactMessage = await channel.send(reactMessageObj);
+				}
+			} else reactMessage = await channel.send(reactMessageObj);
 			DataBaseGuild.Tickets.existingMessage = reactMessage?.id;
 
 			WriteDataBase();
