@@ -1565,8 +1565,8 @@ const Page = {
 				color = newDiv('input'),
 				emoji = newDiv('div', 'emoji');
 
-			author.innerHTML = dataBaseGuild.Tickets.author || 'Support';
-			content.innerHTML = dataBaseGuild.Tickets.content || 'By clicking 💬 you can open a private text channel with only you and the staff team,\nyou can do this to report an error or a person or if you just want to ask a question';
+			author.textContent = dataBaseGuild.Tickets.author || 'Support';
+			content.textContent = dataBaseGuild.Tickets.content || 'By clicking 💬 you can open a private text channel with only you and the staff team,\nyou can do this to report an error or a person or if you just want to ask a question';
 			emoji.innerHTML = dataBaseGuild.Tickets.emoji || '💬';
 			if (dataBaseGuild.Tickets.color) embed.style.borderColor = dataBaseGuild.Tickets.color;
 
@@ -1596,9 +1596,9 @@ const Page = {
 
 			content.setAttribute('contentEditable', ''), footer.setAttribute('contentEditable', '');
 
-			author.innerHTML = dataBaseGuild.Tickets.author || 'Support';
-			content.innerHTML = dataBaseGuild.Tickets.messages?.start?.content || `Welcome to ${guild.name}'s Support\nOnly you and the Support Team can see, read and write in this channel`;
-			footer.innerHTML = dataBaseGuild.Tickets.messages?.start?.footer || `Press ❌ to close this support channel`;
+			author.textContent = dataBaseGuild.Tickets.author || 'Support';
+			content.textContent = dataBaseGuild.Tickets.messages?.start?.content || `Welcome to ${guild.name}'s Support\nOnly you and the Support Team can see, read and write in this channel`;
+			footer.textContent = dataBaseGuild.Tickets.messages?.start?.footer || `Press ❌ to close this support channel`;
 
 			embed = newDiv('div', 'embed', 'end'), author = newDiv('div', 'author'), content = newDiv('div', 'content');
 
@@ -1607,8 +1607,8 @@ const Page = {
 			embed.append(author, content);
 			content.setAttribute('contentEditable', '');
 
-			author.innerHTML = dataBaseGuild.Tickets.author || 'Support';
-			content.innerHTML = dataBaseGuild.Tickets.messages?.end || `**Are you sure you want to close this support channel?**\nYes, I want to close: ✔️\nNo, I want to continue: ❌`;
+			author.textContent = dataBaseGuild.Tickets.author || 'Support';
+			content.textContent = dataBaseGuild.Tickets.messages?.end || `**Are you sure you want to close this support channel?**\nYes, I want to close: ✔️\nNo, I want to continue: ❌`;
 
 			embed = newDiv('div', 'embed', 'save'), author = newDiv('div', 'author'), content = newDiv('div', 'content');
 			let saveOption = newDiv('input', 'saveOption');
@@ -1622,8 +1622,8 @@ const Page = {
 			embed.append(author, content);
 			content.setAttribute('contentEditable', '');
 
-			author.innerHTML = dataBaseGuild.Tickets.author || 'Support';
-			content.innerHTML = dataBaseGuild.Tickets.messages?.save || `**The member can no longer see this channel and the channel is about to close**\nDon't save the transcript: ❌\nSave the transcript: ✔️`;
+			author.textContent = dataBaseGuild.Tickets.author || 'Support';
+			content.textContent = dataBaseGuild.Tickets.messages?.save || `**The member can no longer see this channel and the channel is about to close**\nDon't save the transcript: ❌\nSave the transcript: ✔️`;
 
 			ticketDiv.append(advanced, set);
 			if (dataBaseGuild.Tickets.isEmpty()) dataBaseGuild.Tickets = undefined;
@@ -2826,7 +2826,7 @@ io.on('connection', async socket => {
 										}
 									}
 
-									content.innerHTML = suggestion.suggestion.replace(/\n/g, '<br>');
+									content.textContent = suggestion.suggestion.replace(/\n/g, '<br>');
 
 									if (suggestion.answer) {
 										let answer = newDiv('div', 'answer'),
@@ -2853,7 +2853,7 @@ io.on('connection', async socket => {
 											}
 										}
 
-										reason.innerHTML = suggestion.answer.reason.replace(/\n/g, '<br>');
+										reason.textContent = suggestion.answer.reason.replace(/\n/g, '<br>');
 
 										div.style.setProperty('--clr', `#${Suggestions.embed.colors[suggestion.answer.type]}`);
 										div.setAttribute('status', suggestion.answer.type);
@@ -2931,7 +2931,7 @@ io.on('connection', async socket => {
 
 								timeDiv.append(from, to, expires);
 
-								name.innerHTML = channelName || 'Unknown';
+								name.textContent = channelName || 'Unknown';
 								expires.innerHTML = `<i>Expires:</i><i>${moment(decodeT(closeAt)).fromNow()}</i>`;
 								try {
 									if (!fromto || !fromto[1]) Transcript.fromto = fromto = msgs.filter((x, i) => !i || ++i == msgs.length).map(({ t }) => t);
@@ -3079,7 +3079,7 @@ io.on('connection', async socket => {
 								div.id = [staffId, encodeT(date), (reason || '*').replace(/\W/g, '').substr(0, 20)].join('-');
 								typeDiv.innerHTML = type;
 								dateDiv.innerHTML = moment(date).format('DD/MM - HH:mm');
-								if (reason) reasonDiv.innerHTML = reason.replace(/\n/g, '<br>')
+								if (reason) reasonDiv.textContent = reason.replace(/\n/g, '<br>')
 								else reasonDiv.setAttribute('unspecified', '');
 
 								[staff, member] = await Promise.all([staff(), member()]);
@@ -4067,7 +4067,7 @@ app.all(/^\/Guild\/\d{16,19}\/transcript\/\d{11,12}/i, async (req, res) => {
 		[from, to, expires] = [newDiv('span'), newDiv('span'), newDiv('span')];
 	timeDiv.append(from, to, expires);
 
-	title.innerHTML = channelName || 'Unknown';
+	title.textContent = channelName || 'Unknown';
 
 	fromto = fromto.map(n => n ? decodeT(n, true, guild) : 0);
 	if (fromto[0].slice(0, -8) == fromto[1].slice(0, -8)) fromto[1] = fromto[1].slice(8);
