@@ -3558,7 +3558,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 
 	const textCommandList = GuildData.TextCommandRules?.map(x => x.command.toLowerCase());
 	if (!textCommandList?.includes(command))
-		return sendError(`Command not found: ${subCommand} ${interaction.commandName}`);
+		return sendError(`Command not found: ${interaction.commandName}`);
 
 	let rule = GuildData.TextCommandRules[textCommandList.indexOf(command)];
 
