@@ -1617,7 +1617,7 @@ logsettings {
   }
 }
 
-.logList {
+:is(.commandList, .logList) {
   details {
     font-size: 1rem;
     color: $color7;
