@@ -2386,9 +2386,9 @@ const isTicket = channel =>
 const setGuildCustomCommands = (guild, lazy = false) => {
 	const TextCommandRules = DataBase.guilds[guild.id].TextCommandRules;
 	if (!TextCommandRules?.length) {
-		if (guild.commands.cache.size || !lazy)
-			TextCommandRules = [];
-		else return;
+		if (lazy && !guild.commands.cache.size)
+			return;
+		return guild.commands.set([]);
 	}
 
 	return guild.commands.set(TextCommandRules.map(rule => ({
