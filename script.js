@@ -2383,10 +2383,10 @@ const defaultReasons = {
 const isTicket = channel =>
 	c.topic?.startWith('Support Channel created by');
 
-const setGuildCustomCommands = guild => {
+const setGuildCustomCommands = (guild, lazy = false) => {
 	const TextCommandRules = DataBase.guilds[guild.id].TextCommandRules;
-	if (!TextCommandRules || !TextCommandRules.length) {
-		if (guild.commands.cache.size)
+	if (!TextCommandRules?.length) {
+		if (guild.commands.cache.size || !lazy)
 			TextCommandRules = [];
 		else return;
 	}
@@ -3366,7 +3366,7 @@ client.on('ready', async () => {
 	);
 	for (var guild of client.guilds.cache.values())
 		if (guild.id in DataBase.guilds)
-			setGuildCustomCommands(guild);
+			setGuildCustomCommands(guild, true);
 });
 
 client.on("guildCreate", async guild => {
