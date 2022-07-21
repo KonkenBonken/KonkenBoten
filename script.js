@@ -4282,25 +4282,6 @@ app.get('/oauth', async (req, res) => {
 	res.redirect(302, URLs.botRedirect);
 });
 
-app.get('/terms', async (req, res) => {
-	let document = Cache.get('termsDoc');
-
-	if (!document) {
-		document = await baseDoc({
-			css: 'terms',
-			html: 'terms', // hotjar: true,
-			title: 'KonkenBoten - Terms Of Sevice',
-		});
-		document = document.documentElement.outerHTML.replace(/async=""/g, 'async');
-		Cache.set('termsDoc', document);
-	}
-
-	res.append('Cache-Control', 'public, max-age=259200') // 3d
-		.append('Link', `<terms>; rel="canonical"`)
-		.send(document);
-});
-
-
 app.get('/logout', async (req, res) => {
 	if (Cache.has(req.cookies.LoginId)) Cache.del(req.cookies.LoginId);
 	DataBase.loggedIn[req.cookies.LoginId] = undefined;
@@ -4310,39 +4291,6 @@ app.get('/logout', async (req, res) => {
 
 app.get('/vote', async (req, res) => res.redirect('https://top.gg/bot/813803575264018433/vote')); //.cookie('vtd', 1, {maxAge: 43200, /*12h*/ httpOnly: true})
 app.get('/top.gg', async (req, res) => res.redirect('https://top.gg/bot/813803575264018433'));
-
-app.get('/favicon.ico', (req, res) => res.append('Cache-Control', 'public, max-age=2419200').redirect(301, '/src/icon/logo')); //4w
-
-app.all(/\/src\/(client|terms|home|error)\.css/i, async (req, res) => {
-	let file = req.path.match(/\/src\/(client|terms|home|error)\.css/i)[1];
-	res.append('Cache-Control', 'public, max-age=10800') //3h
-		.append('Content-Disposition', 'render')
-		.download(`${__dirname}/client/${file}.css`);
-});
-
-app.all(/\/src\/(client|home|transcript)\.js/i, async (req, res) => {
-	let file = req.path.match(/\/src\/(client|home|transcript)\.js/i)[1],
-		js = await fs.readFile(`client/${file}.js`, 'utf8');
-
-	res.append('Cache-Control', 'public, max-age=10800'); //3h
-	res.type('js').send(js);
-});
-// app.all(/\/src\/(client|home|transcript)\.js/i, async (req, res) => {
-// 	let file = req.path.match(/\/src\/(client|home|transcript)\.js/i)[1];
-// 	res.append('Cache-Control', 'public, max-age=10800') //3h
-// 		.download(`${__dirname}/client/${file}.js`);
-// });
-
-app.get('/src/icon/discord', (req, res) => res.append('Cache-Control', 'public, max-age=1209600') //2w
-	.sendFile(`${__dirname}/src/discord.svg`));
-// .redirect(301, 'https://discord.com/assets/9f6f9cd156ce35e2d94c0e62e3eff462.png'));
-
-app.all(/\/src\/icon\/logo\d?/i, async (req, res) => {
-	let n = (req.path.match(/(\d)$/) || [0, ''])[1];
-	res.append('Cache-Control', 'public, max-age=1209600') //2w
-		.set('Link', `<src/icon/logo>; rel="canonical"`)
-		.type('svg').sendFile(`${__dirname}/src/kb${n}.svg`);
-});
 
 const iconLookup = {
 	// settings: 'settings', // Not in use
@@ -4356,52 +4304,6 @@ const iconLookup = {
 	open: 'external-link-squared'
 	// ,arrow: 'arrow' //same -> defaults
 };
-app.all(/\/src\/icon\/[a-z]+$/i, async (req, res) => {
-	let name = req.path.match(/\/src\/icon\/(\w+)/i)[1],
-		img = Cache.get(`icon-${name}`),
-		url = iconLookup[name] || name;
-	url = `https://img.icons8.com/ios-filled/dbad11/50/${url}.png`;
-
-	try {
-		if (!img) {
-			img = Buffer.from(await (await Fetch(url)).arrayBuffer());
-			Cache.set(`icon-${name}`, img);
-		}
-
-		res.append('Link', `<${url}>; rel="canonical"`).append('Cache-Control', 'public, max-age=1209600') //2w
-			.type('png').send(img);
-	} catch (e) {
-		res.redirect(url);
-		console.error(e, 'ERROR HANDLED - USER REDIRECTED')
-	}
-
-});
-
-app.get('/src/background', async (req, res) => {
-	const d = new(Date);
-	let secToMidnight = (-d + d.setHours(24, 0)) / 1e3,
-		img = Cache.get('background');
-
-	res.append('Cache-Control', `public, max-age=${secToMidnight}`) //until midnight
-	try {
-		if (!img) {
-			img = Buffer.from(await (
-				await Fetch('https://source.unsplash.com/featured/1920x400/daily?city')
-			).arrayBuffer());
-			Cache.set('background', img, secToMidnight)
-		}
-		res.type('jpg').send(img);
-	} catch {
-		res.redirect(302, 'https://source.unsplash.com/featured/1920x400/daily?city')
-	}
-});
-
-app.get('/src/join.mp3', async (req, res) => res
-	.append('Cache-Control', 'public, max-age=2419200') //4w
-	.sendFile(`${__dirname}/src/join.mp3`));
-app.get('/src/leave.mp3', async (req, res) => res
-	.append('Cache-Control', 'public, max-age=2419200') //4w
-	.sendFile(`${__dirname}/src/leave.mp3`));
 
 app.get('/src/database', async (req, res) => {
 	res.append('Cache-Control', 'no-store');
