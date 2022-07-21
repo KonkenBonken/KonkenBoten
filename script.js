@@ -8,7 +8,6 @@ import dotenv from 'dotenv'
 dotenv.config()
 import Discord from "discord.js";
 import fsSync from 'fs';
-import { minify as Terser } from "terser";
 import { JSDOM } from "jsdom";
 import lightRandom from 'light-random';
 import Fetch from 'node-fetch';
@@ -4323,7 +4322,7 @@ app.all(/\/src\/(client|terms|home|error)\.css/i, async (req, res) => {
 
 app.all(/\/src\/(client|home|transcript)\.js/i, async (req, res) => {
 	let file = req.path.match(/\/src\/(client|home|transcript)\.js/i)[1],
-		js = (await Terser(await fs.readFile(`client/${file}.js`, 'utf8'))).code;
+		js = await fs.readFile(`client/${file}.js`, 'utf8');
 
 	res.append('Cache-Control', 'public, max-age=10800'); //3h
 	res.type('js').send(js);

@@ -7,10 +7,9 @@
   "scripts": {
     "ts:react": "cd src/site && react-scripts build",
     "ts:database": "cd database && npx tsc",
-    "minify": "npx terser src/site/app.js --ecma 5 -o src/site/app.js",
     "sass": "npx sass src/site/ --no-source-map --style=compressed",
     "sass-w": "npx sass src/site/ -w --no-source-map --style=compressed",
-    "build": "npm i && npm run sass & npm run ts:database && npm run ts:react && npm run minify"
+    "build": "npm i && npm run sass & npm run ts:database && npm run ts:react"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
@@ -44,7 +43,6 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "sass": "^1.53.0",
-    "terser": "^5.14.2",
     "typescript": "^4.7.4"
   }
 }
