@@ -1,4 +1,3 @@
-import { Snowflake, mapToClass } from './Utils';
 import fs from 'fs';
 
 import { Guild } from './guild';
