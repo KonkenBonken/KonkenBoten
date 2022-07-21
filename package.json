@@ -4,6 +4,7 @@
   "description": "",
   "main": "script.js",
   "scripts": {
+    "build:database": "cd database && npx tsc ",
     "build:css": "npx sass client/ --no-source-map --style=compressed",
     "build": "npm i && npm run build:css"
   },

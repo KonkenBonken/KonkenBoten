@@ -1,5 +1,5 @@
 {
-  "include": ["*DataBase.ts","*.d.ts"],
+  "include": ["DataBase.ts", "*.d.ts"],
   "compilerOptions": {
     "outDir": "../lib",
     "strict": true,
