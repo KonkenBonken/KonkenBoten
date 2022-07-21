@@ -3,6 +3,7 @@ import { Snowflake } from './Utils';
 import { TextCommandRule } from './TextCommandRule';
 import { TicketSettings } from './TicketSettings';
 import { SuggestionSettings } from './SuggestionSettings';
+import { ModerationSettings } from './ModerationSettings';
 
 interface VoiceCommandRule {
   channel: Snowflake;
@@ -27,5 +28,6 @@ export interface Guild {
   Suggestions?: SuggestionSettings;
   logs?: LogSettings;
   /** @deprecated */ commands?: Record<string, string>;
+  Moderation?: ModerationSettings;
   premium?: number;
 };
