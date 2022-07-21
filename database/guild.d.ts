@@ -34,4 +34,4 @@ export interface Guild {
     f: string;
   }>;
   premium?: number;
-};
+}
