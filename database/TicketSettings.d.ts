@@ -1,6 +1,6 @@
 import { Snowflake, EncodedT } from './Utils';
 
-enum TicketSaveMode {
+declare enum TicketSaveMode {
   always = 'always',
   ask = 'ask',
   never = 'never'
@@ -30,7 +30,7 @@ export interface TicketSettings {
   emoji: string;
   color: string;
   existingMessage: Snowflake;
-  /** @deprecated  */ticketsCreated: Snowflake[];
+  /** @deprecated */ ticketsCreated: Snowflake[];
   parent: string;
   name: string;
   transcripts: TicketTranscript[]
