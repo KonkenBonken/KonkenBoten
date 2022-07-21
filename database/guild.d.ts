@@ -24,5 +24,6 @@ export interface Guild {
   TextCommandRules?: TextCommandRule[];
   VoiceRules?: VoiceCommandRule[];
   Tickets?: TicketSettings;
+  Suggestions?: SuggestionSettings;
   premium?: number;
 };
