@@ -4004,7 +4004,7 @@ client.on('interactionCreate', async interaction => {
 client.on("guildScheduledEventCreate", console.log)
 
 // Express - app
-
+app.use(express.static('./build/site'));
 app.use(cookieParser());
 app.use((req, res, next) => {
 	if (req.hostname != 'bot.konkenbonken.se') {
@@ -4023,206 +4023,31 @@ app.use((req, res, next) => {
 	next()
 });
 
-app.all(/^\/Guild\/\d{16,19}\/transcript\/\d{11,12}/i, async (req, res) => {
+app.get('/*', async (req, res) => {
+	const promises = [
+			fs.readFile('./build/site/index.html')
+		],
+		clientData = {},
+		user = DataBase.loggedIn[req.cookies.LoginId];
 
-	const guildID = req.path.split('/')[2],
-		guild = await client.guilds.fetch(guildID).catch(e => null),
-		transcriptID = req.path.split('/')[4],
-		{ Tickets } = DataBase.guilds[guildID],
-		{ transcripts, unlisted } = Tickets,
-		Transcript = transcripts && transcripts.find(t => t && t.id == transcriptID),
-		user = req.cookies.LoginId && Cache.get(req.cookies.LoginId) || Array(2);
-
-	res.cookie('LstUrl', req.path, {
-		maxAge: 30e3, //30s
-		httpOnly: true
-	});
-
-	// unlisted==ture => alla kan se
-	if (!user[0] && !unlisted) return res.redirect(302, URLs.oauth);
-	if (!guild) return res.error(404, 'guild not found');
-	if (!Transcript) return res.error(404, 'transcript not found');
-
-	if (!unlisted) {
-		let member = await guild.members.fetch(user[0].id).catch(e => null);
-		if (!member) {
-			if (user[0].id == '417331788436733953') user[1].push({ id: guild.id, name: guild.name, permissions: 8 });
-			else return res.error(403, 'member not found');
-		} else if (!member.permissions.has(8n)) return res.error(403, 'no permissions');
-	}
-
-	let { channelName, closedBy, msgs, closeAt, fromto } = Transcript;
-
-	const document = await guildDoc(...user, { js: 'transcript', title: `KonkenBoten - #${channelName}` }, true)
-	document.querySelector(`.guildDropDown>option[value="${guild.id}"]`)?.setAttribute('selected', '');
-
-	let navbar = document.querySelector('navbar');
-	if (/^\/Guild\/\d{16,19}$/i.test(req.headers.referer)) {
-		let back = newDiv('a', 'back');
-		back.href = req.headers.referer;
-		navbar.parentElement.replaceChild(navbar, back);
-	} else navbar.remove();
-
-	let transcriptsDiv = newDiv('transcripts'),
-		transcriptDiv = newDiv('transcript'),
-		title = newDiv('div', 'name'),
-		timeDiv = newDiv('div', 'time'),
-		createdDiv = newDiv('div', 'created'),
-		[from, to, expires] = [newDiv('span'), newDiv('span'), newDiv('span')];
-	timeDiv.append(from, to, expires);
-
-	title.textContent = channelName || 'Unknown';
-
-	fromto = fromto.map(n => n ? decodeT(n, true, guild) : 0);
-	if (fromto[0].slice(0, -8) == fromto[1].slice(0, -8)) fromto[1] = fromto[1].slice(8);
-
-	if (fromto[0]) from.innerHTML = `<i>Created:</i><i>${fromto[0]}</i>`;
-	if (fromto[1]) to.innerHTML = `<i>Closed:</i><i>${fromto[1]}</i>`;
-
-	expires.innerHTML = `<i>Expires:</i><i>${moment(decodeT(closeAt)).fromNow()}</i>`;
-
-	transcriptsDiv.append(transcriptDiv);
-	transcriptDiv.setAttribute('show', '');
-	document.body.append(transcriptsDiv);
-	transcriptDiv.append(title, timeDiv, ...await TranscriptMsgsToHtml(msgs, guild));
-
-	addGuildIcon(guild, document);
-
-	let closeIn = Math.floor((decodeT(closeAt) - Date.now()) / 1e3)
-
-	res.append('Cache-Control', `public, max-age=${closeIn}`)
-		.send(document.documentElement.outerHTML.replace(/async=""/g, 'async'));
-});
-
-
-app.all(/^\/Guild\/\d{16,19}/i, async (req, res) => {
-	let google = /google/i.test(req.headers['user-agent']),
-		guildID = req.path.split('/')[2],
-		guild = await client.guilds.fetch(guildID).catch(e => null),
-		user = req.cookies.LoginId && Cache.get(req.cookies.LoginId);
-
-	if (guild) res.cookie('LstGld', guild.id, {
-		maxAge: 18144e5, //3w
-		httpOnly: true
-	});
-	res.cookie('LstUrl', req.path, {
-		maxAge: 60e3 * 5, //5m
-		httpOnly: true
-	});
-	if (!user) {
-		MaybeGuild = guildID;
-		res.redirect(302, URLs.oauth);
-		return;
-	}
-	let userID = user[0].id;
-	if (!guild) return res.error(404, 'guild not found')
-
-	let member = await guild.members.fetch(userID).catch(e => null);
-	if (!member)
-		if (userID == '417331788436733953') {
-			var konken = await client.users.fetch('417331788436733953').catch(e => null);
-			user[1].push({ id: guild.id, name: guild.name, permissions: 8 });
-		} else return res.error(403, 'member not found');
-
-	if (!member?.permissions.has(8n))
-		if (userID == '417331788436733953') {
-			var konken = await client.users.fetch('417331788436733953').catch(e => null);
-			user[1].push({ id: guild.id, name: guild.name, permissions: 8 });
-		} else return res.error(403, 'no permissions');
-
-
-	let [document, ...pages] = await Promise.all([
-		guildDoc(...user, { title: `KonkenBoten - ${guild.name}` }),
-		Page.commands(guild, 'Commands', 'commands'),
-		Page.voice(guild, 'Voice Channels', 'voice'),
-		Page.moderation(guild, 'Moderation', 'moderation'),
-		Page.suggestions(guild, 'Suggestions', 'suggestions', member?.user || konken),
-		Page.support(guild, 'Support Channels', 'support')
-	]).catch(console.error);
-
-	let pagesDiv = newDiv('pages');
-	document.body.append(pagesDiv);
-	pages.forEach(page => {
-		pagesDiv.append(page[0]);
-
-		let nav = newDiv('a');
-		nav.href = '#' + page[2];
-		nav.target = '_self';
-		nav.innerHTML = `<img src="/src/icon/${page[3]}">`;
-		nav.setAttribute('ttl', page[1]);
-		document.querySelector('header>navbar').append(nav);
-	});
-
-	document.querySelector(`.guildDropDown>option[value="${guild.id}"]`)?.setAttribute('selected', '');
-	addGuildIcon(guild, document)
-
-	if (!req.cookies.Srvr && !SupportServer?.members.fetch(userID).catch(e => 0)) {
-		document.querySelector('header').innerHTML += '<div class="srvr">Get support and updates,<br>Give suggestions and Ask questions<a href="https://discord.gg/HeApb3UFHD">Join our Discord server</a><x/></div>';
-		res.cookie('Srvr', 1, {
-			maxAge: 6048e5, //1w
-			httpOnly: true
-		});
-	}
-	res.append('Cache-Control', 'no-store')
-		.send(document.documentElement.outerHTML.replace(/async=""/g, 'async'));
-});
-app.get('/', async (req, res) => {
-	let document = await baseDoc({
-			css: 'home',
-			js: 'home',
-			html: 'home'
-		}),
-		google = /google/i.test(req.headers['user-agent']),
-		user = !google && req.cookies.LoginId && Cache.get(req.cookies.LoginId),
-		header = document.querySelector('header');
-	if (google) console.log('google', user);
 	if (user) {
-		let DiscordUser = await client.users.fetch(user[0].id).catch(e => null),
-			userDiv = newDiv('div', 'user'),
-			avatar = newDiv('img'),
-			userPopup = newDiv('userpopup'),
-			support = newDiv('a'),
-			vote = newDiv('a'),
-			logout = newDiv('a', 'logout');
-		if (!DiscordUser) console.error('No DiscordUser -  DiscordUser:', DiscordUser);
-		avatar.src = DiscordUser.displayAvatarURL();
-		avatar.alt = `Discord avatar of user ${DiscordUser.tag} - KonkenBoten`;
-		logout.innerHTML = 'Logout';
-		support.innerHTML = 'Discord';
-		vote.innerHTML = 'Vote';
-		support.href = 'https://discord.gg/HeApb3UFHD';
-		vote.href = 'https://top.gg/bot/813803575264018433/vote';
+		clientData.servers = user[1];
+		promises.push(client.users.fetch(user[0].id).then(user =>
+			clientData.user = {
+				id: user.id,
+				avatar: user.avatar,
+				username: user.username,
+				discriminator: user.discriminator
+			}
+		));
+	}
 
-		userDiv.append(avatar, userPopup);
-		userPopup.append(support, vote, logout);
-
-		var listGuilds = user[1];
-
-		let guildDropDown = newDiv('select', 'guildDropDown'),
-			emptyOption = newDiv('option');
-		emptyOption.innerHTML = 'Choose server';
-		emptyOption.value = 'Choose';
-		guildDropDown.append(emptyOption);
-
-		listGuilds.forEach(guild => {
-			let guildOption = newDiv('option');
-			guildOption.innerHTML = guild.name;
-			guildOption.value = guild.id;
-			guildDropDown.append(guildOption);
-		});
-		let addOption = newDiv('option');
-		addOption.innerHTML = 'Add bot to server';
-		addOption.value = 'AddNew';
-		guildDropDown.append(addOption);
-		header.append(guildDropDown, userDiv);
-	} else
-		header.innerHTML += '<a href="/oauth" class="login"><img src="/src/icon/discord" alt="Discord\'s Logo"><p>Login</p></a>';
-
-	if (!req.cookies.ToS) document.body.innerHTML += '<div class="cookie">This website uses cookies to enhance your experience. By logging in, you accept our use of cookies and our <a href="/terms">Terms of Service</a><div class="ok">OK</div></div>';
+	const [document] = await Promise.all(promises);
+	document.replace('%SERVER_DATA%', JSON.stringify(clientData));
 
 	res.append('Cache-Control', 'public, max-age=10800') //3h
 		.append('Link', prefetchs)
-		.send(document.documentElement.outerHTML.replace(/async=""/g, 'async'));
+		.send(document);
 });
 
 app.get('/oauth', async (req, res) => {
