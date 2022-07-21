@@ -1,5 +1,5 @@
-import { promises as fs } from 'fs';
 import { Snowflake, mapToClass } from './Utils';
+import fs from 'fs';
 
 import { Guild } from './guild';
 import { Temp } from './temp';
@@ -20,7 +20,7 @@ class DataBase {
 }
 
 const raw = JSON.parse(
-  await fs.readFile('DataBase.json', 'utf8')
+  fs.readFileSync('DataBase.json', 'utf8')
     .trim()
     .replace(/Ã¤/g, 'ä').replace(/Ã¥/g, 'å').replace(/Ã¶/g, 'ö')
 )
