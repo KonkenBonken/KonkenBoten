@@ -1,7 +1,7 @@
 {
   "include": ["*DataBase.ts","*.d.ts"],
   "compilerOptions": {
-    "outFile": "../lib/DataBase.js",
+    "outDir": "../lib",
     "strict": true,
     "esModuleInterop": true,
     "noImplicitAny": false,
