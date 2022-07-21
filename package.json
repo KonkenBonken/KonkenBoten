@@ -4,11 +4,12 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "ts": "react-scripts build",
+    "ts:react": "react-scripts build",
+    "ts:database": "cd database && npx tsc",
     "minify": "npx terser src/site/app.js --ecma 5 -o src/site/app.js",
     "sass": "npx sass src/site/ --no-source-map --style=compressed",
     "sass-w": "npx sass src/site/ -w --no-source-map --style=compressed",
-    "build": "npm i && npm run sass & npm run ts && npm run minify"
+    "build": "npm i && npm run sass & npm run ts:database && npm run ts:react && npm run minify"
   },
   "author": "Konrad Pettersson",
   "license": "ISC",

@@ -9,3 +9,7 @@ DataBase.json
 .env
 src/emojis3.js
 client/**.css
+
+lib/*
+!lib/*/
+!lib/commands.js

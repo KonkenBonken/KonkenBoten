@@ -26,6 +26,9 @@ import Import_topGgSdk from '@top-gg/sdk';
 import Import_nodeCache from 'node-cache';
 import Import_commands from './lib/commands.js';
 import EmojiList from './src/emojis.js';
+
+import DataBase from './lib/DataBase.js';
+
 console.timeEnd('Packages');
 console.time('Consts');
 
@@ -65,7 +68,6 @@ const app = express(),
 	}),
 	port = 80,
 	PageTitle = 'KonkenBoten - The Ultimate Discord Bot',
-	DataBase = JSON.parse(fsSync.readFileSync('DataBase.json', 'utf8').trim().replace(/Ã¤/g, 'ä').replace(/Ã¥/g, 'å').replace(/Ã¶/g, 'ö')),
 	topggApi = new(Import_topGgSdk.Api)('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMzgwMzU3NTI2NDAxODQzMyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4NjYzNDU4fQ.gqGp-wnvzaFk69HGOohqYPlJ2J4bEjL7RRAvWFCroMQ'),
 	TopggSend = () => topggApi.postStats({ serverCount: client.guilds.cache.size }),
 	Cache = new(Import_nodeCache)();
@@ -2383,27 +2385,30 @@ const defaultReasons = {
 const isTicket = channel =>
 	c.topic?.startWith('Support Channel created by');
 
-const setGuildCustomCommands = guild => {
+const setGuildCustomCommands = (guild, lazy = false) => {
 	const TextCommandRules = DataBase.guilds[guild.id].TextCommandRules;
-	if (!TextCommandRules) return;
+	if (!TextCommandRules?.length) {
+		if (lazy && !guild.commands.cache.size)
+			return;
+		return guild.commands.set([]);
+	}
 
-	for (const rule of TextCommandRules)
-		return guild.commands.create({
-				name: rule.command.substring(0, 32).toLowerCase(),
-				description: (rule.embed ?
-						rule.content.ttl || rule.content.desc :
-						rule.content.substring(0, 100)) ||
-					'Custom Command',
-				options: [{
-					name: 'private',
-					type: 'BOOLEAN',
-					description: 'Only show output to the executor',
-					required: false
-				}],
-				defaultPermission: false,
-				dm_permission: false
-			})
-			.catch(() => console.log('No commands scope in', guild.name, guild.id))
+	return guild.commands.set(TextCommandRules.map(rule => ({
+			name: rule.command.substring(0, 32).toLowerCase(),
+			description: (rule.embed ?
+					rule.content.ttl || rule.content.desc :
+					rule.content.substring(0, 100)) ||
+				'Custom Command',
+			options: [{
+				name: 'private',
+				type: 'BOOLEAN',
+				description: 'Only show output to the executor',
+				required: false
+			}],
+			defaultPermission: false,
+			dm_permission: false
+		})))
+		.catch(() => console.log('No commands scope in', guild.name, guild.id))
 };
 
 const Snowflake = {
@@ -2714,7 +2719,7 @@ io.on('connection', async socket => {
 
 				functions[key](data);
 				if (!socket.GuildData.TextCommandRules.length) socket.GuildData.TextCommandRules = undefined;
-				else if (key != 'get') setGuildCustomCommands(socket.Guild)
+				if (key != 'get') setGuildCustomCommands(socket.Guild)
 				WriteDataBase();
 			} catch (e) {
 				fun(null, e)
@@ -3363,7 +3368,7 @@ client.on('ready', async () => {
 	);
 	for (var guild of client.guilds.cache.values())
 		if (guild.id in DataBase.guilds)
-			setGuildCustomCommands(guild);
+			setGuildCustomCommands(guild, true);
 });
 
 client.on("guildCreate", async guild => {
@@ -3559,7 +3564,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 
 	const textCommandList = GuildData.TextCommandRules?.map(x => x.command.toLowerCase());
 	if (!textCommandList?.includes(command))
-		return sendError(`Command not found: ${subCommand} ${interaction.commandName}`);
+		return sendError(`Command not found: ${interaction.commandName}`);
 
 	let rule = GuildData.TextCommandRules[textCommandList.indexOf(command)];
 
