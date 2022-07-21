@@ -1,0 +1,11 @@
+{
+  "include": ["*DataBase.ts","*.d.ts"],
+  "compilerOptions": {
+    "outFile": "../lib/DataBase.js",
+    "strict": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "target": "es2022",
+    "moduleResolution": "node"
+  }
+}
