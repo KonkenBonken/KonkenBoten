@@ -1,4 +1,5 @@
 import { Snowflake, EncodedT } from './Utils';
+
 export interface ModerationSettings {
   color?: string;
   text: {

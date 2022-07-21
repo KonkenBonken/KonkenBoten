@@ -1,4 +1,5 @@
 import { Snowflake } from './Utils';
+
 export interface Temp {
   g: Snowflake;
   m: Snowflake;
@@ -6,4 +7,4 @@ export interface Temp {
   until: number;
   role?: Snowflake;
   key?: string;
-};
+}

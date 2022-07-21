@@ -1,4 +1,5 @@
 import { Snowflake } from './Utils';
+
 export type LoggedInUser = [
   {
     id: Snowflake, expires: number

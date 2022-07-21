@@ -1,4 +1,5 @@
 import { Snowflake } from './Utils';
+
 export interface SuggestionSettings {
   enabled: boolean;
   embed: {
