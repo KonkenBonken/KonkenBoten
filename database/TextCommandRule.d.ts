@@ -1,13 +1,18 @@
+import { Snowflake } from './Utils';
 
-interface ContentTextCommandRule {
+interface BaseTextCommandRule {
   command: string;
-  content: string;
-  /** @deprecated  */
-  roles?: Snowflake[];
-  embed?: false;
+  /** @deprecated */ roles?: Snowflake[];
+  embed?: boolean;
   disabled?: boolean;
 }
-interface EmbedTextCommandRule extends ContentTextCommandRule {
+
+interface ContentTextCommandRule extends BaseTextCommandRule {
+  embed?: false;
+  content: string;
+}
+
+interface EmbedTextCommandRule extends BaseTextCommandRule {
   embed: true;
   content: {
     athr: {
@@ -23,6 +28,6 @@ interface EmbedTextCommandRule extends ContentTextCommandRule {
       img: string;
       nm: string;
     }
-  }
+  };
 }
 export type TextCommandRule = ContentTextCommandRule | EmbedTextCommandRule
