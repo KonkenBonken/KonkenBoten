@@ -29,5 +29,9 @@ export interface Guild {
   logs?: LogSettings;
   /** @deprecated */ commands?: Record<string, string>;
   Moderation?: ModerationSettings;
+  Reactions?: Record<Snowflake, {
+    e: string[];
+    f: string;
+  }>;
   premium?: number;
 };
