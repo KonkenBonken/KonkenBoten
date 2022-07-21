@@ -25,5 +25,7 @@ export interface Guild {
   VoiceRules?: VoiceCommandRule[];
   Tickets?: TicketSettings;
   Suggestions?: SuggestionSettings;
+  logs?: LogSettings;
+  /** @deprecated */ commands?: Record<string, string>;
   premium?: number;
 };
