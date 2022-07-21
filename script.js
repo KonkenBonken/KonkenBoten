@@ -27,7 +27,7 @@ import Import_nodeCache from 'node-cache';
 import Import_commands from './lib/commands.js';
 import EmojiList from './src/emojis.js';
 
-import DataBase from './lib/DataBase.js';
+import DataBase from './build/DataBase.js';
 
 console.timeEnd('Packages');
 console.time('Consts');
