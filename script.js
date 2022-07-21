@@ -4413,11 +4413,6 @@ app.get('/src/database', async (req, res) => {
 	else res.error(403, 'no permissions');
 });
 
-app.get('/allow-commands', (req, res) => res.redirect(301, `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&scope=applications.commands`));
-
-app.get('/robots.txt', (req, res) => res.send('User-agent:Googlebot\nDisallow:/Guild/\nDisallow:/guild/'));
-app.get('/googleef57faccce66a13b.html', (req, res) => res.send('google-site-verification: googleef57faccce66a13b.html'));
-
 app.get('/KonkenBoten', (req, res) => res.redirect(301, '/'));
 app.all(/(weather|news)/, (req, res) => res.error(410, 'page gone'));
 app.use((req, res) => res.error(404, 'page not found'));
