@@ -13,6 +13,7 @@ class DataBase {
 
   constructor(data: object) {
     this.guilds = data.guilds;
+    this.temp = data.temp;
     this.loggedIn = data.loggedIn;
     this.voiceCreated = data.voiceCreated;
   }
