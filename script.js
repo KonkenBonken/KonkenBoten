@@ -26,6 +26,9 @@ import Import_topGgSdk from '@top-gg/sdk';
 import Import_nodeCache from 'node-cache';
 import Import_commands from './lib/commands.js';
 import EmojiList from './src/emojis.js';
+
+import DataBase from './database/DataBase.ts';
+
 console.timeEnd('Packages');
 console.time('Consts');
 
@@ -65,7 +68,6 @@ const app = express(),
 	}),
 	port = 80,
 	PageTitle = 'KonkenBoten - The Ultimate Discord Bot',
-	DataBase = JSON.parse(fsSync.readFileSync('DataBase.json', 'utf8').trim().replace(/Ã¤/g, 'ä').replace(/Ã¥/g, 'å').replace(/Ã¶/g, 'ö')),
 	topggApi = new(Import_topGgSdk.Api)('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMzgwMzU3NTI2NDAxODQzMyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4NjYzNDU4fQ.gqGp-wnvzaFk69HGOohqYPlJ2J4bEjL7RRAvWFCroMQ'),
 	TopggSend = () => topggApi.postStats({ serverCount: client.guilds.cache.size }),
 	Cache = new(Import_nodeCache)();
