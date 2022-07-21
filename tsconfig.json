@@ -1,0 +1,14 @@
+{
+  "include": ["src/*.tsx"],
+  "compilerOptions": {
+    "outFile": "lib/app.js",
+    "strict": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "target": "es2022",
+    "jsx": "react",
+    "jsxFactory": "El",
+    "moduleResolution": "node",
+    "removeComments": true
+  }
+}
