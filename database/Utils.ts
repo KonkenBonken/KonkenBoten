@@ -1,7 +1,6 @@
 export { Snowflake } from 'discord.js';
 
 export type EncodedT = number;
-export { BaseDB } from './BaseDB'
 
 export function mapValues<K, V, R>(obj: Record<K, V>, mapper: (V) => R): Record<K, R> {
   for (const key in obj)

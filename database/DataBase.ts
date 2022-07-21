@@ -12,9 +12,7 @@ class DataBase {
   voiceCreated: Snowflake[];
 
   constructor(data: object) {
-    this.guilds = mapToClass(Guild, data.guilds);
-    this.temp = mapToClass(Temp, data.temp);
-    this.loggedIn = mapToClass(LoggedInUser, data.loggedIn);
+    this.guilds = data.guilds;
     this.voiceCreated = data.voiceCreated;
   }
 }

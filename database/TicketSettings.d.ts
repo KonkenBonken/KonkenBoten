@@ -1,4 +1,4 @@
-import { Snowflake, EncodedT, BaseDB } from './Utils';
+import { Snowflake, EncodedT } from './Utils';
 
 enum TicketSaveMode {
   always = 'always',
@@ -22,7 +22,7 @@ interface TicketTranscript {
   fromto: [EncodedT, EncodedT]
 }
 
-export class TicketSettings extends BaseDB {
+export interface TicketSettings {
   enabled?: boolean;
   channel: Snowflake;
   staff: Snowflake;
@@ -37,5 +37,4 @@ export class TicketSettings extends BaseDB {
   save: TicketSaveMode;
   unlisted?: 1;
   content: string;
-  constructor(data: object) { super(data) }
 }
