@@ -1,0 +1,38 @@
+@use '../abstracts' as *;
+
+nav {
+  background-color: clr(3);
+  border-right: border();
+  grid-area: nav;
+  border-bottom-right-radius: .5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+
+  > a {
+    box-sizing: border-box;
+    background-color: clr(2);
+    @include outline;
+    display: block;
+    color: clr(27);
+    text-decoration: none;
+    height: 3vh;
+    border-radius: .5em;
+    line-height: 1.5;
+    padding-left: 2ch;
+    &.active,
+    &:hover,
+    :focus {
+      background-color: clr(4);
+      color: clr(99);
+      @include outline(3, 18);
+    }
+
+    &.active:hover,
+    &:active {
+      background-color: clr(6);
+      color: clr(99);
+      @include outline(3, 18);
+    }
+  }
+}

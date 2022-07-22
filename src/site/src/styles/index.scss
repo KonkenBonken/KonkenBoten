@@ -14,17 +14,9 @@ body {
 }
 
 #root {
-  background-color: clr(3);
+  background-color: clr(5);
   display: grid;
   grid-template-areas: 'header header' 'nav main';
   grid-template-rows: $header-size 1fr;
   grid-template-columns: $nav-size 1fr;
-}
-
-nav {
-  background-color: clr(2);
-  border-right: border();
-  grid-area: nav;
-  border-bottom-right-radius: .5rem;
-  border-bottom-right-radius: .5rem;
 }
