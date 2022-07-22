@@ -17,7 +17,7 @@ export function Navigation() {
     <nav>
       <Link to="Commands" paths={['Auto Reaction', 'Commands', 'Custom Commands']} />
       <Link to="Dynamic Voice Channels" />
-      <Link to="Moderation" paths={['Moderation', 'Auto Moderation', 'Logging', 'Moderations Logs']} />
+      <Link to="Moderation" paths={['Moderation', 'Auto Moderation', 'Logging', 'Infractions']} />
       <Link to="Suggestions" paths={['Settings', 'Suggestions']} />
       <Link to="Support Channels" paths={['Settings', 'Transcripts']} />
     </nav>
