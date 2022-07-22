@@ -21,17 +21,6 @@ body {
   grid-template-columns: $nav-size 1fr;
 }
 
-header {
-  background-color: clr(1);
-  border-bottom: border();
-  grid-area: header;
-  padding: $header-size*.07 1%;
-
-  > svg {
-    height: 100%;
-  }
-}
-
 nav {
   background-color: clr(2);
   border-right: border();
