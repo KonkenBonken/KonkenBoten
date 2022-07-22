@@ -1,7 +1,0 @@
-@use 'globals.scss' as *;
-@function clr($weight) {
-  @return hsl(hue($theme) + 190 - $weight * 2 , $weight * -.8% + 45%, $weight * 3% + 7%);
-}
-@function border($weight:15) {
-  @return .06rem solid clr($weight);
-}
