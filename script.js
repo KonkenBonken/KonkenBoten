@@ -9,21 +9,16 @@ dotenv.config()
 import Discord from "discord.js";
 import fsSync from 'fs';
 import { JSDOM } from "jsdom";
-import lightRandom from 'light-random';
 import Fetch from 'node-fetch';
-import cookieParser from 'cookie-parser';
 import moment from 'moment-timezone';
 import { stringify as CleanDate } from 'simple-duration';
 import ObjectMerge from 'deepmerge';
-import express from 'express';
-import { Server as socketIo } from 'socket.io';
 import { isWebUri as isValidUrl } from 'valid-url';
 
-import Import_http from 'http';
-import Import_discordOauth2 from "discord-oauth2";
 import Import_topGgSdk from '@top-gg/sdk';
 import Import_nodeCache from 'node-cache';
 import Import_commands from './lib/commands.js';
+import Import_express from './lib/express.js';
 import EmojiList from './src/emojis.js';
 
 import DataBase from './build/DataBase.js';
@@ -58,32 +53,12 @@ const intents = new Discord.Intents( // https://discord.com/developers/docs/topi
 console.time('Login');
 client.login(process.env.TOKEN);
 
-const app = express(),
-	server = Import_http.createServer(app),
-	io = new socketIo(server, {
-		transports: ['polling'],
-		pingInterval: 60e3,
-		pingTimeout: 120e3,
-	}),
-	port = 80,
-	PageTitle = 'KonkenBoten - The Ultimate Discord Bot',
-	topggApi = new(Import_topGgSdk.Api)('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMzgwMzU3NTI2NDAxODQzMyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4NjYzNDU4fQ.gqGp-wnvzaFk69HGOohqYPlJ2J4bEjL7RRAvWFCroMQ'),
+const topggApi = new(Import_topGgSdk.Api)('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMzgwMzU3NTI2NDAxODQzMyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4NjYzNDU4fQ.gqGp-wnvzaFk69HGOohqYPlJ2J4bEjL7RRAvWFCroMQ'),
 	TopggSend = () => topggApi.postStats({ serverCount: client.guilds.cache.size }),
 	Cache = new(Import_nodeCache)();
 
 const NewGuildSubrcibers = [],
 	ClientID = '813803575264018433',
-	RedirectTo = { de: 'https://bot.konkenbonken.se/oauth', en: 'https%3A%2F%2Fbot.konkenbonken.se%2Foauth' },
-	URLs = {
-		oauth: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&redirect_uri=${RedirectTo.en}&scope=identify%20guilds&response_type=code`,
-		bot: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&permissions=8&scope=bot%20applications.commands`,
-		botRedirect: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&redirect_uri=${RedirectTo.en}&permissions=8&scope=bot%20applications.commands&response_type=code`
-	},
-	oauth = new(Import_discordOauth2)({
-		clientId: ClientID,
-		clientSecret: process.env.OAUTH,
-		redirectUri: RedirectTo.de
-	}),
 
 	WriteDataBase = () => {
 		if (performance.now() > 30e3)
@@ -196,15 +171,6 @@ const RandomUser = () => 'User#' + Math.floor(Math.random() * 8999 + 1000),
 			return null;
 		}
 	};
-let prefetchs = [...[
-		...['logo', 'commands', 'voice', 'moderation', 'suggestions', 'support', 'sort', 'reply', 'arrow', 'discord'].map(x => `src/icon/${x}`),
-		'src/client.js', 'src/client.css', 'src/error.css', 'src/background' //, 'socket.io/socket.io.js',    // ,...["1cbd08c76f8af6dddce02c5138971129","6debd47ed13483642cf09e832ed0bc1b","dd4dbc0016779df1378e7812eabaa04d","322c936a8c8be1b803cd94861bdfa868"].map(x=>`https://discordapp.com/assets/${x}.png`)
-		, ...EmojiList.split(';').map(s => s.split(',')).slice(0, 40).map(([n, id]) => `https://twemoji.maxcdn.com/v/latest/72x72/${id}.png`)
-	].map(url => `<${url}>; rel="prefetch"`),
-	'<oauth>; rel="prerender"', '<https://discord.com>; rel="preconnect"',
-	'</>; rel="canonical"', '<https://top.gg/bot/813803575264018433/vote>; rel="prerender"',
-
-].join();
 
 const ParseModLogs = (logs, guild, targetMember, targetStaff) => Object.entries(logs)
 	//targetMember = Member | User | id
@@ -2369,8 +2335,7 @@ const TranscriptMsgsToHtml = (msgs, guild) => Promise.all(msgs.map(async ({ a, c
 			document.body.append(icon);
 			icon.setAttribute('style', `background-image:radial-gradient(#0000, #34373c 70%),url(https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.webp?size=512)`);
 		}
-	},
-	isAdmin = (permissions) => (new Discord.BitField(permissions)).has(8);
+	};
 const defaultReasons = {
 	words: 'Used a bad word',
 	links: 'Sent a link',
@@ -2459,8 +2424,6 @@ Object.entries(DataBase.loggedIn).forEach(([id, data]) => {
 	console.log(id, CleanDate(duration / 1000, 'm'));
 
 	if (duration <= 0) return delete DataBase.loggedIn[id]
-
-	Cache.set(id, data, duration);
 	setTimeout(() => delete DataBase.loggedIn[id], duration);
 
 	data[1] = guilds.filter(x => x);
@@ -2478,15 +2441,7 @@ Object.entries(DataBase.loggedIn).forEach(([id, data]) => {
 })
 
 const commands = Import_commands({ client, CleanDate, capital, moment, ParseModLogs, ObjectMerge, MutedPermissions, encodeT, DataBase, WriteDataBase, newDiv, SuggestRespond });
-
-app.response.error = async function (code, message) { // wont return response | not chainable
-	const document = await baseDoc({
-		css: 'error',
-		htmlString: `<header><a href="/" class="logo"><div> <img src="/src/icon/logo" alt="KonkenBoten's Logo"></div></a></header><h1>${code}</h1><h2>${message}</h2>`,
-		title: `KonkenBoten - ${code}: ${message}`
-	});
-	this.status(code).end(document.documentElement.outerHTML);
-}
+const listen = Import_express({ client, DataBase, OAUTH: process.env.OAUTH, Discord });
 
 moment._ZoneLookup = { cs: 'CZ', da: 'DK', el: 'GR', hi: 'IN', ja: 'JP', ko: 'KP', uk: 'UA' };
 moment.ZoneLookup = locale => moment.tz._countries[
@@ -3258,7 +3213,8 @@ DataBase.temp = DataBase.temp.filter(x => x);
 // Discord - client.on
 client.on('ready', async () => {
 	console.timeEnd('Login');
-	server.listen(port, () => console.log(`listening on ${port} and logged in as ${client.user.username}!`));
+	listen(() => console.log(`listening`));
+	console.log(`logged in as ${client.user.username}!`);
 
 	console.log(client.guilds.cache.filter(g => g.available).size, 'available of', client.guilds.cache.size, 'Guilds before fetch');
 	await client.guilds.fetch( /*{ force: true }*/ );
@@ -4002,151 +3958,6 @@ client.on('interactionCreate', async interaction => {
 }); // interactionCreate
 
 client.on("guildScheduledEventCreate", console.log)
-
-// Express - app
-app.use(express.static('./build/site'));
-app.use(cookieParser());
-app.use((req, res, next) => {
-	if (req.hostname != 'bot.konkenbonken.se') {
-		res.append('Link', `<https://bot.konkenbonken.se${req.path}>; rel="canonical"`)
-			.redirect(301, 'https://bot.konkenbonken.se' + req.path);
-		return;
-	};
-	try {
-		let d = new Date(),
-			ua = req.headers['user-agent'],
-			google = /google/i.test(ua);
-		// /*uncommend = log src*/	console.log(`\x1b[3${req.path.startsWith('/src/')?4:google?6:2}m%s\x1b[0m`, `${d.getHours()}:${d.getMinutes()} >> ${req.url} ${google?(ua.includes('compatible;')?ua.match(/compatible; ([^;]+);/)[1]||'':ua):''}`);
-		if (!['src', 'favicon.ico'].includes(req.path.split('/')[1]))
-			console.log(`\x1b[3${google?6:2}m%s\x1b[0m`, `${d.getHours()}:${d.getMinutes()} >> ${req.url} ${google?(ua.includes('compatible;')&&ua.match(/compatible; ([^;]+);/)?ua.match(/compatible; ([^;]+);/)[1]||'':ua):''}`);
-	} catch {}
-	next()
-});
-
-app.get('/*', async (req, res) => {
-	const promises = [
-			fs.readFile('./build/site/index.html')
-		],
-		clientData = {},
-		user = DataBase.loggedIn[req.cookies.LoginId];
-
-	if (user) {
-		clientData.servers = user[1];
-		promises.push(client.users.fetch(user[0].id).then(user =>
-			clientData.user = {
-				id: user.id,
-				avatar: user.avatar,
-				username: user.username,
-				discriminator: user.discriminator
-			}
-		));
-	}
-
-	const [document] = await Promise.all(promises);
-	document.replace('%SERVER_DATA%', JSON.stringify(clientData));
-
-	res.append('Cache-Control', 'public, max-age=10800') //3h
-		.append('Link', prefetchs)
-		.send(document);
-});
-
-app.get('/oauth', async (req, res) => {
-	const fail = () => res.append('Link', prefetchs).redirect(302, URLs.oauth);
-	if (req.query.code) {
-		let scope = ["identify", "guilds"];
-
-		let { access_token } = await oauth.tokenRequest({
-			code: req.query.code,
-			scope,
-			grantType: "authorization_code",
-		}).catch(e => fail() && {});
-
-		if (!access_token) return fail();
-		var [user, guilds] = await Promise.all([oauth.getUser(access_token), oauth.getUserGuilds(access_token)]);
-		if (!user || !guilds) return fail();
-
-		const LoginExpire = 864e5 * 4, //4d
-			Hash = Object.entries(DataBase.loggedIn).find(([key, value]) => value?.[0]?.id == user.id)?.[0] || lightRandom(16);
-
-		if (DataBase.loggedIn[Hash]) console.log(DataBase.loggedIn[Hash][0], 57412);
-
-		res.cookie('LoginId', Hash, {
-			maxAge: 864e5 * 16, //16d  // cookie for 16d but saves on database for 4d (if logges in on other device)
-			httpOnly: true
-		}).cookie('ToS', 1, {
-			maxAge: 2592e6, //30d
-			httpOnly: true
-		});
-
-		user = { id: user.id, expires: Date.now() + LoginExpire };
-		console.time('Guild Validation');
-		guilds = (await Promise.all(
-				guilds.filter(({ permissions }) => isAdmin(permissions))
-				.map(async guild => await client.guilds.fetch(guild.id).catch(() => false) && guild)
-			))
-			.filter(x => x)
-			.map(({ id, icon, name, permissions }) => ({
-				id,
-				icon: icon || undefined,
-				name,
-				permissions
-			}))
-			.sort((a, b) => a.name > b.name ? 1 : -1);
-		console.timeEnd('Guild Validation');
-
-		DataBase.loggedIn[Hash] = [user, guilds];
-		setTimeout(() => delete DataBase.loggedIn[Hash], LoginExpire);
-		Cache.set(Hash, [user, guilds], LoginExpire);
-
-	} else if (!Cache.has(req.cookies.LoginId))
-		return fail();
-
-	if (req.cookies.LstUrl) return res.redirect(302, req.cookies.LstUrl);
-	if (req.cookies.LstGld) return res.redirect(302, '/Guild/' + req.cookies.LstGld);
-	if (guilds && guilds[0]) return res.redirect(302, '/Guild/' + guilds[0].id);
-	res.redirect(302, URLs.botRedirect);
-});
-
-app.get('/logout', async (req, res) => {
-	if (Cache.has(req.cookies.LoginId)) Cache.del(req.cookies.LoginId);
-	DataBase.loggedIn[req.cookies.LoginId] = undefined;
-	res.clearCookie('LoginId')
-		.redirect('/');
-});
-
-app.get('/vote', async (req, res) => res.redirect('https://top.gg/bot/813803575264018433/vote')); //.cookie('vtd', 1, {maxAge: 43200, /*12h*/ httpOnly: true})
-app.get('/top.gg', async (req, res) => res.redirect('https://top.gg/bot/813803575264018433'));
-
-const iconLookup = {
-	// settings: 'settings', // Not in use
-	commands: 'chat-settings',
-	voice: 'speaker',
-	moderation: 'policeman-male--v2',
-	support: 'headset',
-	suggestions: 'mailbox-opened-flag-down',
-	sort: 'generic-sorting',
-	reply: 'forward-arrow',
-	open: 'external-link-squared'
-	// ,arrow: 'arrow' //same -> defaults
-};
-
-app.get('/src/database', async (req, res) => {
-	res.append('Cache-Control', 'no-store');
-	if (!req.cookies.LoginId) return res.redirect(302, URLs.oauth);
-	let user = Cache.get(req.cookies.LoginId);
-	if (!user) return res.redirect(302, URLs.oauth);
-	let userid = user[0].id;
-	console.log({
-		DatabaseAccess: userid,
-		Access: userid == '417331788436733953'
-	});
-	if (userid == '417331788436733953') res.json(DataBase)
-	else res.error(403, 'no permissions');
-});
-
-app.get('/KonkenBoten', (req, res) => res.redirect(301, '/'));
-app.all(/(weather|news)/, (req, res) => res.error(410, 'page gone'));
-app.use((req, res) => res.error(404, 'page not found'));
 
 // Error.stackTraceLimit = 1e5;
 const sendError = async (message = '', err) => {
