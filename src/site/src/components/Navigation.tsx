@@ -1,13 +1,25 @@
-import { NavLink as Link } from "react-router-dom";
+import { Fragment } from 'react';
+import { NavLink } from "react-router-dom";
+
+function Link({ to, paths = [] }: { to: string, paths: string[] }) {
+  const path = to.toLowerCase().replace(/\s/g, '-');
+
+  return (<Fragment>
+    <NavLink to={path}>{to}</NavLink>
+    {paths.map(to => (
+      <NavLink className="child" to={path + '/' + to.toLowerCase().replace(/\s/g, '-')}>{to}</NavLink>
+    ))}
+  </Fragment>)
+}
 
 export function Navigation() {
   return (
     <nav>
-      <Link to="moderation">Moderation</Link>
-      <Link to="suggestion">Suggestion</Link>
-      <Link to="support-channels">Support Channels</Link>
-      <Link to="logging">Logging</Link>
-      <Link to="dynamic-voice-channels">Dynamic Voice Channels</Link>
+      <Link to="Commands" paths={['Auto Reaction', 'Commands', 'Custom Commands']} />
+      <Link to="Dynamic Voice Channels" />
+      <Link to="Moderation" paths={['Moderation', 'Auto Moderation', 'Logging', 'Moderations Logs']} />
+      <Link to="Suggestions" paths={['Settings', 'Suggestions']} />
+      <Link to="Support Channels" paths={['Settings', 'Transcripts']} />
     </nav>
   );
 }

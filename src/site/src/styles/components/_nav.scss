@@ -6,7 +6,8 @@ nav {
   border-bottom-right-radius: .5rem;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: .4rem;
+  padding-left: .1rem;
 
   > a {
     box-sizing: border-box;
@@ -19,6 +20,7 @@ nav {
     border-radius: .5em;
     line-height: 1.5;
     padding-left: 2ch;
+    font-weight: bold;
     &.active,
     &:hover,
     :focus {
@@ -32,6 +34,15 @@ nav {
       background-color: clr(6);
       color: clr(99);
       @include outline(3, 18);
+    }
+
+    &.child {
+      margin-left: 2ch;
+      font-weight: normal;
+    }
+
+    &:not(.child) {
+      margin-top: .7rem;
     }
   }
 }
