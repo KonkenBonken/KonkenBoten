@@ -8,9 +8,7 @@
     "ts:react": "cd src/site && react-scripts build",
     "ts:database": "cd database && npx tsc",
     "test:react": "npm run ts:react && node siteTest.js",
-    "sass": "npx sass src/site/ --no-source-map --style=compressed",
-    "sass-w": "npx sass src/site/ -w --no-source-map --style=compressed",
-    "build": "npm i && npm run sass & npm run ts:database && npm run ts:react"
+    "build": "npm i && npm run ts:database && npm run ts:react"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
