@@ -1,11 +1,11 @@
 @use 'globals.scss' as *;
 @function clr($weight) {
-  @return hsl(hue($theme) + 190 - $weight * 2 , $weight * -.8% + 45%, $weight * 3% + 7%);
+  @return hsl(hue($theme) + 190 - $weight * 2 , $weight * -.8% + 30%, $weight * 3% + 10%);
 }
-@function border($width: 1 ,$clr-weight: 15) {
+@function border($width: 1, $clr-weight: 15) {
   @return clr($clr-weight) solid $outline-width * $width;
 }
-@mixin outline($width: 1 ,$clr-weight: 15) {
+@mixin outline($width: 1, $clr-weight: 10) {
   outline: border($width,$clr-weight);
   outline-offset: -$outline-width * $width;
 }
