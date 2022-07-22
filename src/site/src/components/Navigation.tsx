@@ -6,9 +6,10 @@ function Link({ to, paths = [] }: { to: string, paths: string[] }) {
 
   return (<Fragment>
     <NavLink to={path}>{to}</NavLink>
-    {paths.map(to => (
-      <NavLink className="child" to={path + '/' + to.toLowerCase().replace(/\s/g, '-')}>{to}</NavLink>
-    ))}
+    {paths.map(to => {
+      const childPath = path + '/' + to.toLowerCase().replace(/\s/g, '-');
+      return (<NavLink className="child" key={childPath} to={childPath}>{to}</NavLink>)
+    })}
   </Fragment>)
 }
 
