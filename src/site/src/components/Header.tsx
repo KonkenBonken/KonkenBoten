@@ -4,7 +4,6 @@ export function Header() {
   return (
     <header>
       <Logo />
-      Header!
     </header>
   );
 }
