@@ -1,0 +1,13 @@
+@use '../abstracts' as *;
+
+header > .select {
+  width: 20em;
+  height: $header-space;
+  float: right;
+  background-color: clr(4);
+  position: relative;
+
+  > input {
+    height: $header-space;
+  }
+}
