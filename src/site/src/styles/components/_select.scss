@@ -28,13 +28,18 @@
       display: grid;
       position: absolute;
       top: 0;
+
+      > :is(.placeholder, img) {
+        width: $header-space*.95;
+        margin-top: $header-space*.025;
+      }
     }
   }
 
   > a {
     display: none;
     grid-template-areas: 'icon label';
-    grid-template-columns: 48px 1fr;
+    grid-template-columns: $header-space 1fr;
     gap: 10px;
     place-items: center left;
     padding-left: 3%;
@@ -45,7 +50,7 @@
       grid-area: icon;
       @include avatar;
       display: block;
-      width: 100%;
+      width: $header-space;
     }
 
     .placeholder {
@@ -54,7 +59,7 @@
       place-items: center;
       user-select: none;
       color: rgb(220, 221, 222);
-      font-size: 1rem;
+      font-size: .9rem;
     }
 
     > span {
