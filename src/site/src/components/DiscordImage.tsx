@@ -3,5 +3,5 @@ export function DiscordImage({ src, srcSizes, className }: { src: string, srcSiz
     .filter(size => !srcSizes || srcSizes.includes(size)),
     srcset = (size: number) => `${src}?size=${size} ${size}w`;
 
-  return (<img src={`${src}?size=32`} srcSet={sizes.map(srcset).join()} className={className} />);
+  return (<img src={`${src}?size=${sizes[0]}`} srcSet={sizes.map(srcset).join()} className={className} />);
 }

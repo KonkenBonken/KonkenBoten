@@ -8,7 +8,7 @@ export function ServerSelect({ servers }: ContextData) {
     <div className="server-select" role="navigation">
       {servers.map(({ id, icon, name }) => (
         <NavLink to={'Guild/' + id} key={id}>
-          {icon && (<DiscordImage src={`https://cdn.discordapp.com/icons/${id}/${icon}`} />)}
+          {icon && (<DiscordImage src={`https://cdn.discordapp.com/icons/${id}/${icon}`} srcSizes={[16, 32, 64]} />)}
           {name}
         </NavLink>
       ))}

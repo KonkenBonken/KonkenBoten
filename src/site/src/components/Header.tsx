@@ -13,7 +13,7 @@ export function Header() {
         {({ user, servers }: ContextData) => {
           if (user)
             return (<Fragment>
-              <DiscordImage src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`} className="avatar" />
+              <DiscordImage src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`} srcSizes={[16, 32, 64]} className="avatar" />
               <ServerSelect servers={servers} />
             </Fragment>)
           else
