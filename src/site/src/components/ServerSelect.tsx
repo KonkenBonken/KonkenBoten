@@ -5,6 +5,6 @@ import { Select } from './Select.tsx';
 
 export function ServerSelect({ servers }: ContextData) {
   return (
-    <Select options={servers.map(({ id, icon, name }) => ({ id, label: name, icon }))} />
+    <Select options={servers.map(({ id, icon, name }) => ({ id, label: name, icon }))} link="Guild/" />
   );
 }

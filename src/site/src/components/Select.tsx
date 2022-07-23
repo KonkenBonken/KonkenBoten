@@ -3,42 +3,41 @@ import { NavLink } from "react-router-dom";
 import normalizeString from 'any-ascii';
 import { DiscordImage, GuildPlaceholder } from './DiscordImage.tsx';
 
-export function Select({ options, initialSelected, guildIcons = true, onChoice }: { options: { id?: string, label: string, icon?: string }[], initialSelected: string, onChoice?: (string) => void }) {
+export function Select({ options, guildIcons = true, onChoice, link }: { options: { id?: string, label: string, icon?: string }[], onChoice?: (string) => void, link?: string }) {
   for (const option of options)
     option.id ??= option.label;
 
   const
     displayIcons = guildIcons && options.some(option => option.icon),
-    [selectedId, setSelectedId] = useState(initialSelected),
-    selected = options.find(option => option.id == selectedId) || options[0],
     [searchQuery, setSearchQuery] = useState('');
 
-  if (!options.some(option => option.id == selectedId))
-    setSelectedId(options[0].id)
+  function Option({ id, children }: { id: string }) {
+    function onClick() {
+      onChoice && onChoice(id);
+      document.activeElement.blur()
+    }
+
+    if (link)
+      return (<NavLink to={link + id} onClick={onClick}>{children}</NavLink>)
+    else
+      return (<div id={id} onClick={onClick}>{children}</div>)
+  }
 
   return (<div className="select">
     <input className="search"
       onFocus={({ target }) => target.value = ''}
-      onBlur={({ target }) => target.value = selected.label}
       onChange={({ target }) => setSearchQuery(target.value)}
     />
     {options.filter(({ label, id }) => [label, id, normalizeString(label)].some(text => text.toLowerCase().includes(searchQuery)))
       .map(({ label, id, icon }) => (
-        <NavLink key={id} to={'Guild/' + id}
-          onClick={({ target }) => {
-            setSelectedId(id);
-            onChoice && onChoice(id);
-            document.activeElement.blur()
-          }}>
-
+        <Option id={id} key={id}>
           {displayIcons && (icon ?
             <DiscordImage src={`https://cdn.discordapp.com/icons/${id}/${icon}`}
               srcSizes={[16, 32, 64]} /> :
             <GuildPlaceholder name={label} />
           )}
-
           <span>{label}</span>
-        </NavLink>
+        </Option>
       ))}
   </div>)
 }
