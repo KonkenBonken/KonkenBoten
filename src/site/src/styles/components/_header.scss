@@ -6,6 +6,10 @@ header {
   padding: $header-size*.07 15px;
 
   > img {
+    &.logo {
+      height: 100%;
+    }
+
     &.avatar {
       @include avatar;
       height: 100%;
