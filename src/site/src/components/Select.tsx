@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import normalizeString from 'any-ascii';
 import { DiscordImage, GuildPlaceholder } from './DiscordImage.tsx';
 
 export function Select({ options, initialSelected, guildIcons = true, onChoice }: { options: { id?: string, label: string, icon?: string }[], initialSelected: string, onChoice?: (string) => void }) {
@@ -21,7 +22,7 @@ export function Select({ options, initialSelected, guildIcons = true, onChoice }
       onBlur={({ target }) => target.value = selected.label}
       onChange={({ target }) => setSearchQuery(target.value)}
     />
-    {options.filter(({ label, id }) => [label, id].some(text => text.includes(searchQuery)))
+    {options.filter(({ label, id }) => [label, id, normalizeString(label)].some(text => text.toLowerCase().includes(searchQuery)))
       .map(({ label, id, icon }) => (
         <div key={id} id={id}
           className={selectedId == id ? 'active' : ''}
