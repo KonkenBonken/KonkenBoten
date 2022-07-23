@@ -18,4 +18,46 @@ header {
       float: right;
     }
   }
+
+  .server-select {
+    height: $header-size;
+    width: 20em;
+    overflow: hidden;
+    float: right;
+    background-color: clr(4);
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    &:focus-within {
+      overflow-y: auto;
+      height: auto;
+      max-height: 98vh;
+    }
+
+    &:focus-within > a {
+      display: inline-block;
+    }
+
+    > a {
+      display: none;
+      color: clr(27);
+      text-decoration: none;
+      line-height: 1;
+      height: $header-size;
+      width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &.active {
+        display: inline-block;
+      }
+
+      > img {
+        @include avatar;
+        height: 100%;
+      }
+    }
+  }
 }
