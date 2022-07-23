@@ -8,18 +8,20 @@ import { Home } from './route/Home.tsx';
 import { Guild } from './route/Guild.tsx';
 import { GuildSelector } from './route/GuildSelector.tsx';
 import { Header } from './components/Header.tsx';
-
+import { Provider } from './context.tsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <StrictMode>
-    <Header />
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="Guild" element={<GuildSelector />} />
-        <Route path="Guild/:guildId" element={<Guild />} />
-      </Routes>
-    </BrowserRouter>
+    <Provider>
+      <Header />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="Guild" element={<GuildSelector />} />
+          <Route path="Guild/:guildId" element={<Guild />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   </StrictMode>
 );
