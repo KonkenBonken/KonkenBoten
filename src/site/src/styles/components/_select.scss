@@ -14,7 +14,7 @@
   &:focus-within {
     height: fit-content;
 
-    > div {
+    > a {
       display: grid;
     }
   }
@@ -31,7 +31,7 @@
     }
   }
 
-  > div {
+  > a {
     display: none;
     grid-template-areas: 'icon label';
     grid-template-columns: 48px 1fr;
