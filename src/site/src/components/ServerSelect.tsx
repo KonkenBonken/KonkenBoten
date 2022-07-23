@@ -1,17 +1,10 @@
 import { useState } from 'react';
-import { NavLink } from "react-router-dom";
 import { ContextData } from '../types.d.ts';
 import { DiscordImage } from './DiscordImage.tsx';
+import { Select } from './Select.tsx';
 
 export function ServerSelect({ servers }: ContextData) {
   return (
-    <div className="server-select" role="navigation">
-      {servers.map(({ id, icon, name }) => (
-        <NavLink to={'Guild/' + id} key={id}>
-          {icon && (<DiscordImage src={`https://cdn.discordapp.com/icons/${id}/${icon}`} srcSizes={[16, 32, 64]} />)}
-          {name}
-        </NavLink>
-      ))}
-    </div>
+    <Select options={servers.map(({ id, icon, name }) => ({ id, label: name, icon }))} />
   );
 }

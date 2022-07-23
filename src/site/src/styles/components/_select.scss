@@ -1,0 +1,67 @@
+@use '../abstracts' as *;
+
+.select {
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  > input {
+    background: inherit;
+    z-index: 4;
+  }
+
+  &:focus-within {
+    height: fit-content;
+
+    > div {
+      display: grid;
+    }
+  }
+
+  &:not(:focus-within) {
+    > input {
+      opacity: 0;
+    }
+
+    > .active {
+      display: grid;
+      position: absolute;
+      top: 0;
+    }
+  }
+
+  > div {
+    display: none;
+    grid-template-areas: 'icon label';
+    grid-template-columns: 48px 1fr;
+    gap: 10px;
+    place-items: center left;
+    padding-left: 3%;
+    position: relative;
+    z-index: 3;
+
+    > :is(.placeholder, img) {
+      grid-area: icon;
+      @include avatar;
+      display: block;
+      width: 100%;
+    }
+
+    .placeholder {
+      background-color: rgb(54, 57, 63);
+      display: grid;
+      place-items: center;
+      user-select: none;
+      color: rgb(220, 221, 222);
+      font-size: 1rem;
+    }
+
+    > span {
+      overflow: hidden;
+      grid-area: label;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
