@@ -1,3 +1,5 @@
+@use 'abstracts' as *;
+
 html {
   box-sizing: border-box;
   font-size: 16px;
@@ -29,4 +31,9 @@ input {
   background: none;
   box-shadow: none;
   padding: 0;
+}
+
+a {
+  color: clr(27);
+  text-decoration: none;
 }
