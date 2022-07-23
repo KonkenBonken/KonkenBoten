@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { DiscordImage, GuildPlaceholder } from './DiscordImage.tsx';
 
-export function Select({ options, initialSelected, guildIcons = true, onChoice }: { options: { id?: string, label: string, icon?: string }[], initialSelected: string, onChoice?: () => void }) {
+export function Select({ options, initialSelected, guildIcons = true, onChoice }: { options: { id?: string, label: string, icon?: string }[], initialSelected: string, onChoice?: (string) => void }) {
   for (const option of options)
     option.id ??= option.label;
 
