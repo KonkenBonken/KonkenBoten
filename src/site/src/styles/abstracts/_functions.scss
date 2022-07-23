@@ -5,11 +5,3 @@
 @function border($width: 1, $clr-weight: 15) {
   @return clr($clr-weight) solid $outline-width * $width;
 }
-@mixin outline($width: 1, $clr-weight: 10) {
-  outline: border($width,$clr-weight);
-  outline-offset: -$outline-width * $width;
-}
-@mixin avatar {
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-}

@@ -1,0 +1,10 @@
+@use 'globals.scss' as *;
+@use 'functions.scss' as *;
+@mixin outline($width: 1, $clr-weight: 10) {
+  outline: border($width,$clr-weight);
+  outline-offset: -$outline-width * $width;
+}
+@mixin avatar {
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+}
