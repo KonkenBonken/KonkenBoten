@@ -1,4 +1,4 @@
-import { Consumer } from '../context.tsx';
+import { Consumer } from '../utils/context.tsx';
 import { ContextData } from '../types.d.ts';
 
 import { DiscordImage } from './DiscordImage.tsx';

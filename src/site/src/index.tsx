@@ -8,7 +8,7 @@ import { Home } from './route/Home.tsx';
 import { Guild } from './route/Guild.tsx';
 import { GuildSelector } from './route/GuildSelector.tsx';
 import { Header } from './components/Header.tsx';
-import { Provider } from './context.tsx';
+import { Provider } from './utils/context.tsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
