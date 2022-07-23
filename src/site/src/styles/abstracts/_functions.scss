@@ -9,3 +9,7 @@
   outline: border($width,$clr-weight);
   outline-offset: -$outline-width * $width;
 }
+@mixin avatar {
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+}
