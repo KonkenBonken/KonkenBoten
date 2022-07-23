@@ -5,7 +5,7 @@ export function Select({ options, initialSelected, guildIcons = true, onChoice }
   for (const option of options)
     option.id ??= option.label;
 
-  const [open, setOpen] = useState(false),
+  const
     displayIcons = guildIcons && options.some(option => option.icon),
     [selectedId, setSelectedId] = useState(initialSelected),
     selected = options.find(option => option.id == selectedId) || options[0],
@@ -14,7 +14,7 @@ export function Select({ options, initialSelected, guildIcons = true, onChoice }
   if (!options.some(option => option.id == selectedId))
     setSelectedId(options[0].id)
 
-  return (<div className={'select' + (open ? ' open' : '')}>
+  return (<div className="select">
     <input className="search"
       defaultValue={selected.label}
       onFocus={({ target }) => target.value = ''}
