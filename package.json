@@ -8,7 +8,7 @@
     "ts:react": "cd src/site && react-scripts build",
     "ts:database": "cd database && npx tsc",
     "test:react": "npm run ts:react && node siteTest.js",
-    "icons": "npx icon-gen -i ./src/site/src/assets/icon.svg -o ./build/site --favicon --favicon-name icon- --favicon-ico-sizes 16,32 --favicon-png-sizes 16,32,48,64,128,256,512",
+    "icons": "npx icon-gen -i ./src/site/public/icon.svg -o ./build/site --favicon --favicon-name icon- --favicon-ico-sizes 16,32 --favicon-png-sizes 16,32,48,64,128,256,512",
     "build": "npm i && npm run ts:database && npm run ts:react && npm run icons"
   },
   "dependencies": {
