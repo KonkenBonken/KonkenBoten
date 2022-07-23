@@ -1,11 +1,10 @@
-import { ReactComponent as Logo } from '../assets/icon.svg';
 import { Consumer } from '../context.tsx';
 import { ContextData } from '../types.d.ts';
 
 export function Header() {
   return (
     <header>
-      <Logo />
+      <img className="logo" src="/icon.svg" alt="KonkenBoten's Logo" />
       <Consumer>
       </Consumer>
     </header>
