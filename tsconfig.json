@@ -1,5 +1,5 @@
 {
-  "include": ["src/*.tsx"],
+  "include": ["src/*.tsx","src/*.ts"],
   "compilerOptions": {
     "outFile": "lib/app.js",
     "strict": true,
