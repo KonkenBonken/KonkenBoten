@@ -1,4 +1,4 @@
-import { LoggedInUser } from '../../../../database/loggedInUser.d.ts';
+import { LoggedInUserGuild } from '../../../../database/loggedInUser.d.ts';
 
 export interface ContextData {
   user?: {
@@ -6,6 +6,6 @@ export interface ContextData {
     avatar: string,
     username: string,
     discriminator: string,
-    guilds?: LoggedInUser[1]
+    guilds?: LoggedInUserGuild
   }
 }
