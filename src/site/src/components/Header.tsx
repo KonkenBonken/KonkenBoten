@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { Consumer } from '../utils/context.tsx';
-import { ContextData } from '../types.d.ts';
+import { ContextData } from '../utils/types.d.ts';
 
 import { DiscordImage } from './DiscordImage.tsx';
 import { ServerSelect } from './ServerSelect.tsx';

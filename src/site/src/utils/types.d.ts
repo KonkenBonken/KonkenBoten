@@ -1,4 +1,4 @@
-import { LoggedInUser } from '../../../database/loggedInUser.d.ts';
+import { LoggedInUser } from '../../../../database/loggedInUser.d.ts';
 
 export interface ContextData {
   user?: {
