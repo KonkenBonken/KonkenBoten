@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-import { LoggedInUserGuild } from '../../../../database/loggedInUser.d.ts';
+import { LoggedInUserGuild } from '../../../../database/loggedInUser';
 
 export interface ContextData {
   user?: {
