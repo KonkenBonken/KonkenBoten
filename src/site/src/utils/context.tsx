@@ -15,4 +15,4 @@ export interface ContextData {
 const Context = createContext<ContextData>(contextData);
 
 export const Provider = (props) => (<Context.Provider value={contextData} {...props} />);
-export const Consumer = Context.Consumer;
+export const { Consumer } = Context;
