@@ -10,18 +10,23 @@ import { GuildSelector } from './route/GuildSelector.tsx';
 import { Header } from './components/Header.tsx';
 
 import { ContextData } from './utils/context';
+import { socket, connect } from './utils/socket';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <StrictMode>
     <Provider>
-      <ContextHandler />
     </Provider>
   </StrictMode>
 );
 
 function ContextHandler() {
   const [context, setContext] = useState<ContextData>({});
+
+  if (context.user)
+    connect(context.user.id)
+  else
+    socket.disconnect();
 
   return (
     <BrowserRouter>

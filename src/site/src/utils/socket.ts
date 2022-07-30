@@ -1,8 +1,12 @@
 import { io } from "socket.io-client";
 
-if (!contextData.user)
-  export const socket = undefined;
-else
-  export const socket = io({
-    query: { userId: contextData.user.id }
-  });
+export const socket = io({
+  autoConnect: false
+});
+
+export function connect(userId: string) {
+  if (socket.connected) return;
+  socket.socket.options.query = { userId };
+  socket.connect();
+  return new Promise(resolve => socket.once("connect", resolve))
+}
