@@ -10,7 +10,7 @@ import { GuildSelector } from './route/GuildSelector.tsx';
 import { Header } from './components/Header.tsx';
 
 import { ContextData } from './utils/context';
-import { socket, connect } from './utils/socket';
+import { socket, connect } from './utils/socket.ts';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -20,7 +20,7 @@ root.render(
 );
 
 function ContextHandler() {
-  const [context, setContext] = useState<ContextData>({});
+  const [context, setContext] = useState<ContextData>(contextData);
 
   if (context.user)
     connect(context.user.id)
