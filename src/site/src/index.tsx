@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
 
 import './styles/index.scss';
 
@@ -19,6 +19,7 @@ root.render(
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="Guild" element={<GuildSelector />} />
+          <Route path="Guilds" element={<Navigate to="Guild" />} />
           <Route path="Guild/:guildId" element={<Guild />} />
         </Routes>
       </BrowserRouter>
