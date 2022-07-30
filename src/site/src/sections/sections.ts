@@ -1,5 +1,7 @@
 import { ReactElement } from 'react';
 
+import { SupportChannelSettings } from './SupportChannelSettings.tsx';
+
 export default [
   {
     name: 'commands',
@@ -34,7 +36,7 @@ export default [
   {
     name: 'support_channels',
     children: {
-      settings() { },
+      settings: SupportChannelSettings,
       transcripts() { },
     }
   }
