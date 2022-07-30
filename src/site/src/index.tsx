@@ -29,7 +29,7 @@ function ContextHandler() {
 
   return (
     <BrowserRouter>
-      <Header />
+      <Header context={context} />
       <Routes>
         <Route path="/" element={<Home context={context} />} />
         <Route path="Guild" element={<GuildSelector context={context} />} />
