@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Outlet } from "react-router-dom";
 
 import { socket } from '../utils/socket.ts';
 import { ContextProps } from '../utils/context';
@@ -13,10 +13,13 @@ export function Guild({ context: { guild, user }, setContext }: ContextProps) {
       setContext(prev => ({ ...prev, guild: res }))
     })
 
-  return (
-    <>
-      <Navigation />
-      <pre>{guild ? JSON.stringify(guild, ' ', 2) : 'Loading...'}</pre>
-    </>
-  );
+  return (<>
+    <Navigation />
+    {!guild ?
+      'Loading...' :
+      (<main>
+        <Outlet />
+      </main>)
+    }
+  </>);
 }

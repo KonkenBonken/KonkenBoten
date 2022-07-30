@@ -1,25 +1,19 @@
 import { NavLink } from "react-router-dom";
+import sections from '../sections/sections.ts';
 
-function Link({ to, paths = [] }: { to: string, paths: string[] }) {
-  const path = to.toLowerCase().replace(/\s/g, '-');
-
-  return (<>
-    <NavLink to={path}>{to}</NavLink>
-    {paths.map(to => {
-      const childPath = path + '/' + to.toLowerCase().replace(/\s/g, '-');
-      return (<NavLink className="child" key={childPath} to={childPath}>{to}</NavLink>)
-    })}
-  </>)
+function titleCase(string: string) {
+  return string.replace(/^_*(.)|_+(.)/g, (s, c, d) => c ? c.toUpperCase() : ' ' + d.toUpperCase())
 }
 
 export function Navigation() {
-  return (
-    <nav>
-      <Link to="Commands" paths={['Auto Reaction', 'Commands', 'Custom Commands']} />
-      <Link to="Dynamic Voice Channels" />
-      <Link to="Moderation" paths={['Moderation', 'Auto Moderation', 'Logging', 'Infractions']} />
-      <Link to="Suggestions" paths={['Settings', 'Suggestions']} />
-      <Link to="Support Channels" paths={['Settings', 'Transcripts']} />
-    </nav>
-  );
+  return (<nav>
+    {sections.flatMap(({ name, children }) => [
+      <NavLink to={name} key={name} >{titleCase(name)}</NavLink>,
+      ...Object.entries(children).map(([childName, Render]) => (
+        <NavLink className="child" key={`${name}>${childName}`} to={`${name}/${childName}`}>
+          {titleCase(childName)}
+        </NavLink>
+      ))
+    ])}
+  </nav>);
 }
