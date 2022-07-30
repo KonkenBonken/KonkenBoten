@@ -15,8 +15,7 @@ import { socket, connect } from './utils/socket';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <StrictMode>
-    <Provider>
-    </Provider>
+    <ContextHandler />
   </StrictMode>
 );
 
