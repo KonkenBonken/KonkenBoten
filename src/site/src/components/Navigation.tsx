@@ -1,9 +1,7 @@
 import { NavLink } from "react-router-dom";
 import sections from '../sections/sections.ts';
 
-function titleCase(string: string) {
-  return string.replace(/^_*(.)|_+(.)/g, (s, c, d) => c ? c.toUpperCase() : ' ' + d.toUpperCase())
-}
+import { titleCase } from '../utils/utils.ts';
 
 export function Navigation() {
   return (<nav>
