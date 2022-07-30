@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { ContextData } from '../utils/context';
-import { DiscordImage } from './DiscordImage';
-import { Select } from './Select';
+import { ContextData } from '../utils/context.tsx';
+import { DiscordImage } from './DiscordImage.tsx';
+import { Select } from './Select.tsx';
 
 export function ServerSelect({ user: { guilds } }: ContextData) {
   return (

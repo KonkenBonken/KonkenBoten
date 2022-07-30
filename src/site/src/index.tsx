@@ -4,11 +4,11 @@ import { Route, Routes, BrowserRouter } from "react-router-dom";
 
 import './styles/index.scss';
 
-import { Home } from './route/Home';
-import { Guild } from './route/Guild';
-import { GuildSelector } from './route/GuildSelector';
-import { Header } from './components/Header';
-import { Provider } from './utils/context';
+import { Home } from './route/Home.tsx';
+import { Guild } from './route/Guild.tsx';
+import { GuildSelector } from './route/GuildSelector.tsx';
+import { Header } from './components/Header.tsx';
+import { Provider } from './utils/context.tsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

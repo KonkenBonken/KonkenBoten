@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
-import { Consumer, ContextData } from '../utils/context';
+import { Consumer, ContextData } from '../utils/context.tsx';
 
-import { DiscordImage } from './DiscordImage';
-import { ServerSelect } from './ServerSelect';
+import { DiscordImage } from './DiscordImage.tsx';
+import { ServerSelect } from './ServerSelect.tsx';
 
 export function Header() {
   return (
