@@ -1,5 +1,7 @@
+import { BackgroundImage } from '../components/BackgroundImage.tsx';
+
 export function Home() {
-  return (
-    <></>
-  );
+  return (<>
+    <BackgroundImage />
+  </>);
 }

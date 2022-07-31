@@ -3,6 +3,7 @@ import { useParams, Outlet } from "react-router-dom";
 import { socket } from '../utils/socket.ts';
 import { ContextProps } from '../utils/context';
 import { Navigation } from '../components/Navigation.tsx';
+import { BackgroundImage } from '../components/BackgroundImage.tsx';
 
 export function Guild({ context: { guild, user }, setContext }: ContextProps) {
   const { guildId } = useParams();
@@ -14,12 +15,11 @@ export function Guild({ context: { guild, user }, setContext }: ContextProps) {
     })
 
   return (<>
+    <BackgroundImage />
     <Navigation />
-    {!guild ?
+    <main>{!guild ?
       'Loading...' :
-      (<main>
-        <Outlet />
-      </main>)
-    }
+      (<Outlet />)
+    }</main>
   </>);
 }
