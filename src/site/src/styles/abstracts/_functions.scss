@@ -1,6 +1,6 @@
 @use 'globals.scss' as *;
-@function clr($weight) {
-  @return hsl(hue($theme) + 190 - $weight * 2 , $weight * -.8% + 30%, $weight * 3% + 10%);
+@function clr($weight, $opacity: 1) {
+  @return hsl(hue($theme) + 190 - $weight * 2 , $weight * -.8% + 30%, $weight * 3% + 10%, $opacity);
 }
 @function border($width: 1, $clr-weight: 15) {
   @return clr($clr-weight) solid $outline-width * $width;
