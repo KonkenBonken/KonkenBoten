@@ -28,11 +28,6 @@
       display: grid;
       position: absolute;
       top: 0;
-
-      > :is(.placeholder, img) {
-        width: $header-space*.95;
-        margin-top: $header-space*.025;
-      }
     }
   }
 
