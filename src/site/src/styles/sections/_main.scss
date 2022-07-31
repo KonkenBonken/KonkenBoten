@@ -1,8 +1,31 @@
 @use '../abstracts' as *;
+$block-clr: rgb(clr(2), .2);
 
 main {
   width: calc(100vw - $nav-size);
+  padding: 2rem 3ch;
   background: linear-gradient(220deg, rgba(clr(6), .9), clr(5) 80%);
+  position: relative;
+
+  > h2 {
+    font-weight: bold;
+    margin-left: -1ch;
+    margin-bottom: 1rem;
+  }
+
   > section {
+    background-color: $block-clr;
+    backdrop-filter:blur(1rem);
+    padding: 1rem 1ch;
+    border-radius: 1rem;
+
+    > input {
+      background-color: $block-clr;
+      height: 2em;
+      width: 20ch;
+      border-radius: .4em;
+      padding-left: 2ch;
+      display: block;
+    }
   }
 }

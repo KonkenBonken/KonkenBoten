@@ -1,8 +1,14 @@
 @use 'abstracts' as *;
 
 html {
-  box-sizing: border-box;
   font-size: 16px;
+}
+
+div,
+html,
+main,
+section {
+  box-sizing: border-box;
 }
 
 *:after,
