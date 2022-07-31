@@ -6,21 +6,21 @@ export default [
   {
     name: 'commands',
     children: {
+      documentation() { },
       auto_reaction() { },
-      commands() { },
       custom_commands() { },
     }
   },
   {
     name: 'dynamic_voice_channels',
     children: {
-      _index() { }
+      settings() { }
     }
   },
   {
     name: 'moderation',
     children: {
-      moderation() { },
+      settings() { },
       auto_moderation() { },
       logging() { },
       infractions() { },
