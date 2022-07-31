@@ -22,18 +22,12 @@ nav {
     padding-left: 2ch;
     font-weight: bold;
     box-shadow: 0 0 5px clr(0);
+    @include button-colors(2,4,5,6,7);
 
     &.active,
+    &:active,
     &:hover,
-    :focus {
-      background-color: clr(4);
-      color: clr(99);
-      @include outline(3, 18);
-    }
-
-    &.active:hover,
-    &:active {
-      background-color: clr(6);
+    :focus-within {
       color: clr(99);
       @include outline(3, 18);
     }

@@ -7,4 +7,33 @@
 @mixin avatar {
   aspect-ratio: 1 / 1;
   border-radius: 50%;
+@mixin button-colors($clr1, $clr2, $clr3,$clr4, $clr5) {
+  background-color: clr($clr1);
+
+  &.active,
+  &:active,
+  &:focus-within,
+  &:hover {
+    background-color: clr($clr2);
+  }
+
+  &.active:active,
+  &.active:focus-within,
+  &.active:hover,
+  &:focus-within:active,
+  &:hover:active,
+  &:hover:focus-within {
+    background-color: clr($clr3);
+  }
+
+  &.active:active:focus-within,
+  &.active:active:hover,
+  &.active:focus-within:hover,
+  &:active:focus-within:hover {
+    background-color: clr($clr4);
+  }
+
+  &.active:active:focus-within:hover {
+    background-color: clr($clr5);
+  }
 }
