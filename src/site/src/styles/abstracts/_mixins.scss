@@ -7,6 +7,13 @@
 @mixin avatar {
   aspect-ratio: 1 / 1;
   border-radius: 50%;
+  transition: border-radius ease-out .2s;
+
+  &:focus,
+  &:hover {
+    border-radius: 35%;
+  }
+}
 @mixin button-colors($clr1, $clr2, $clr3,$clr4, $clr5) {
   background-color: clr($clr1);
 
