@@ -1,0 +1,7 @@
+@use '../abstracts' as *;
+
+main {
+  > section {
+    max-width: calc(100vw - $nav-size);
+  }
+}
