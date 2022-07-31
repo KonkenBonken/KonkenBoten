@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 
 const sizes = [640, 800, 1024, 1280, 1440, 1600, 1920, 2560, 3840, 7680],
-  bgQueries = ['city', 'street', 'abstract', 'wall', 'nature', 'forest'];
+  bgQueries = ['city', 'street', 'abstract', 'forest'];
 
 if (!sizes.includes(window.screen.availWidth))
   sizes.push(window.screen.availWidth);
