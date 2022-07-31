@@ -1,7 +1,7 @@
 @use '../abstracts' as *;
 
 nav {
-  background-color: clr(3);
+  @include glass(3, .95);
   grid-area: nav;
   border-bottom-right-radius: .5rem;
   display: flex;
@@ -13,7 +13,6 @@ nav {
 
   > a {
     box-sizing: border-box;
-    background-color: clr(2);
     @include outline;
     display: block;
     height: 30px;
@@ -22,12 +21,12 @@ nav {
     padding-left: 2ch;
     font-weight: bold;
     box-shadow: 0 0 5px clr(0);
-    @include button-colors(2,4,5,6,7);
+    @include button-colors(2, 5, 8, 10, 12);
 
     &.active,
     &:active,
-    &:hover,
-    :focus-within {
+    &:focus-within,
+    &:hover {
       color: clr(99);
       @include outline(3, 18);
     }

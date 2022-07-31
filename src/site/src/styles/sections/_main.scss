@@ -1,5 +1,4 @@
 @use '../abstracts' as *;
-$block-clr: clr(2, .2);
 
 main {
   width: calc(100vw - $nav-size);
@@ -10,17 +9,26 @@ main {
   > h2 {
     font-weight: bold;
     margin-left: -1ch;
-    margin-bottom: 1rem;
+  }
+
+  > h3 {
+    margin-top: 1rem;
+    margin-bottom: .5rem;
   }
 
   > section {
-    background-color: $block-clr;
-    backdrop-filter:blur(1rem);
+    @include glass;
     padding: 1rem 1ch;
     border-radius: 1rem;
+    box-shadow: .3ch .3em 2em clr(0);
+    transition: box-shadow ease-out .5s;
+
+    &:focus-within {
+      box-shadow: .7ch .7em 4em clr(0);
+    }
 
     > input {
-      background-color: $block-clr;
+      background-color: clr(2, .2);
       height: 2em;
       width: 20ch;
       border-radius: .4em;
