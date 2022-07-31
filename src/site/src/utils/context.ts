@@ -11,6 +11,7 @@ export interface ContextData {
     guilds?: LoggedInUserGuild[]
   },
   guild?: {
+    id: Snowflake
     member: {
       nickname: string
       color: string

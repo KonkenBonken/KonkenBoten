@@ -13,6 +13,8 @@ export function Guild({ context: { guild, user }, setContext }: ContextProps) {
       if (err) return console.error('Could not fetch guild', { err });
       setContext(prev => ({ ...prev, guild: res }))
     })
+  else if (guild.id !== guildId)
+    setContext(prev => ({ ...prev, guild: undefined }));
 
   return (<>
     <BackgroundImage />
