@@ -28,7 +28,7 @@ export function Select({ options, guildIcons = true, onChoice, link }: { options
       onFocus={({ target }) => target.value = ''}
       onChange={({ target }) => setSearchQuery(target.value)}
     />
-    {options.filter(({ label, id }) => [label, id, normalizeString(label)].some(text => text.toLowerCase().includes(searchQuery)))
+    {options.filter(({ label, id }) => [label, id, normalizeString(label)].some(text => text.toLowerCase().includes(searchQuery.toLowerCase())))
       .map(({ label, id, icon }) => (
         <Option id={id} key={id}>
           {displayIcons && (icon ?
