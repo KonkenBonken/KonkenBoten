@@ -18,4 +18,18 @@ header {
       float: right;
     }
   }
+
+  > .breadcrumb {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    color: #888;
+    margin-left: 4ch;
+
+    > span {
+      & + span::before {
+        content: ' > ';
+      }
+    }
+  }
 }
