@@ -8,7 +8,7 @@ export function Breadcrumb({ context: { user: { guilds } } }: ContextProps) {
     entries = pathname.split('/')
       .map(entry =>
         guilds.find(guild => guild.id == entry) ?.name
-          ?? entry
+          ?? titleCase(entry)
       )
       .filter(Boolean)
       .map(entry => (<span>{entry}</span>));
