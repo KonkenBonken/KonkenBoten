@@ -1,7 +1,7 @@
 @use '../abstracts' as *;
 
 main {
-  width: calc(100vw - $nav-size);
+  grid-area: main;
   padding: 2rem 3ch;
   position: relative;
 
