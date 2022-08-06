@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 import { DiscordImage } from './DiscordImage.tsx';
 import { ServerSelect } from './ServerSelect.tsx';
 import { Breadcrumb } from './Breadcrumb.tsx';
@@ -8,7 +10,9 @@ export function Header({ context }: ContextProps) {
 
   return (
     <header>
-      <img className="logo" src="/icon.svg" alt="KonkenBoten's Logo" />
+      <NavLink to="/">
+        <img className="logo" src="/icon.svg" alt="KonkenBoten's Logo" />
+      </NavLink>
       <Breadcrumb context={context} />
       {user ?
         (<>

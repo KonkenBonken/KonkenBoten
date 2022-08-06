@@ -7,16 +7,15 @@ header {
   box-shadow: 0 0 20px clr(-2);
   z-index: 3;
 
-  > img {
-    &.logo {
-      height: 100%;
-    }
+  > a > .logo {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+  }
 
-    &.avatar {
-      @include avatar;
-      height: 100%;
-      float: right;
-    }
+  > .avatar {
+    @include avatar;
+    height: 100%;
+    float: right;
   }
 
   > .breadcrumb {
