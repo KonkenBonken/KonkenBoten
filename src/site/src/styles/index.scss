@@ -15,10 +15,9 @@ body {
 }
 
 #root {
-  background-color: clr(5);
   display: grid;
   grid-template-areas: 'header header' 'nav main';
   grid-template-rows: $header-size 1fr;
   grid-template-columns: $nav-size 1fr;
-  isolation: isolate;
+  background: linear-gradient(220deg, clr(6, .9), clr(5) 80%);
 }
