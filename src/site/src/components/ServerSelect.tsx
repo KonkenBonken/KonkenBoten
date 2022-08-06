@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { ContextProps } from '../utils/context';
 import { DiscordImage } from './DiscordImage.tsx';
 import { Select } from './Select.tsx';
