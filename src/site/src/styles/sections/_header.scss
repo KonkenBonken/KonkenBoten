@@ -26,8 +26,8 @@ header {
     color: #888;
     margin-left: 4ch;
 
-    > span {
-      & + span::before {
+    > a {
+      & + a::before {
         content: ' > ';
       }
     }
