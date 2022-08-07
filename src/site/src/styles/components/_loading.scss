@@ -1,32 +1,53 @@
-svg.loading {
+@use '../abstracts' as *;
+@use 'sass:math';
+
+div.loading {
   position: absolute;
   transform: translate(-50%, -50%);
   inset: 50%;
-  max-width: min(80%, 300px);
-  max-height: min(80%, 300px);
-
-  > g {
-    overflow: hidden;
-    opacity: .7;
-
-    &#fill {
-      &.a {
-        animation-delay: 1.5s;
+  width: min(80%, 300px);
+  height: min(80%, 300px);
+  aspect-ratio: 1 / 1;
+  clip-path: circle(100% at center);
+  overflow: hidden;
+  > div {
+    opacity: .4;
+    height: 100%;
+    width: 100%;
+    background: $theme;
+    position: absolute;
+    $classes: a, b, c, d, e;
+    $duration: 5 * 1.5s;
+    @for $i from 1 through length($classes) {
+      &##{nth($classes, $i)} {
+        animation-delay: $i * math.$e + math.sin($i) - 40s;
+        animation-duration: $duration - $i * .2s + math.sin($i);
       }
-      height: 0;
-      $places: center, right, bottom, left, top;
-      animation: fill linear (length($places) + 1) * 1.5s infinite;
-      clip-path: circle(0%);
-      @keyframes fill {
-        @for $i from 1 through length($places) {
-          #{$i * 20% - 10%} {
-            clip-path: circle(50% at nth($places, $i) center);
-          }
+    }
+    animation: circle linear $duration infinite;
+    @keyframes circle {
+      0%,
+      100%,
+      25%,
+      50%,
+      75% {
+        clip-path: circle(100% at center);
+      }
 
-          #{$i * 20%} {
-            clip-path: circle(0 at center);
-          }
-        }
+      12.5% {
+        clip-path: circle(0 at right center);
+      }
+
+      37.5% {
+        clip-path: circle(0 at bottom center);
+      }
+
+      62.5% {
+        clip-path: circle(0 at left center);
+      }
+
+      87.5% {
+        clip-path: circle(0 at top center);
       }
     }
   }
