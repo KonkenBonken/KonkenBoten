@@ -1,0 +1,33 @@
+svg.loading {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  inset: 50%;
+  max-width: min(80%, 300px);
+  max-height: min(80%, 300px);
+
+  > g {
+    overflow: hidden;
+    opacity: .7;
+
+    &#fill {
+      &.a {
+        animation-delay: 1.5s;
+      }
+      height: 0;
+      $places: center, right, bottom, left, top;
+      animation: fill linear (length($places) + 1) * 1.5s infinite;
+      clip-path: circle(0%);
+      @keyframes fill {
+        @for $i from 1 through length($places) {
+          #{$i * 20% - 10%} {
+            clip-path: circle(50% at nth($places, $i) center);
+          }
+
+          #{$i * 20%} {
+            clip-path: circle(0 at center);
+          }
+        }
+      }
+    }
+  }
+}
