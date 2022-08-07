@@ -1,21 +1,23 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, CSSProperties } from 'react';
 
-const sizes = [640, 800, 1024, 1280, 1440, 1600, 1920, 2560, 3840, 7680],
+const sizes = [
+  [document.body.clientWidth, document.body.clientHeight],
+  [screen.availWidth, screen.availHeight]
+],
   bgQueries = ['city', 'street', 'abstract', 'forest'];
 
-if (!sizes.includes(window.screen.availWidth))
-  sizes.push(window.screen.availWidth);
+if (sizes[0][0] == sizes[1][0])
+  sizes = [];
 
 export function BackgroundImage() {
   const mountTime = useMemo(Date.now, []),
-    [styles, setStyles] = useState({ opacity: 0 }),
-    aspectRatio = window.screen.availHeight / window.screen.availWidth,
-    url = (w: number) => `https://source.unsplash.com/featured/${w}x${Math.floor(w * aspectRatio)}/daily?${bgQueries}`,
-    src = (w: number) => `${url(w)} ${w}w`;
+    [styles, setStyles] = useState<CSSProperties>({ opacity: 0 }),
+    url = ([w, h]: number[]) => `https://source.unsplash.com/featured/${w}x${h}/daily?${bgQueries}`,
+    src = (size: number[]) => `${url(size)} ${size[0]}w`;
 
   function onLoad() {
-    if (Date.now() < mountTime + 300)
-      setStyles({})
+    if (Date.now() < mountTime + 300 || 'transition' in styles)
+      setStyles(undefined)
     else
       setStyles({
         transition: 'opacity ease-in 1s'
