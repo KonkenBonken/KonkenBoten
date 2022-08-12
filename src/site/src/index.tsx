@@ -1,11 +1,11 @@
-import { StrictMode, useState, lazy, Suspense } from 'react';
+import { StrictMode, useState, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
 
 import './styles/index.scss';
 
 import { Header } from './components/Header.tsx';
-import { Await } from './components/Loading.tsx';
+import { Await, lazy } from './components/Loading.tsx';
 
 const Home = lazy(() => import('./route/Home.tsx'));
 const Guild = lazy(() => import('./route/Guild.tsx'));

@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { lazyWithPreload } from "react-lazy-with-preload";
 
 export function Loading() {
   return (
@@ -16,4 +17,10 @@ export function Await({ element }) {
   return (<Suspense fallback={<Loading />}>
     {element}
   </Suspense>)
+}
+
+export function lazy(importing) {
+  const preloadable = lazyWithPreload(importing);
+  setTimeout(() => preloadable.preload(), 2000);
+  return preloadable;
 }
