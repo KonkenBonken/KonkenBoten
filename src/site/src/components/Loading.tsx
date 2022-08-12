@@ -19,8 +19,9 @@ export function Await({ element }) {
   </Suspense>)
 }
 
-export function lazy(importing) {
+export function lazy(importing, preload = false) {
   const Preloadable = lazyWithPreload(importing);
-  setTimeout(() => Preloadable.preload(), 2000);
+  if (preload)
+    setTimeout(() => Preloadable.preload(), 2000);
   return (props = {}) => (<Await element={<Preloadable {...props} />} />);
 }

@@ -7,8 +7,8 @@ import './styles/index.scss';
 import { Header } from './components/Header.tsx';
 import { lazy } from './components/Loading.tsx';
 
-const Home = lazy(() => import('./route/Home.tsx'));
-const Guild = lazy(() => import('./route/Guild.tsx'));
+const Home = lazy(() => import('./route/Home.tsx'), true);
+const Guild = lazy(() => import('./route/Guild.tsx'), true);
 const GuildSelector = lazy(() => import('./route/GuildSelector.tsx'));
 
 import { ContextData } from './utils/context';
