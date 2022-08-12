@@ -1,6 +1,8 @@
 import { ReactElement } from 'react';
 
-import { SupportChannelSettings } from './SupportChannelSettings.tsx';
+import { lazy } from '../components/Loading.tsx';
+
+const SupportChannelSettings = lazy(() => import('./SupportChannelSettings.tsx'));
 
 export default [
   {
