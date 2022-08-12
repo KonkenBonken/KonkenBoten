@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 export function Loading() {
   return (
     <div className="loading" >
@@ -8,4 +10,10 @@ export function Loading() {
       <div id="e" />
     </div>
   );
+}
+
+export function Await({ element }) {
+  return (<Suspense fallback={<Loading />}>
+    {element}
+  </Suspense>)
 }

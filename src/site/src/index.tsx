@@ -5,7 +5,7 @@ import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
 import './styles/index.scss';
 
 import { Header } from './components/Header.tsx';
-import { Loading } from './components/Loading.tsx';
+import { Await } from './components/Loading.tsx';
 
 const Home = lazy(() => import('./route/Home.tsx'));
 const Guild = lazy(() => import('./route/Guild.tsx'));
@@ -35,16 +35,16 @@ function ContextHandler() {
     <BrowserRouter>
       <Header context={context} />
       <Routes>
-        <Route path="/" element={<Suspense fallback={<Loading />}>
+        <Route path="/" element={<Await element={
           <Home context={context} />
-        </Suspense>} />
-        <Route path="Guild" element={<Suspense fallback={<Loading />}>
+        } />} />
+        <Route path="Guild" element={<Await element={
           <GuildSelector context={context} />
-        </Suspense>} />
+        } />} />
         <Route path="Guilds" element={<Navigate to="Guild" />} />
-        <Route path="Guild/:guildId" element={<Suspense fallback={<Loading />}>
+        <Route path="Guild/:guildId" element={<Await element={
           <Guild context={context} setContext={setContext} />
-        </Suspense>} >
+        } />} >
           {sections.map(({ name, children }) => [
             (<Route path={name} exact key={name}
               element={<>
