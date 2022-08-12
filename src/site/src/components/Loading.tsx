@@ -20,7 +20,7 @@ export function Await({ element }) {
 }
 
 export function lazy(importing) {
-  const preloadable = lazyWithPreload(importing);
-  setTimeout(() => preloadable.preload(), 2000);
-  return preloadable;
+  const Preloadable = lazyWithPreload(importing);
+  setTimeout(() => Preloadable.preload(), 2000);
+  return (props = {}) => (<Await element={<Preloadable {...props} />} />);
 }
