@@ -1,13 +1,15 @@
-import { StrictMode, useState } from 'react';
+import { StrictMode, useState, lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
 
 import './styles/index.scss';
 
-import { Home } from './route/Home.tsx';
-import { Guild } from './route/Guild.tsx';
-import { GuildSelector } from './route/GuildSelector.tsx';
 import { Header } from './components/Header.tsx';
+import { Loading } from './components/Loading.tsx';
+
+const Home = lazy(() => import('./route/Home.tsx'));
+const Guild = lazy(() => import('./route/Guild.tsx'));
+const GuildSelector = lazy(() => import('./route/GuildSelector.tsx'));
 
 import { ContextData } from './utils/context';
 import { socket, connect } from './utils/socket.ts';
@@ -33,10 +35,16 @@ function ContextHandler() {
     <BrowserRouter>
       <Header context={context} />
       <Routes>
-        <Route path="/" element={<Home context={context} />} />
-        <Route path="Guild" element={<GuildSelector context={context} />} />
+        <Route path="/" element={<Suspense fallback={<Loading />}>
+          <Home context={context} />
+        </Suspense>} />
+        <Route path="Guild" element={<Suspense fallback={<Loading />}>
+          <GuildSelector context={context} />
+        </Suspense>} />
         <Route path="Guilds" element={<Navigate to="Guild" />} />
-        <Route path="Guild/:guildId" element={<Guild context={context} setContext={setContext} />} >
+        <Route path="Guild/:guildId" element={<Suspense fallback={<Loading />}>
+          <Guild context={context} setContext={setContext} />
+        </Suspense>} >
           {sections.map(({ name, children }) => [
             (<Route path={name} exact key={name}
               element={<>

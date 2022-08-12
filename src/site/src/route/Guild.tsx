@@ -6,7 +6,7 @@ import { Navigation } from '../components/Navigation.tsx';
 import { BackgroundImage } from '../components/BackgroundImage.tsx';
 import { Loading } from '../components/Loading.tsx';
 
-export function Guild({ context: { guild, user }, setContext }: ContextProps) {
+export default function Guild({ context: { guild, user }, setContext }: ContextProps) {
   const { guildId } = useParams();
 
   if (!guild)
