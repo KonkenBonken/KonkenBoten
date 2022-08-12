@@ -17,7 +17,7 @@ export function BackgroundImage() {
 
   function onLoad() {
     if (Date.now() < mountTime + 300 || 'transition' in styles)
-      setStyles(undefined)
+      setStyles({})
     else
       setStyles({
         transition: 'opacity ease-in 1s'
