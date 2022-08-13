@@ -5,9 +5,7 @@ import { ServerSelect } from './ServerSelect.tsx';
 import { Breadcrumb } from './Breadcrumb.tsx';
 import { ContextProps } from '../utils/context';
 
-export function Header({ context }: ContextProps) {
-  const { user } = context;
-
+export function Header({ context, context: { user } }: ContextProps) {
   return (
     <header>
       <NavLink to="/">
