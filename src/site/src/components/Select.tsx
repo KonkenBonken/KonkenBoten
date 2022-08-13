@@ -24,7 +24,7 @@ export function Select({ options, guildIcons = true, onChoice, link }: { options
   }
 
   return (<div className="select">
-    <input className="search"
+    <input className="search" type="search"
       onFocus={({ target }) => target.value = ''}
       onChange={({ target }) => setSearchQuery(target.value)}
     />
