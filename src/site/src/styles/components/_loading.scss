@@ -8,7 +8,7 @@ div.loading {
   width: min(80%, 300px);
   height: min(80%, 300px);
   aspect-ratio: 1 / 1;
-  clip-path: circle(100% at center);
+  clip-path: circle(50% at center);
   overflow: hidden;
   > div {
     opacity: .4;
