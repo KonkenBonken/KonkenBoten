@@ -1,4 +1,5 @@
 @use '../abstracts' as *;
+@use '../components/server-select.scss';
 
 header {
   background-color: clr(1);

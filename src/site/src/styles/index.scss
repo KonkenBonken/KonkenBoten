@@ -1,7 +1,6 @@
 @use 'abstracts' as *;
-@use 'sections' as *;
-@use 'components' as *;
 @use 'reset.scss';
+@use 'globals.scss';
 
 #root,
 :root,

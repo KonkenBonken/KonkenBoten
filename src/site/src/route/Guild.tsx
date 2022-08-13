@@ -6,6 +6,8 @@ import { Navigation } from '../components/Navigation.tsx';
 import { BackgroundImage } from '../components/BackgroundImage.tsx';
 import { Loading } from '../components/Loading.tsx';
 
+import '../styles/routes/guild.scss';
+
 export default function Guild({ context: { guild, user }, setContext }: ContextProps) {
   const { guildId } = useParams();
 
