@@ -4,11 +4,9 @@ import { lazyWithPreload } from "react-lazy-with-preload";
 export function Loading() {
   return (
     <div className="loading" >
-      <div id="a" />
-      <div id="b" />
-      <div id="c" />
-      <div id="d" />
-      <div id="e" />
+      {'abcde'.split('').map(letter => (
+        <div id={letter} key={letter} />
+      ))}
     </div>
   );
 }
