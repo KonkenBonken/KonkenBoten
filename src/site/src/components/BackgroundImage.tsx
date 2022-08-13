@@ -1,6 +1,6 @@
 import { useState, useMemo, CSSProperties } from 'react';
 
-const sizes = [
+let sizes = [
   [document.body.clientWidth, document.body.clientHeight],
   [screen.availWidth, screen.availHeight]
 ],
