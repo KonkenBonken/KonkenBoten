@@ -26,10 +26,8 @@ header {
     color: #888;
     margin-left: $header-gap;
 
-    > a {
-      & + a::before {
-        content: ' > ';
-      }
+    > span {
+      margin: 0 .5ch;
     }
   }
 }
