@@ -5,23 +5,29 @@ div.loading {
   position: absolute;
   transform: translate(-50%, -50%);
   inset: 50%;
-  width: min(80%, 300px);
   height: min(80%, 300px);
   aspect-ratio: 1 / 1;
   clip-path: circle(50% at center);
   overflow: hidden;
+  animation: appear .3s ease-in;
+  @keyframes appear {
+    from {
+      opacity: 0;
+    }
+  }
+
   > div {
     opacity: .4;
     height: 100%;
     width: 100%;
     background: $theme;
     position: absolute;
-    $classes: a, b, c, d, e;
-    $duration: 5 * 1.5s;
+    $classes: a, b, c, d;
+    $duration: 8s;
     @for $i from 1 through length($classes) {
       &##{nth($classes, $i)} {
-        animation-delay: $i * math.$e + math.sin($i) - 40s;
-        animation-duration: $duration - $i * .2s + math.sin($i);
+        animation-delay: math.pow(math.$e, $i) * (-1s);
+        animation-duration: $duration - $i * math.$e / 7;
       }
     }
     animation: circle linear $duration infinite;
