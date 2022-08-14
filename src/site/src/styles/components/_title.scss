@@ -1,0 +1,60 @@
+@use '../abstracts' as *;
+
+#title {
+  position: absolute;
+  top: $header-size + 120px;
+  display: flex;
+  place-items: center;
+  font-size: min(140px, 12vw);
+  height: 1em;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-end;
+  $ani-dur: 1.2s;
+  $ani-opt: ease-in-out .4s backwards;
+
+  svg {
+    height: 1.5em;
+    inset: 0;
+    fill: $theme;
+    margin-bottom: -3px;
+    position: relative;
+
+    &#k {
+      margin-right: -1.4ch;
+    }
+
+    &#b {
+      margin-left: -1.4ch + 1ch;
+    }
+    animation: load-title-svg ($ani-dur * .8) $ani-opt;
+    @keyframes load-title-svg {
+      from {
+        margin: 0 0 0 -3em;
+        height: 3em;
+        left: 1.5em;
+        top: 35vh;
+      }
+    }
+  }
+
+  div {
+    color: $theme;
+    animation: load-title-txt $ani-dur $ani-opt;
+    width: 5ch;
+    @keyframes load-title-txt {
+      from {
+        width: 0;
+        opacity: 0;
+      }
+
+      40% {
+        opacity: 0;
+      }
+
+      80% {
+        width: 5ch;
+      }
+    }
+  }
+}
