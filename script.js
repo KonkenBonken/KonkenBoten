@@ -3003,9 +3003,9 @@ io.on('connection', async socket => {
 							['tempmute', 'temporarily muted']
 						].forEach(([key, value]) => {
 							/* if coms default: delete*/
-							if (data.coms[key].txt == value) data.coms[key].txt = undefined;
-							else data.coms[key].txt = data.coms[key].txt.trim();
-							if (!+data.coms[key].role) data.coms[key].role = undefined;
+							if (data.coms[key]?.txt == value) data.coms[key].txt = undefined;
+							else if (data.coms[key]?.txt) data.coms[key].txt = data.coms[key].txt.trim();
+							if (!+data.coms[key]?.role) data.coms[key].role = undefined;
 							if (!Object.values(data.coms[key]).filter(x => x).length) data.coms[key] = undefined;
 						});
 						['enabled', 'dmInvite', 'dmAll', 'tellWho', 'logsEnabled', 'banMessage', 'timeout'].forEach(key => {
