@@ -27,17 +27,17 @@ export default function Guild({ context, context: { guild, user }, setContext }:
     <Navigation />
     <main>{!guild ?
       <Loading /> :
-      sections.map(({ name, children }) => [
-        (<Route path={name} exact key={name}
-          element={<>
             <h2>{TC(name)}</h2>
-            {Object.entries(children).map(([childName, Section]) => (<>
+      sections.map(({ name, children }) => (<>
+        <Route path={name} exact key={name}
+          element={
+            Object.entries(children).map(([childName, Section]) => (<>
               <h3>{TC(childName)}</h3>
               <Section key={`${name}>${childName}`} {...contextProps} />
-            </>))}
-          </>}
-        />),
-        ...Object.entries(children).map(([childName, Section]) =>
+            </>))
+          }
+        />
+        {Object.entries(children).map(([childName, Section]) =>
           (<Route path={`${name}/${childName}`} key={`${name}>${childName}`}
             element={<>
               <h2>{TC(name)}</h2>
@@ -45,8 +45,8 @@ export default function Guild({ context, context: { guild, user }, setContext }:
               <Section key={`${name}>${childName}`} {...contextProps} />
             </>}
           />)
-        )
-      ])
+        )}
+      </>))
     }</main>
   </>);
 }
