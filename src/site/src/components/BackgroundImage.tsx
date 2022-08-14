@@ -1,13 +1,12 @@
 import { useState, useMemo, CSSProperties } from 'react';
 
 let sizes = [
-  [document.body.clientWidth, document.body.clientHeight],
-  [screen.availWidth, screen.availHeight]
+  [document.body.clientWidth, document.body.clientHeight]
 ],
   bgQueries = ['city', 'street', 'abstract', 'forest'];
 
-if (sizes[0][0] == sizes[1][0])
-  sizes = [];
+if (sizes[0][0] != screen.availWidth)
+  sizes.push([screen.availWidth, screen.availHeight]);
 
 export function BackgroundImage() {
   const mountTime = useMemo(Date.now, []),
@@ -26,7 +25,7 @@ export function BackgroundImage() {
 
   return (<img
     src={url(sizes[0])}
-    srcSet={sizes.map(src).join()}
+    srcSet={sizes.length > 1 && sizes.map(src).join()}
     style={styles}
     onLoad={onLoad}
   />);
