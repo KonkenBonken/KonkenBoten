@@ -39,7 +39,7 @@ export default function Guild({ context, context: { guild, user }, setContext }:
   }
 
   return (<>
-    <Navigation />
+    <Navigation guildId={guildId} />
     <main>
       {!guild ? (<Loading />) :
         (section ? (
