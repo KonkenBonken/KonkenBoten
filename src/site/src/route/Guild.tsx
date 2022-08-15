@@ -42,8 +42,10 @@ export default function Guild({ context, context: { guild, user }, setContext }:
     <main>
       {!guild ? (<Loading />) :
         (section ? (
-          child ?
-            Child(child, sections.find(({ name }) => name == section).children[child]) :
+          child ? [
+            <h2>{TC(section)}</h2>,
+            Child(child, sections.find(({ name }) => name == section).children[child])
+          ] :
             Section(sections.find(({ name }) => name == section))
         ) : sections.map(Section)
         )}
