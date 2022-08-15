@@ -4,6 +4,7 @@ main {
   grid-area: main;
   padding: 2rem 3ch;
   position: relative;
+  overflow-y: auto;
 
   > h2 {
     font-weight: bold;
