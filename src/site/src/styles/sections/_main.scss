@@ -2,13 +2,14 @@
 
 main {
   grid-area: main;
-  padding: 2rem 3ch;
+  padding: 0 3ch 2rem;
   position: relative;
   overflow-y: auto;
 
   > h2 {
     font-weight: bold;
     margin-left: -1ch;
+    margin-top: 2rem;
   }
 
   > h3 {
