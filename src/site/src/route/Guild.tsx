@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { socket } from '../utils/socket.ts';
 import { ContextProps } from '../utils/context';
 import { Navigation } from '../components/Navigation.tsx';
-import { BackgroundImage } from '../components/BackgroundImage.tsx';
 import { Loading } from '../components/Loading.tsx';
 import sections from '../sections/sections.ts';
 import { titleCase as TC } from '../utils/utils.ts';
@@ -37,7 +36,6 @@ export default function Guild({ context, context: { guild, user }, setContext }:
   }
 
   return (<>
-    <BackgroundImage />
     <Navigation />
     <main>
       {!guild ? (<Loading />) :

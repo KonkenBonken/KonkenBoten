@@ -6,6 +6,7 @@ import './styles/index.scss';
 
 import { RouteHandler } from './route/RouteHandler.tsx';
 import { Header } from './components/Header.tsx';
+import { BackgroundImage } from './components/BackgroundImage.tsx';
 
 import { ContextData } from './utils/context';
 import { socket, connect } from './utils/socket.ts';
@@ -28,6 +29,7 @@ function ContextHandler() {
 
   return (
     <BrowserRouter>
+      <BackgroundImage />
       <Header context={context} />
       <RouteHandler {...contextProps} />
     </BrowserRouter >
