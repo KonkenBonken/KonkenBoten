@@ -1,4 +1,4 @@
-import { useParams, Outlet } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { socket } from '../utils/socket.ts';
 import { ContextProps } from '../utils/context';
@@ -11,7 +11,7 @@ import { titleCase as TC } from '../utils/utils.ts';
 import '../styles/routes/guild.scss';
 
 export default function Guild({ context, context: { guild, user }, setContext }: ContextProps) {
-  const { guildId } = useParams(),
+  const { guildId, section, child } = useParams(),
     contextProps = { context, setContext };
 
   if (!guild)
@@ -22,31 +22,34 @@ export default function Guild({ context, context: { guild, user }, setContext }:
   else if (guild.id !== guildId)
     setContext(prev => ({ ...prev, guild: undefined }));
 
+  function Child(child: string, Render: ({ contextProps }: { contextProps: ContextProps }) => JSX.Element) {
+    return (<>
+      <h3>{TC(child)}</h3>
+      <Render key={child} {...contextProps} />
+    </>);
+  }
+
+  function Section({ name: section, children }: { name: string, children: Record<string, () => JSX.Element> }) {
+    return (<>
+      <h2>{TC(section)}</h2>
+      {Object.entries(children).map(child => Child(...child))}
+    </>);
+  }
+
   return (<>
     <BackgroundImage />
     <Navigation />
-    <main>{!guild ?
-      <Loading /> :
-            <h2>{TC(name)}</h2>
-      sections.map(({ name, children }) => (<>
-        <Route path={name} exact key={name}
-          element={
-            Object.entries(children).map(([childName, Section]) => (<>
-              <h3>{TC(childName)}</h3>
-              <Section key={`${name}>${childName}`} {...contextProps} />
-            </>))
-          }
-        />
-        {Object.entries(children).map(([childName, Section]) =>
-          (<Route path={`${name}/${childName}`} key={`${name}>${childName}`}
-            element={<>
-              <h2>{TC(name)}</h2>
-              <h3>{TC(childName)}</h3>
-              <Section key={`${name}>${childName}`} {...contextProps} />
-            </>}
-          />)
+    <main>
+      {!guild ? (<Loading />) :
+        (section ? (
+          child ?
+            Child(child, sections.find(({ name }) => name == section).children[child]) :
+            Section(sections.find(({ name }) => name == section))
+        ) : sections.map(Section)
         )}
-      </>))
-    }</main>
+    </main>
   </>);
 }
+// (sections.map(({ name, children }) => (<>
+
+// </>)))
