@@ -21,10 +21,13 @@ export default function Guild({ context, context: { guild, user }, setContext }:
   else if (guild.id !== guildId)
     setContext(prev => ({ ...prev, guild: undefined }));
 
-  function Child(child: string, Render: ({ contextProps }: { contextProps: ContextProps }) => JSX.Element) {
+  function Child(child: string, Render: () => JSX.Element) {
     return (<>
       <h3>{TC(child)}</h3>
-      <Render key={child} {...contextProps} />
+      {Render ?
+        <Render {...contextProps} />
+        : <section />
+      }
     </>);
   }
 
@@ -50,6 +53,3 @@ export default function Guild({ context, context: { guild, user }, setContext }:
     </main>
   </>);
 }
-// (sections.map(({ name, children }) => (<>
-
-// </>)))

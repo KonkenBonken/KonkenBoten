@@ -1,48 +1,44 @@
-import { ReactElement } from 'react';
-
 import { lazy } from '../components/Loading.tsx';
-
-const SupportChannelSettings = lazy(() => import('./SupportChannelSettings.tsx'));
 
 export default [
   {
     name: 'commands',
     children: {
-      documentation() { },
-      auto_reaction() { },
-      custom_commands() { },
+      documentation: null,
+      auto_reaction: null,
+      custom_commands: null,
     }
   },
   {
     name: 'dynamic_voice_channels',
     children: {
-      settings() { }
+      settings: null
     }
   },
   {
     name: 'moderation',
     children: {
-      settings() { },
-      auto_moderation() { },
-      logging() { },
-      infractions() { },
+      settings: null,
+      auto_moderation: null,
+      logging: null,
+      infractions: null,
     }
   },
   {
     name: 'suggestions',
     children: {
-      settings() { },
-      suggestions() { },
+      settings: null,
+      suggestions: null,
     }
   },
   {
     name: 'support_channels',
     children: {
-      settings: SupportChannelSettings,
-      transcripts() { },
+      settings: lazy(() => import('./SupportChannelSettings.tsx')),
+      transcripts: null,
     }
   }
 ] as {
   name: string,
-  children: Record<string, () => ReactElement>
+  children: Record<string, () => Promise> | Record<string, null>
 }[];
