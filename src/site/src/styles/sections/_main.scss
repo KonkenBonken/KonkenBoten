@@ -1,8 +1,9 @@
 @use '../abstracts' as *;
+$side-padding: 3ch;
 
 main {
   grid-area: main;
-  padding: 0 3ch 2rem;
+  padding: 0 $side-padding 2rem;
   position: relative;
   overflow-y: auto;
 
@@ -34,6 +35,23 @@ main {
       border-radius: .4em;
       padding-left: 2ch;
       display: block;
+    }
+  }
+
+  &::-webkit-scrollbar {
+    width: $side-padding;
+    $thumb-width: 5px;
+    @function thumb-gradient($opacity) {
+      @return linear-gradient(to left, clr(10, $opacity) $thumb-width, transparent $thumb-width);
+    }
+
+    &-thumb {
+      background-image: thumb-gradient(.2);
+      border-radius: $thumb-width / 2;
+
+      &:hover {
+        background-image: thumb-gradient(.8);
+      }
     }
   }
 }
