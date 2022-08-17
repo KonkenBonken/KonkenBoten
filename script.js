@@ -2223,7 +2223,7 @@ const AllMessages = channel => new Promise(async resolver => {
 					reactMessage.delete();
 					reactMessage = await channel.send(reactMessageObj);
 				}
-			} else reactMessage = await channel.send(reactMessageObj);
+			} else reactMessage = await channel.send(reactMessageObj).catch(() => undefined);
 			DataBaseGuild.Tickets.existingMessage = reactMessage?.id;
 
 			WriteDataBase();
