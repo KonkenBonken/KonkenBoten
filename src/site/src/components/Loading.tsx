@@ -17,15 +17,15 @@ export function Loading() {
   );
 }
 
-export function Await({ element }) {
-  return (<Suspense fallback={<Loading />}>
+export function Await({ element, hideAnimation = false }) {
+  return (<Suspense fallback={hideAnimation ? null : <Loading />}>
     {element}
   </Suspense>)
 }
 
-export function lazy(importing, preload = false) {
+export function lazy(importing, preload = false, hideAnimation = false) {
   const Preloadable = lazyWithPreload(importing);
   if (preload)
     setTimeout(() => Preloadable.preload(), 2000);
-  return (props = {}) => (<Await element={<Preloadable {...props} />} />);
+  return (props = {}) => (<Await element={<Preloadable {...props} />} hideAnimation={hideAnimation} />);
 }
