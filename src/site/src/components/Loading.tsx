@@ -2,12 +2,14 @@ import { Suspense } from 'react';
 import { lazyWithPreload } from "react-lazy-with-preload";
 import { ReactComponent as LogoClip } from "../assets/logo-clip.svg";
 
+const letters = ['a', 'b', 'c', 'd'] as const;
+
 export function Loading() {
   return (
     <div className="loading" style={{
       clipPath: "url('#loading-clip-path')"
     }}>
-      {'abcd'.split('').map(letter => (
+      {letters.map(letter => (
         <div id={letter} key={letter} />
       ))}
       <LogoClip />
