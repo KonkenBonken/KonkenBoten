@@ -1,4 +1,4 @@
-import { Snowflake } from './Utils';
+import { Snowflake, DeepPartial, DeepRequired } from './Utils';
 
 import { TextCommandRule } from './TextCommandRule';
 import { TicketSettings } from './TicketSettings';
@@ -35,3 +35,6 @@ export interface Guild {
   }>;
   premium?: number;
 }
+
+export type PartialGuild = DeepPartial<Guild>
+export type RequiredGuild = DeepRequired<Guild>
