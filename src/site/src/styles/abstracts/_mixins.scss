@@ -4,7 +4,7 @@
   outline: border($width,$clr-weight);
   outline-offset: -$outline-width * $width;
 }
-@mixin glass($clr-weight:2,$opacity:.2,$blur:1rem) {
+@mixin glass($clr-weight: 2, $opacity: .2, $blur: 1rem) {
   background-color: clr($clr-weight, $opacity);
   backdrop-filter:blur($blur);
 }
@@ -18,7 +18,7 @@
     border-radius: 35%;
   }
 }
-@mixin button-colors($clr1, $clr2, $clr3,$clr4, $clr5) {
+@mixin button-colors($clr1, $clr2, $clr3, $clr4, $clr5) {
   @include glass($clr1);
 
   &.active,
