@@ -20,7 +20,6 @@ root.render(
 
 function ContextHandler() {
   const [context, setContext] = useState<ContextData>(contextData),
-    contextProps = { context, setContext };
 
   if (context.user)
     connect(context.user.id)
@@ -31,7 +30,7 @@ function ContextHandler() {
     <BrowserRouter>
       <BackgroundImage />
       <Header context={context} />
-      <RouteHandler {...contextProps} />
+      <RouteHandler {...{ context, setContext, changes }} />
     </BrowserRouter >
   );
 }

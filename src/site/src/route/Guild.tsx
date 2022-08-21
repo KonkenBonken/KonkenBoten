@@ -11,7 +11,6 @@ import '../styles/routes/guild.scss';
 
 export default function Guild({ context, context: { guild, user }, setContext }: ContextProps) {
   const { guildId, section, child } = useParams(),
-    contextProps = { context, setContext };
 
   if (!guild)
     socket.emit('getGuild', guildId, (res, err) => {
@@ -25,7 +24,7 @@ export default function Guild({ context, context: { guild, user }, setContext }:
     return (<>
       <h3>{TC(child)}</h3>
       {Render ?
-        <Render {...contextProps} />
+        <Render {...{ context, setContext }} />
         : <section />
       }
     </>);
