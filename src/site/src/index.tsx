@@ -9,7 +9,9 @@ import { Header } from './components/Header.tsx';
 import { BackgroundImage } from './components/BackgroundImage.tsx';
 
 import { ContextData } from './utils/context';
-import { socket, connect } from './utils/socket.ts';
+import { PartialGuild } from '../../../database/guild';
+
+import { socket, connect, contextResolver } from './utils/socket.ts';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -20,6 +22,9 @@ root.render(
 
 function ContextHandler() {
   const [context, setContext] = useState<ContextData>(contextData),
+    [changes, setChanges] = useState<PartialGuild[]>([]);
+
+  contextResolver([setContext, setChanges]);
 
   if (context.user)
     connect(context.user.id)

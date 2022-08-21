@@ -2,15 +2,18 @@ import { useParams } from "react-router-dom";
 
 import { socket } from '../utils/socket.ts';
 import { ContextProps } from '../utils/context';
-import { Navigation } from '../components/Navigation.tsx';
-import { Loading } from '../components/Loading.tsx';
-import sections from '../sections/sections.ts';
 import { titleCase as TC } from '../utils/utils.ts';
+
+import { Navigation } from '../components/Navigation.tsx';
+import { Loading, lazy } from '../components/Loading.tsx';
+import sections from '../sections/sections.ts';
+
+const ChangesPopup = lazy(() => import('../components/ChangesPopup.tsx'), false, true);
 
 import '../styles/routes/guild.scss';
 
-export default function Guild({ context, context: { guild, user }, setContext }: ContextProps) {
-  const { guildId, section, child } = useParams(),
+export default function Guild({ context, context: { guild, user }, setContext, changes }: ContextProps) {
+  const { guildId, section, child } = useParams();
 
   if (!guild)
     socket.emit('getGuild', guildId, (res, err) => {
@@ -50,5 +53,6 @@ export default function Guild({ context, context: { guild, user }, setContext }:
         ) : sections.map(Section)
         )}
     </main>
+    {!!changes.length && <ChangesPopup changes={changes} />}
   </>);
 }

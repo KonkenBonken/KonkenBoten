@@ -1,5 +1,5 @@
 import { LoggedInUserGuild } from '../../../../database/loggedInUser';
-import { Guild } from '../../../../database/guild';
+import { Guild, PartialGuild } from '../../../../database/guild';
 import { Snowflake } from '../../../../database/Utils';
 
 export interface ContextData {
@@ -51,6 +51,7 @@ export interface ContextData {
 }
 
 export interface ContextProps {
+  changes: PartialGuild[]
   context: ContextData
   setContext(context: ContextData): void
   setContext(setter: (old: ContextData) => ContextData): void

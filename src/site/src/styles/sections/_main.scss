@@ -1,4 +1,5 @@
 @use '../abstracts' as *;
+@use '../components/changes-popup.scss';
 $side-padding: 3ch;
 
 main {
