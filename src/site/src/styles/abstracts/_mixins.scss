@@ -4,7 +4,7 @@
   outline: border($width,$clr-weight);
   outline-offset: -$outline-width * $width;
 }
-@mixin glass($clr-weight: 2, $opacity: .2, $blur: 1rem) {
+@mixin glass($clr-weight: 2, $opacity: .4, $blur: .3rem) {
   background-color: clr($clr-weight, $opacity);
   backdrop-filter:blur($blur);
 }

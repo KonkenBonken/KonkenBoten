@@ -1,7 +1,7 @@
 @use '../abstracts' as *;
 
 nav {
-  @include glass(3, .95);
+  @include glass(2, .5);
   grid-area: nav;
   border-bottom-right-radius: .5rem;
   display: flex;
