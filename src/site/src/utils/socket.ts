@@ -34,7 +34,7 @@ export function proposeChange(change: PartialGuild) {
 export function saveChanges() {
   socket.emit('changes', { changes }, (res, err) => {
     if (err) return console.error('Could not set changes', { err });
-    changes = [];
+    changes.length = 0;
     updateChanges();
   })
 }
