@@ -13,9 +13,15 @@ $height: 3em;
   box-shadow: -.2ch .4em 1em clr(.5);
   @include glass(1, .8, .4rem);
   padding: 1em 3ch;
+  animation: changes-popup-slide-in .5s ease-out;
 
   > button {
     float: right;
     bottom: $input-height / 2;
+  }
+}
+@keyframes changes-popup-slide-in {
+  from {
+    bottom: -$height;
   }
 }
