@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { DiscordImage } from './DiscordImage.tsx';
 import { ServerSelect } from './ServerSelect.tsx';
 import { Breadcrumb } from './Breadcrumb.tsx';
-import { ContextProps } from '../utils/context';
+import { ContextProps } from '../../../../types/context';
 
 export function Header({ context, context: { user } }: ContextProps) {
   return (

@@ -1,4 +1,4 @@
-import { ContextProps } from '../utils/context';
+import { ContextProps } from '../../../../types/context';
 import { DiscordImage } from './DiscordImage.tsx';
 import { Select } from './Select.tsx';
 

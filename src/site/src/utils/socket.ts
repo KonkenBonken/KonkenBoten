@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import { ContextProps } from '../utils/context';
+import { ContextProps } from '../../../../types/context';
 import { PartialGuild } from '../../../../types/guild';
 
 export const socket = io({

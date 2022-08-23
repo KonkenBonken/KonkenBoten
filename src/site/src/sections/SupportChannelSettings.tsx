@@ -1,4 +1,4 @@
-import { ContextProps } from '../utils/context';
+import { ContextProps } from '../../../../types/context';
 
 export default function SupportChannelSettings({ context: { guild: { database } } }: ContextProps) {
   return (<section>

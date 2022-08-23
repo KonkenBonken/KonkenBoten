@@ -1,6 +1,6 @@
-import { LoggedInUserGuild } from '../../../../types/loggedInUser';
-import { Guild, PartialGuild } from '../../../../types/guild';
-import { Snowflake } from '../../../../types/Utils';
+import { LoggedInUserGuild } from './loggedInUser';
+import { Guild, PartialGuild } from './guild';
+import { Snowflake } from './Utils';
 
 export interface ContextData {
   user?: {
@@ -9,7 +9,7 @@ export interface ContextData {
     username: string
     discriminator: string
     guilds?: LoggedInUserGuild[]
-  },
+  }
   guild?: {
     id: Snowflake
     member: {
@@ -45,7 +45,7 @@ export interface ContextData {
         position: number
         color: string
         permissions: string
-      }[],
+      }[]
     }
   }
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ContextProps } from '../utils/context';
+import { ContextProps } from '../../../../types/context';
 import { saveChanges } from '../utils/socket.ts';
 
 export default function ChangesPopup({ changes }: ContextProps) {

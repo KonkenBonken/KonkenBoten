@@ -1,7 +1,7 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 
 import { lazy } from '../components/Loading.tsx';
-import { ContextProps } from '../utils/context';
+import { ContextProps } from '../../../../types/context';
 
 const Home = lazy(() => import('./Home.tsx'), true);
 const Guild = lazy(() => import('./Guild.tsx'), true);

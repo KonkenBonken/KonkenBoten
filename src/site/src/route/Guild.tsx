@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 
 import { socket } from '../utils/socket.ts';
-import { ContextProps } from '../utils/context';
+import { ContextProps } from '../../../../types/context';
 import { titleCase as TC } from '../utils/utils.ts';
 
 import { Navigation } from '../components/Navigation.tsx';
