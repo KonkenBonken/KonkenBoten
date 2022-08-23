@@ -10,5 +10,10 @@ button {
   font-size: 1rem;
   height: $input-height;
   width: 2.5rem;
-  text-align: center;
+  display: grid;
+  place-items: center;
+
+  &.loading {
+    @include spinner;
+  }
 }

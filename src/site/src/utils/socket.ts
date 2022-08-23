@@ -32,9 +32,11 @@ export function proposeChange(change: PartialGuild) {
 }
 
 export function saveChanges() {
-  socket.emit('changes', { changes }, (res, err) => {
-    if (err) return console.error('Could not set changes', { err });
-    changes.length = 0;
-    updateChanges();
-  })
+  return new Promise((resolve, reject) =>
+    socket.emit('changes', { changes }, (res, err) => {
+      if (err) return reject(console.error('Could not set changes', { err }));
+      changes.length = 0;
+      updateChanges();
+      resolve();
+    }))
 }
