@@ -1,0 +1,14 @@
+@use '../abstracts' as *;
+
+button {
+  all: unset;
+  background-color: $theme;
+  padding: .5em 1ch;
+  border-radius: .2ch;
+  cursor: pointer;
+  position: relative;
+  font-size: 1rem;
+  height: $input-height;
+  width: 2.5rem;
+  text-align: center;
+}

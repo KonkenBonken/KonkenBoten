@@ -13,4 +13,9 @@ $height: 3em;
   box-shadow: -.2ch .4em 1em clr(.5);
   @include glass(1, .8, .4rem);
   padding: 1em 3ch;
+
+  > button {
+    float: right;
+    bottom: $input-height / 2;
+  }
 }
