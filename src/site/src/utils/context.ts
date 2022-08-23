@@ -1,6 +1,6 @@
-import { LoggedInUserGuild } from '../../../../database/loggedInUser';
-import { Guild, PartialGuild } from '../../../../database/guild';
-import { Snowflake } from '../../../../database/Utils';
+import { LoggedInUserGuild } from '../../../../types/loggedInUser';
+import { Guild, PartialGuild } from '../../../../types/guild';
+import { Snowflake } from '../../../../types/Utils';
 
 export interface ContextData {
   user?: {

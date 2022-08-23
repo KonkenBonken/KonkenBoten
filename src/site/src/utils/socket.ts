@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 import { ContextProps } from '../utils/context';
-import { PartialGuild } from '../../../../database/guild';
+import { PartialGuild } from '../../../../types/guild';
 
 export const socket = io({
   autoConnect: false

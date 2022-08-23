@@ -9,7 +9,7 @@ import { Header } from './components/Header.tsx';
 import { BackgroundImage } from './components/BackgroundImage.tsx';
 
 import { ContextData } from './utils/context';
-import { PartialGuild } from '../../../database/guild';
+import { PartialGuild } from '../../../types/guild';
 
 import { socket, connect, contextResolver } from './utils/socket.ts';
 
