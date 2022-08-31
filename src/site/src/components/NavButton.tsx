@@ -5,5 +5,7 @@ export default function NavButton() {
     root.classList.toggle('nav');
   }
 
-  return <div className="nav-button" onClick={onClick} />;
+  return <div className="nav-button" onClick={onClick} >
+    <div /><div /><div />
+  </div>;
 }

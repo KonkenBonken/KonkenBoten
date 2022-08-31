@@ -1,5 +1,6 @@
 @use '../abstracts' as *;
 @use '../components/server-select.scss';
+@use '../components/nav-button.scss';
 
 header {
   background-color: clr(1);
@@ -31,14 +32,5 @@ header {
       margin: 0 .5ch;
     }
     @include hide-on-mobile;
-  }
-  @include mobile {
-    .nav-button {
-      width: $header-space;
-      height: $header-space;
-      background-color: white;
-      border-radius: 4%;
-      display: inline-block;
-    }
   }
 }

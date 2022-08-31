@@ -1,0 +1,30 @@
+@use '../abstracts' as *;
+@include mobile {
+  .nav-button {
+    height: $header-space;
+    width: $header-space;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-around;
+    position: relative;
+    bottom: $header-space/7/2;
+
+    > div {
+      height: $header-space/7;
+      border-radius: 3px;
+      background-color: clr(23);
+      transition: margin 1s ease-out;
+
+      #root.nav & {
+        &:nth-child(2) {
+          margin: 0 -5%;
+        }
+
+        &:not(:nth-child(2)) {
+          margin: 0 10%;
+        }
+      }
+    }
+    transition: transform 1s ease-out;
+  }
+}
