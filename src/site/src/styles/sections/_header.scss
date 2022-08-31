@@ -29,5 +29,12 @@ header {
     > span {
       margin: 0 .5ch;
     }
+  @include mobile {
+    .nav-button {
+      width: $header-space;
+      height: $header-space;
+      background-color: white;
+      border-radius: 4%;
+    }
   }
 }

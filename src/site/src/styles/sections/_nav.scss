@@ -40,4 +40,16 @@ nav {
       margin-top: .7rem;
     }
   }
+  @include mobile {
+    position: fixed;
+    top: $header-size;
+    bottom: 0;
+    width: 100%;
+    right: 100%;
+    transition: left 1s ease-out;
+
+    #root.nav & {
+      right: 0;
+    }
+  }
 }

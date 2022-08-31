@@ -19,4 +19,7 @@ body {
   grid-template-rows: $header-size 1fr;
   grid-template-columns: $nav-size 1fr;
   background: linear-gradient(220deg, clr(6, .9), clr(5) 80%);
+  @include mobile {
+    grid-template-columns: 0 1fr;
+  }
 }
