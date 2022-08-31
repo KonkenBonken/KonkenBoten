@@ -74,3 +74,8 @@
     }
   }
 }
+@mixin mobile {
+  @media (max-aspect-ratio: 3/4) {
+    @content;
+  }
+}
