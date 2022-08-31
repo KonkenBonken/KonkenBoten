@@ -78,4 +78,9 @@
   @media (max-aspect-ratio: 3/4) {
     @content;
   }
+@mixin hide-on-mobile {
+  @include mobile {
+    display: none;
+  }
+}
 }
