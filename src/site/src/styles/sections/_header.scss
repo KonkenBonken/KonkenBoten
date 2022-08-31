@@ -17,6 +17,9 @@ header {
     @include avatar;
     height: 100%;
     float: right;
+    @include mobile {
+      display: none;
+    }
   }
 
   > .breadcrumb {
@@ -29,6 +32,10 @@ header {
     > span {
       margin: 0 .5ch;
     }
+    @include mobile {
+      display: none;
+    }
+  }
   @include mobile {
     .nav-button {
       width: $header-space;

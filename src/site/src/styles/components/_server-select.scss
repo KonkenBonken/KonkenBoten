@@ -17,4 +17,8 @@ header > .select {
     height: $header-space*.95;
     margin-top: $header-space*.025;
   }
+  @include mobile {
+    width: calc(100% - 15px*2 - $header-space);
+    margin-right: 0;
+  }
 }
