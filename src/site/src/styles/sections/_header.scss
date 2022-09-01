@@ -18,7 +18,6 @@ header {
     @include avatar;
     height: 100%;
     float: right;
-    @include hide-on-mobile;
   }
 
   > .breadcrumb {
@@ -31,6 +30,5 @@ header {
     > span {
       margin: 0 .5ch;
     }
-    @include hide-on-mobile;
   }
 }
