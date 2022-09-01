@@ -9,6 +9,8 @@
   > input {
     background: inherit;
     z-index: 4;
+    font-size: 1rem;
+    padding-left: calc(3% + $header-space + 10px);
   }
 
   &:focus-within {
@@ -16,6 +18,15 @@
 
     > a {
       display: grid;
+    }
+
+    > img {
+      display: block;
+      position: absolute;
+      aspect-ratio: 1 / 1;
+      z-index: 4;
+      left: 4.75%;
+      top: 1%;
     }
   }
 
@@ -69,5 +80,18 @@
     &:hover {
       background-color: #fff3;
     }
+  }
+
+  > img {
+    display: none;
+  }
+}
+@mixin select-height($height) {
+  > input {
+    height: $height;
+  }
+
+  > img {
+    height: calc($height - 2%);
   }
 }

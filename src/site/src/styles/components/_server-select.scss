@@ -1,5 +1,5 @@
 @use '../abstracts' as *;
-@use './select.scss';
+@use './select.scss' as *;
 
 header > .select {
   width: 20em;
@@ -8,6 +8,7 @@ header > .select {
   background-color: clr(4);
   position: relative;
   margin-right: $header-gap;
+  @include select-height($header-space);
 
   > input {
     height: $header-space;
