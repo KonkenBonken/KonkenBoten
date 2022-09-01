@@ -4,7 +4,7 @@
 header {
   background-color: clr(1);
   grid-area: header;
-  padding: calc(($header-size - $header-space) / 2) 15px;
+  padding: ($header-size - $header-space)/2 15px;
   box-shadow: 0 0 20px clr(-2);
   z-index: 3;
 
