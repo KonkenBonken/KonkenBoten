@@ -13,18 +13,11 @@
       height: $header-space/7;
       border-radius: 3px;
       background-color: clr(23);
-      transition: margin 1s ease-out;
+      transition: transform 1s ease-out;
 
       #root.nav & {
-        &:nth-child(2) {
-          margin: 0 -5%;
-        }
-
-        &:not(:nth-child(2)) {
-          margin: 0 10%;
-        }
+        transform: rotate(-10deg);
       }
     }
-    transition: transform 1s ease-out;
   }
 }
