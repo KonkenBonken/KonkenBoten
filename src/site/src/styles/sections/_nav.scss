@@ -46,9 +46,10 @@ nav {
     bottom: 0;
     width: 100%;
     right: 100%;
-    transition: right 1s ease-out;
+    transition: right .6s ease-in-out;
 
     #root.nav & {
+      transition: right 1s ease-out;
       right: 0;
     }
   }
