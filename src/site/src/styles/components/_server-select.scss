@@ -2,23 +2,18 @@
 @use './select.scss';
 
 header > .select {
-  width: 20em;
-  height: $header-space;
-  float: right;
+  grid-area: server-select;
+  height: 100%;
   background-color: clr(4);
   position: relative;
-  margin-right: $header-gap;
+  max-width: 20em;
 
   > input {
-    height: $header-space;
+    height: 100%;
   }
 
   &:not(:focus-within) > .active > :is(.placeholder, img) {
     height: $header-space*.95;
     margin-top: $header-space*.025;
-  }
-  @include mobile {
-    width: calc(100% - 15px*2 - $header-space);
-    margin-right: 0;
   }
 }

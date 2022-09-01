@@ -8,24 +8,33 @@ header {
   padding: calc(($header-size - $header-space) / 2) 15px;
   box-shadow: 0 0 20px clr(-2);
   z-index: 3;
+  display: grid;
+  grid-template-areas: 'logo breadcrumb server-select avatar';
+  grid-template-columns: $header-space 1fr 20em $header-space;
+  column-gap: $header-gap;
+  @include mobile {
+    grid-template-areas: 'logo server-select';
+    grid-template-columns: $header-space 1fr;
+  }
 
-  > a > .logo {
-    height: 100%;
-    aspect-ratio: 1 / 1;
+  > a {
+    grid-area: logo;
+    height: $header-space;
   }
 
   > .avatar {
     @include avatar;
-    height: 100%;
-    float: right;
+    grid-area: avatar;
+    height: $header-space;
   }
 
   > .breadcrumb {
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
+    grid-area: breadcrumb;
+    line-height: $header-space;
     color: #888;
-    margin-left: $header-gap;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 
     > span {
       margin: 0 .5ch;

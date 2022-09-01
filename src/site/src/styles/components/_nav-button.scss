@@ -1,16 +1,16 @@
 @use '../abstracts' as *;
 @include mobile {
   .nav-button {
+    grid-area: logo;
     height: $header-space;
     width: $header-space;
     display: inline-flex;
     flex-direction: column;
     justify-content: space-around;
     position: relative;
-    bottom: $header-space/7/2;
 
     > div {
-      height: $header-space/7;
+      height: 14.29%;
       border-radius: 3px;
       background-color: clr(23);
       transition: transform .6s ease-in-out;
