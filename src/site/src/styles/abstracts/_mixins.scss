@@ -75,7 +75,7 @@
   }
 }
 @mixin mobile {
-  @media (max-aspect-ratio: 3/4) {
+  @media (max-aspect-ratio: 3 / 5) {
     @content;
   }
 }
