@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { useLocation, NavLink } from "react-router-dom";
 import { useMediaQuery } from 'react-responsive';
 
 import { DiscordImage } from './DiscordImage.tsx';
@@ -10,11 +10,12 @@ import { lazy } from '../components/Loading.tsx';
 const NavButton = lazy(() => import('../components/NavButton.tsx'));
 
 export function Header({ context, context: { user } }: ContextProps) {
-  const isMobile = useMediaQuery({ query: '(max-aspect-ratio: 3/4)' });
+  const isMobile = useMediaQuery({ query: '(max-aspect-ratio: 3/4)' }),
+    { pathname } = useLocation();
 
   return (
     <header>
-      {isMobile ?
+      {isMobile && /guild\/\d+/i.test(pathname) ?
         <NavButton /> :
         <NavLink to="/">
           <img className="logo" src="/icon.svg" alt="KonkenBoten's Logo" />
