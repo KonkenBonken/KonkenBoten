@@ -33,7 +33,7 @@ export function Select({ options, guildIcons = true, onChoice, link }: { options
         <Option id={id} key={id}>
           {displayIcons && (icon ?
             <DiscordImage src={`https://cdn.discordapp.com/icons/${id}/${icon}`}
-              srcSizes={[16, 32, 64]} /> :
+              srcSizes={[64]} /> :
             <GuildPlaceholder name={label} />
           )}
           <span>{label}</span>

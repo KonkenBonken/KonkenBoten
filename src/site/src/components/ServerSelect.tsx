@@ -1,5 +1,4 @@
 import { ContextProps } from '../../../../types/context';
-import { DiscordImage } from './DiscordImage.tsx';
 import { Select } from './Select.tsx';
 
 export function ServerSelect({ context: { user: { guilds } } }: ContextProps) {

@@ -14,7 +14,7 @@ export function Header({ context, context: { user } }: ContextProps) {
       <Breadcrumb context={context} />
       {user ?
         (<>
-          <DiscordImage src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`} srcSizes={[16, 32, 64]} className="avatar" />
+          <DiscordImage src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`} srcSizes={[64]} className="avatar" />
           <ServerSelect servers={user.guilds} context={context} />
         </>) :
         (<a href="/oauth" class="login">
