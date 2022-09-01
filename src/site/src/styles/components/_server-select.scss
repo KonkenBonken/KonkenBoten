@@ -1,5 +1,5 @@
 @use '../abstracts' as *;
-@use './select.scss';
+@use './select.scss' as *;
 
 header > .select {
   grid-area: server-select;
@@ -7,10 +7,7 @@ header > .select {
   background-color: clr(4);
   position: relative;
   max-width: 20em;
-
-  > input {
-    height: 100%;
-  }
+  @include select-height($header-space);
 
   &:not(:focus-within) > .active > :is(.placeholder, img) {
     height: $header-space*.95;

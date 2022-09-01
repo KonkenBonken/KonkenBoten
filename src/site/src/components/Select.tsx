@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { NavLink } from "react-router-dom";
 import normalizeString from 'any-ascii';
+
 import { DiscordImage, GuildPlaceholder } from './DiscordImage.tsx';
+import searchIcon from '../assets/search.svg';
 
 export function Select({ options, guildIcons = true, onChoice, link }: { options: { id?: string, label: string, icon?: string }[], onChoice?: (string) => void, link?: string }) {
   for (const option of options)
@@ -25,9 +27,11 @@ export function Select({ options, guildIcons = true, onChoice, link }: { options
 
   return (<div className="select">
     <input className="search" type="search"
+      placeholder="Search"
       onFocus={({ target }) => target.value = ''}
       onChange={({ target }) => setSearchQuery(target.value)}
     />
+    <img src={searchIcon} />
     {options.filter(({ label, id }) => [label, id, normalizeString(label)].some(text => text.toLowerCase().includes(searchQuery.toLowerCase())))
       .map(({ label, id, icon }) => (
         <Option id={id} key={id}>
@@ -36,7 +40,7 @@ export function Select({ options, guildIcons = true, onChoice, link }: { options
               srcSizes={[64]} /> :
             <GuildPlaceholder name={label} />
           )}
-          <span>{label}</span>
+          <span title={label}>{label}</span>
         </Option>
       ))}
   </div>)
