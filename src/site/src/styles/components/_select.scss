@@ -1,4 +1,5 @@
 @use '../abstracts' as *;
+$select-height: $header-space;
 
 .select {
   border-radius: 10px;
@@ -10,7 +11,7 @@
     background: inherit;
     z-index: 4;
     font-size: 1rem;
-    padding-left: calc(3% + $header-space + 10px);
+    padding-left: calc(3% + $select-height + 10px);
   }
 
   &:focus-within {
@@ -45,7 +46,7 @@
   > a {
     display: none;
     grid-template-areas: 'icon label';
-    grid-template-columns: $header-space 1fr;
+    grid-template-columns: $select-height 1fr;
     gap: 10px;
     place-items: center left;
     padding-left: 3%;
@@ -56,7 +57,7 @@
       grid-area: icon;
       @include avatar;
       display: block;
-      width: $header-space;
+      width: $select-height;
     }
 
     .placeholder {
