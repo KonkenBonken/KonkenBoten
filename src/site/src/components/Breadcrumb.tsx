@@ -18,7 +18,7 @@ export function Breadcrumb({ context: { user: { guilds } } }: ContextProps) {
         </NavLink>
       )).flatMap(entry => [(<span>></span>), entry]).slice(1);
 
-  return (<p className="breadcrumb">
+  return entries.length ? <p className="breadcrumb">
     {entries}
-  </p>);
+  </p> : null;
 }
