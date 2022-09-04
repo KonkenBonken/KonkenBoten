@@ -3,7 +3,7 @@ import { useLocation, NavLink } from "react-router-dom";
 import { ContextProps } from '../../../../types/context';
 import { titleCase, snowflakeRegex } from '../utils/utils.ts';
 
-export function Breadcrumb({ context: { user: { guilds } } }: ContextProps) {
+export default function Breadcrumb({ context: { user: { guilds } } }: ContextProps) {
   const { pathname } = useLocation(),
     pathnames = pathname.split('/'),
     entries = pathnames

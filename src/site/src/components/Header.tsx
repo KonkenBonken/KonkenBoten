@@ -2,8 +2,10 @@ import { NavLink } from "react-router-dom";
 
 import { DiscordImage } from './DiscordImage.tsx';
 import { ServerSelect } from './ServerSelect.tsx';
-import { Breadcrumb } from './Breadcrumb.tsx';
 import { ContextProps } from '../../../../types/context';
+
+import { lazy } from '../components/Loading.tsx';
+const Breadcrumb = lazy(() => import('./Breadcrumb.tsx'), false, true);
 
 export function Header({ context, context: { user } }: ContextProps) {
   return (
