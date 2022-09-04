@@ -1,7 +1,14 @@
 import { ContextProps } from '../../../../types/context';
+import Toggle from '../components/Toggle.tsx';
 
-export default function SupportChannelSettings({ context: { guild: { database } } }: ContextProps) {
+export default function SupportChannelSettings({ context: { guild: { database: { Tickets } } } }: ContextProps) {
+  console.log(Tickets);
+
   return (<section>
-    <pre>{JSON.stringify(database.Tickets, null, 2)}</pre>
+    <button onClick={() => console.log('Clicked!')}>Save</button>
+    <Toggle toggled={Tickets.enabled} />
+    <input />
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt risus nec dapibus ultrices. Nulla eget auctor enim. Praesent ac nisl sit amet ligula tempus aliquam. Maecenas id euismod urna. Nulla mattis rutrum nibh, a molestie leo tempor et. Phasellus volutpat velit quis consectetur ultrices. Aenean nec nisl et urna molestie lacinia id eu nisl. Quisque vel sollicitudin mi, quis pretium enim. Aenean tempor est vitae facilisis dictum. Ut non turpis vel leo porta sodales eget in mauris. Praesent vehicula in odio at fringilla.<br /><br /><br />
+    Nunc sagittis neque purus, at tincidunt diam pretium in. Quisque ac tempor elit, nec laoreet mi. Fusce at iaculis enim. Praesent eget velit eget dui vestibulum euismod nec quis elit. Pellentesque fermentum scelerisque ante vel sollicitudin. Quisque eu vulputate sem, vestibulum malesuada urna. Quisque malesuada ac ex vitae convallis.
   </section>)
 }
