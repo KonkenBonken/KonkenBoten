@@ -14,9 +14,7 @@ export default function ContextHandler() {
   const [context, setContext] = useState<ContextData>(contextData),
     [changes, setChanges] = useState<PartialGuild[]>([]);
 
-  window.setChanges = setChanges;
-
-  contextResolver([(a) => setContext(a), (a) => setChanges(a)]);
+  contextResolver([setContext, setChanges]);
 
   if (context.user)
     connect(context.user.id)

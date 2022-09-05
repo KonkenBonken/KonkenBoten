@@ -53,6 +53,6 @@ export default function Guild({ context, context: { guild, user }, setContext, c
         ) : sections.map(Section)
         )}
     </main>
-    {!!changes.length && <ChangesPopup changes={changes} />}
+    <ChangesPopup changes={changes} />
   </>);
 }

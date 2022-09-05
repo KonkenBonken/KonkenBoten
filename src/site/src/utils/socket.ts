@@ -21,8 +21,10 @@ export { contextResolver };
 
 const changes: PartialGuild[] = [];
 
-function updateChanges() {
-  setChanges.then(set => set(changes));
+async function updateChanges() {
+  const set = await setChanges;
+  set(changes);
+  window.dispatchEvent(new Event('rerenderChanges'));
 }
 
 /** proposeChange({ commands: { mute: 'mjuta' } }) */
