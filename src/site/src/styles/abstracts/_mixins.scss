@@ -74,3 +74,14 @@
     }
   }
 }
+@mixin base-button {
+  border-radius: $input-border-radius;
+  position: relative;
+  cursor: pointer;
+  height: $input-height;
+  width: 3.28rem;
+  padding: .125rem $input-side-padding;
+  font-size: 1rem;
+  display: grid;
+  place-items: center;
+}

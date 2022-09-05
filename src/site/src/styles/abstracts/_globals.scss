@@ -1,9 +1,13 @@
+@use 'sass:color' as *;
 $theme: #dbad11;
 $off-white: #e6eaea; // clr(27)
 $off-black: #121321; // clr(0)
+$gray: change($theme, $saturation: 5%);
 $header-size: 50px;
 $header-space: $header-size - 7px;
 $header-gap: 25px;
 $nav-size: 300px;
 $outline-width: .06rem;
-$input-height: 1.15rem;
+$input-height: 1.96rem;
+$input-border-radius: .6ch;
+$input-side-padding: .14rem;

@@ -1,0 +1,29 @@
+@use '../abstracts' as *;
+
+.toggle {
+  @include base-button;
+  transition: background-color .4s ease-out;
+  background-color: $gray;
+
+  > input {
+    display: none;
+  }
+
+  > div {
+    position: absolute;
+    height: $input-height;
+    width: $input-height;
+    border-radius: $input-border-radius * 2;
+    transition: right .4s ease-out;
+    background-color: $off-white;
+    right: 2.5rem - $input-height + $input-side-padding * 6;
+  }
+
+  &.checked {
+    background-color: $theme;
+
+    > div {
+      right: $input-side-padding;
+    }
+  }
+}
