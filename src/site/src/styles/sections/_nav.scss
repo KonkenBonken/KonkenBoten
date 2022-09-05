@@ -8,7 +8,7 @@ nav {
   flex-direction: column;
   gap: .4rem;
   padding: 0 .2rem;
-  box-shadow: 0 0 15px clr(0);
+  box-shadow: 0 0 15px $off-black;
   z-index: 2;
 
   > a {
@@ -20,14 +20,14 @@ nav {
     line-height: 1.5;
     padding-left: 2ch;
     font-weight: bold;
-    box-shadow: 0 0 5px clr(0);
+    box-shadow: 0 0 5px $off-black;
     @include button-colors(2, 5, 8, 10, 12);
 
     &.active,
     &:active,
     &:focus-within,
     &:hover {
-      color: clr(99);
+      color: white;
       @include outline(3, 18);
     }
 

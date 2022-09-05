@@ -22,11 +22,11 @@ main {
     @include glass;
     padding: 1rem 1ch;
     border-radius: 1rem;
-    box-shadow: .3ch .3em 2em clr(0);
+    box-shadow: .3ch .3em 2em $off-black;
     transition: box-shadow ease-out .5s;
 
     &:focus-within {
-      box-shadow: .7ch .7em 4em clr(0);
+      box-shadow: .7ch .7em 4em $off-black;
     }
 
     > input {
