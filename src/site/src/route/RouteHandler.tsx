@@ -3,8 +3,8 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { lazy } from '../components/Loading.tsx';
 import { ContextProps } from '../../../../types/context';
 
-const Home = lazy(() => import('./Home.tsx'), true);
-const Guild = lazy(() => import('./Guild.tsx'), true);
+const Home = lazy(() => import('./Home.tsx'));
+const Guild = lazy(() => import('./Guild.tsx'));
 const GuildSelector = lazy(() => import('./GuildSelector.tsx'));
 
 export function RouteHandler(contextProps: ContextProps) {

@@ -8,7 +8,7 @@ import { Navigation } from '../components/Navigation.tsx';
 import { Loading, lazy } from '../components/Loading.tsx';
 import sections from '../sections/sections.ts';
 
-const ChangesPopup = lazy(() => import('../components/ChangesPopup.tsx'), false, true);
+const ChangesPopup = lazy(() => import('../components/ChangesPopup.tsx'), true);
 
 import '../styles/routes/guild.scss';
 

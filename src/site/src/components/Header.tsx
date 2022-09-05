@@ -5,7 +5,7 @@ import { ServerSelect } from './ServerSelect.tsx';
 import { ContextProps } from '../../../../types/context';
 
 import { lazy } from '../components/Loading.tsx';
-const Breadcrumb = lazy(() => import('./Breadcrumb.tsx'), false, true);
+const Breadcrumb = lazy(() => import('./Breadcrumb.tsx'), true);
 
 export function Header({ context, context: { user } }: ContextProps) {
   return (
