@@ -53,20 +53,14 @@ $select-height: $header-space;
     gap: 10px;
     place-items: center left;
 
-    > :is(.placeholder, img) {
+    > img {
       @include avatar;
       display: block;
-      width: $select-height;
-      grid-area: icon;
     }
 
-    .placeholder {
-      display: grid;
-      background-color: rgb(54, 57, 63);
-      color: rgb(220, 221, 222);
-      font-size: .9rem;
-      user-select: none;
-      place-items: center;
+    > :is(.placeholder, img) {
+      width: $select-height;
+      grid-area: icon;
     }
 
     > span {
