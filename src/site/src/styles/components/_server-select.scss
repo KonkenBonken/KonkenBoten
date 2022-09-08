@@ -2,20 +2,20 @@
 @use './select.scss' as *;
 
 header > .select {
+  @include select-height($header-space);
+  position: relative;
+  float: right;
+  margin-right: $header-gap;
   width: 20em;
   height: $header-space;
-  float: right;
   background-color: clr(4);
-  position: relative;
-  margin-right: $header-gap;
-  @include select-height($header-space);
 
   > input {
     height: $header-space;
   }
 
   &:not(:focus-within) > .active > :is(.placeholder, img) {
-    height: $header-space*.95;
     margin-top: $header-space*.025;
+    height: $header-space*.95;
   }
 }

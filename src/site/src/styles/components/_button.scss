@@ -1,9 +1,9 @@
 @use '../abstracts' as *;
 
 button {
-  all: unset;
   @include base-button;
   background-color: $theme;
+  all: unset;
 
   &.loading {
     @include spinner;

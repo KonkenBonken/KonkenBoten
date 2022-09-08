@@ -2,16 +2,16 @@
 $select-height: $header-space;
 
 .select {
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border-radius: 10px;
 
   > input {
-    background: inherit;
     z-index: 4;
-    font-size: 1rem;
     padding-left: calc(3% + $select-height + 10px);
+    background: inherit;
+    font-size: 1rem;
   }
 
   &:focus-within {
@@ -22,12 +22,12 @@ $select-height: $header-space;
     }
 
     > img {
-      display: block;
       position: absolute;
-      aspect-ratio: 1 / 1;
-      z-index: 4;
-      left: 4.75%;
       top: $select-height * .01;
+      left: 4.75%;
+      z-index: 4;
+      display: block;
+      aspect-ratio: 1 / 1;
     }
   }
 
@@ -37,44 +37,44 @@ $select-height: $header-space;
     }
 
     > .active {
-      display: grid;
       position: absolute;
       top: 0;
+      display: grid;
     }
   }
 
   > a {
+    position: relative;
+    z-index: 3;
     display: none;
+    padding-left: 3%;
     grid-template-areas: 'icon label';
     grid-template-columns: $select-height 1fr;
     gap: 10px;
     place-items: center left;
-    padding-left: 3%;
-    position: relative;
-    z-index: 3;
 
     > :is(.placeholder, img) {
-      grid-area: icon;
       @include avatar;
       display: block;
       width: $select-height;
+      grid-area: icon;
     }
 
     .placeholder {
-      background-color: rgb(54, 57, 63);
       display: grid;
-      place-items: center;
-      user-select: none;
+      background-color: rgb(54, 57, 63);
       color: rgb(220, 221, 222);
       font-size: .9rem;
+      user-select: none;
+      place-items: center;
     }
 
     > span {
       overflow: hidden;
-      grid-area: label;
+      width: 100%;
       text-overflow: ellipsis;
       white-space: nowrap;
-      width: 100%;
+      grid-area: label;
     }
 
     &:focus-within,

@@ -2,33 +2,33 @@
 
 nav {
   @include glass(2, .5);
-  grid-area: nav;
-  border-bottom-right-radius: .5rem;
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: .4rem;
   padding: 0 .2rem;
+  border-bottom-right-radius: .5rem;
   box-shadow: 0 0 15px $off-black;
-  z-index: 2;
+  grid-area: nav;
+  gap: .4rem;
 
   > a {
-    box-sizing: border-box;
     @include outline;
+    @include button-colors(2, 5, 8, 10, 12);
     display: block;
+    box-sizing: border-box;
+    padding-left: 2ch;
     height: 30px;
     border-radius: .5em;
-    line-height: 1.5;
-    padding-left: 2ch;
-    font-weight: bold;
     box-shadow: 0 0 5px $off-black;
-    @include button-colors(2, 5, 8, 10, 12);
+    font-weight: bold;
+    line-height: 1.5;
 
     &.active,
     &:active,
     &:focus-within,
     &:hover {
-      color: white;
       @include outline(3, 18);
+      color: white;
     }
 
     &.child {

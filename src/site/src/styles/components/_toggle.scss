@@ -2,8 +2,8 @@
 
 .toggle {
   @include base-button;
-  transition: background-color .4s ease-out;
   background-color: $gray;
+  transition: background-color .4s ease-out;
 
   > input {
     display: none;
@@ -11,12 +11,12 @@
 
   > div {
     position: absolute;
-    height: $input-height;
-    width: $input-height;
-    border-radius: $input-border-radius * 2;
-    transition: right .4s ease-out;
-    background-color: $off-white;
     right: 2.5rem - $input-height + $input-side-padding * 6;
+    width: $input-height;
+    height: $input-height;
+    border-radius: $input-border-radius * 2;
+    background-color: $off-white;
+    transition: right .4s ease-out;
   }
 
   &.checked {

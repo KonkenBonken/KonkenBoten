@@ -1,11 +1,11 @@
 @use '../abstracts' as *;
 
 #root > img {
-  grid-area: nav / nav / main / main;
+  z-index: -1;
   width: 100%;
   height: 100%;
-  object-fit: cover;
   opacity: 1;
   filter: saturate(.3);
-  z-index: -1;
+  grid-area: nav / nav / main / main;
+  object-fit: cover;
 }

@@ -2,11 +2,11 @@
 @use '../components/server-select.scss';
 
 header {
-  background-color: clr(1);
-  grid-area: header;
-  padding: ($header-size - $header-space)/2 15px;
-  box-shadow: 0 0 20px clr(-2);
   z-index: 3;
+  padding: ($header-size - $header-space)/2 15px;
+  background-color: clr(1);
+  box-shadow: 0 0 20px clr(-2);
+  grid-area: header;
 
   > a > .logo {
     height: 100%;
@@ -15,16 +15,16 @@ header {
 
   > .avatar {
     @include avatar;
-    height: 100%;
     float: right;
+    height: 100%;
   }
 
   > .breadcrumb {
     display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-    color: #888;
     margin-left: $header-gap;
+    height: 100%;
+    color: #888;
+    vertical-align: middle;
 
     > span {
       margin: 0 .5ch;

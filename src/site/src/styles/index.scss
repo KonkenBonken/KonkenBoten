@@ -5,18 +5,18 @@
 #root,
 :root,
 body {
+  overflow: hidden;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  color: $off-white;
   font-size: 16px;
   font-family: sans-serif;
-  color: $off-white;
 }
 
 #root {
   display: grid;
+  background: linear-gradient(220deg, clr(6, .9), clr(5) 80%);
   grid-template-areas: 'header header' 'nav main';
   grid-template-rows: $header-size 1fr;
   grid-template-columns: $nav-size 1fr;
-  background: linear-gradient(220deg, clr(6, .9), clr(5) 80%);
 }
