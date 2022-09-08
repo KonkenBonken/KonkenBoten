@@ -2,12 +2,12 @@
   "type": "module",
   "browserslist": {
     "production": [
+    "last 1 chrome version"
+    ],
+    "development": [
       "last 2 versions",
       ">0.2%",
       "not dead"
-    ],
-    "development": [
-      "last 1 chrome version"
     ]
   }
 }
