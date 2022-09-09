@@ -85,3 +85,18 @@
   cursor: pointer;
   place-items: center;
 }
+@mixin main-scrollbar {
+  &::-webkit-scrollbar {
+    $thumb-width: 5px;
+    width: $main-side-padding;
+
+    &-thumb {
+      border-radius: $thumb-width / 2;
+      background-image: thumb-gradient(.2);
+
+      &:hover {
+        background-image: thumb-gradient(.8);
+      }
+    }
+  }
+};
