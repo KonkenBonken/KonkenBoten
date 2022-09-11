@@ -105,3 +105,12 @@
     @content;
   }
 }
+@mixin section-shadow {
+  box-shadow: .3ch .3em 2em $off-black;
+  transition: box-shadow ease-out .5s;
+
+  &:focus-within,
+  &:hover {
+    box-shadow: .7ch .7em 4em $off-black;
+  }
+}

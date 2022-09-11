@@ -20,17 +20,12 @@ main {
 
   > section {
     @include glass;
+    @include section-shadow;
     display: flex;
     flex-direction: column;
     padding: 1rem 1ch;
     border-radius: 1rem;
-    box-shadow: .3ch .3em 2em $off-black;
-    transition: box-shadow ease-out .5s;
     gap: 1rem;
-
-    &:focus-within {
-      box-shadow: .7ch .7em 4em $off-black;
-    }
 
     > input {
       display: block;

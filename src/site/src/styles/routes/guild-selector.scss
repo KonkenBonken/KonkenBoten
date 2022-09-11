@@ -15,6 +15,7 @@ section#selector {
 
   > a {
     @include glass;
+    @include section-shadow;
     display: grid;
     padding: 2em 2ch;
     width: 20em;
