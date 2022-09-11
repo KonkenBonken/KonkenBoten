@@ -99,4 +99,9 @@
       }
     }
   }
-};
+}
+@mixin mobile {
+  @media (max-aspect-ratio: 3 / 5) {
+    @content;
+  }
+}

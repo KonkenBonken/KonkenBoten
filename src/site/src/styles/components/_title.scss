@@ -35,6 +35,10 @@
 
     &#b {
       margin-left: -1.4ch;
+
+      + div {
+        margin-right: -1.5ch;
+      }
     }
   }
 

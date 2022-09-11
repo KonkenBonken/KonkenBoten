@@ -4,15 +4,10 @@
 header > .select {
   @include select-height($header-space);
   position: relative;
-  float: right;
-  margin-right: $header-gap;
-  width: 20em;
-  height: $header-space;
+  max-width: 20em;
+  height: 100%;
   background-color: clr(4);
-
-  > input {
-    height: $header-space;
-  }
+  grid-area: server-select;
 
   &:not(:focus-within) > .active > :is(.placeholder, img) {
     margin-top: $header-space*.025;

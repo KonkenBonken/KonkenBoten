@@ -1,30 +1,40 @@
 @use '../abstracts' as *;
 @use '../components/server-select.scss';
+@use '../components/nav-button.scss';
 
 header {
+  @include mobile {
+    grid-template-areas: 'logo server-select';
+    grid-template-columns: $header-space 1fr;
+  }
   z-index: 3;
+  display: grid;
   padding: ($header-size - $header-space)/2 15px;
   background-color: clr(1);
   box-shadow: 0 0 20px clr(-2);
+  column-gap: $header-gap;
   grid-area: header;
+  grid-template-areas: 'logo breadcrumb server-select avatar';
+  grid-template-columns: $header-space 1fr 20em $header-space;
 
-  > a > .logo {
-    height: 100%;
-    aspect-ratio: 1 / 1;
+  > a {
+    height: $header-space;
+    grid-area: logo;
   }
 
   > .avatar {
     @include avatar;
-    float: right;
-    height: 100%;
+    height: $header-space;
+    grid-area: avatar;
   }
 
   > .breadcrumb {
-    display: inline-block;
-    margin-left: $header-gap;
-    height: 100%;
+    overflow: hidden;
     color: #888;
-    vertical-align: middle;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: $header-space;
+    grid-area: breadcrumb;
 
     > span {
       margin: 0 .5ch;
