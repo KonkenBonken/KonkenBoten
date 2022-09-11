@@ -9,16 +9,16 @@ section#selector {
   justify-content: center;
   overflow-y: auto;
   padding: 2em 3em;
+  text-align: center;
   grid-area: nav / nav / main / main;
   gap: 4em;
-  text-align: center;
 
-  > section {
+  > a {
     @include glass;
     display: grid;
     padding: 2em 2ch;
     width: 20em;
-    height: 30em;
+    height: 25em;
     border-radius: 1em;
     box-shadow: .3ch .3em 2em $off-black;
     transition: box-shadow ease-out .5s;
@@ -28,16 +28,6 @@ section#selector {
       @include avatar;
       width: 15rem;
       font-size: (15rem / 3);
-    }
-
-    > a {
-      padding: .125rem $input-side-padding;
-      width: 7rem;
-      height: 3rem;
-      border-radius: $input-border-radius;
-      background-color: $theme;
-      font-size: 1.5rem;
-      line-height: 3rem;
     }
   }
 }
