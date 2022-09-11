@@ -4,13 +4,10 @@ import { useMediaQuery } from 'react-responsive';
 import { DiscordImage } from './DiscordImage.tsx';
 import { ServerSelect } from './ServerSelect.tsx';
 import { ContextProps } from '../../../../types/context';
-import { lazy } from '../components/Loading.tsx';
+import { lazy } from './Loading.tsx';
 import { isMobile } from '../utils/utils.ts';
 
-
 const NavButton = lazy(() => import('../components/NavButton.tsx'));
-
-import { lazy } from '../components/Loading.tsx';
 const Breadcrumb = lazy(() => import('./Breadcrumb.tsx'), true);
 
 export function Header({ context, context: { user } }: ContextProps) {
