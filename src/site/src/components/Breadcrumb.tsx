@@ -16,7 +16,7 @@ export default function Breadcrumb({ context: { user: { guilds } } }: ContextPro
         <NavLink to={pathnames.slice(0, i + 2).join('/')}>
           {entry}
         </NavLink>
-      )).flatMap(entry => [(<span>></span>), entry]).slice(1);
+      )).flatMap(entry => [(<span>></span>), entry]).slice(3);
 
   return entries.length ? <p className="breadcrumb">
     {entries}
