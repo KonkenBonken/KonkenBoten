@@ -10,7 +10,7 @@ a#select-server {
   background-color: $theme;
   font-size: 1.5rem;
   animation: load-button ($ani-dur / 2) ease-in-out $ani-dur backwards;
-  grid-area: nav / nav / main / main;
+  grid-area: $fill-grid;
 }
 @keyframes load-button {
   from {

@@ -3,6 +3,7 @@ $theme: #dbad11;
 $off-white: #e6eaea; // clr(27)
 $off-black: #121321; // clr(0)
 $gray: change($theme, $saturation: 5%);
+$fill-grid: nav / nav / main / main;
 $header-size: 50px;
 $header-space: $header-size - 7px;
 $header-gap: 25px;
