@@ -1,4 +1,4 @@
-@use 'globals.scss' as *;
+@use 'constants.scss' as *;
 @function clr($weight, $opacity: 1) {
   @return hsl(hue($theme) + 190 - $weight * 2 , $weight * -.8% + 30%, $weight * 3% + 10%, $opacity);
 }
