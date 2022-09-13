@@ -1,4 +1,4 @@
-import { ContextProps } from '../../../../types/context';
+import { ContextProps } from '../utils/types';
 import Toggle from '../components/Toggle.tsx';
 
 export default function SupportChannelSettings({ context: { guild: { database: { Tickets } } } }: ContextProps) {

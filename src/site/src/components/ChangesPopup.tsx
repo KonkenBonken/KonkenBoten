@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ContextProps } from '../../../../types/context';
+import { ContextProps } from '../utils/types';
 import { saveChanges } from '../utils/socket.ts';
 import { useForceRerender } from '../utils/utils.ts';
 

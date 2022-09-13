@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { Title } from '../components/Title.tsx';
-import { ContextProps } from '../../../../types/context';
+import { ContextProps } from '../utils/types';
 
 import '../styles/routes/home.scss';
 

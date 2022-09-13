@@ -1,4 +1,4 @@
-import { ContextProps } from '../../../../types/context';
+import { ContextProps } from '../utils/types';
 import { Select } from './Select.tsx';
 
 export function ServerSelect({ context: { user: { guilds } } }: ContextProps) {

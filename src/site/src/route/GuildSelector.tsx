@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import useLocalState from "@phntms/use-local-state";
 
 import { DiscordImage, GuildPlaceholder } from '../components/DiscordImage.tsx';
-import { ContextProps } from '../../../../types/context';
+import { ContextProps } from '../utils/types';
 
 import '../styles/routes/guild-selector.scss';
 

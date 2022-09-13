@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import useLocalState from "@phntms/use-local-state";
 
 import { socket } from '../utils/socket.ts';
-import { ContextProps } from '../../../../types/context';
+import { ContextProps } from '../utils/types';
 import { titleCase as TC } from '../utils/utils.ts';
 
 import { Navigation } from '../components/Navigation.tsx';

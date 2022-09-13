@@ -3,7 +3,7 @@ import { useMediaQuery } from 'react-responsive';
 
 import { DiscordImage } from './DiscordImage.tsx';
 import { ServerSelect } from './ServerSelect.tsx';
-import { ContextProps } from '../../../../types/context';
+import { ContextProps } from '../utils/types';
 import { lazy } from './Loading.tsx';
 import { isMobile } from '../utils/utils.ts';
 

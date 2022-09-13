@@ -1,6 +1,6 @@
 import { useLocation, NavLink } from "react-router-dom";
 
-import { ContextProps } from '../../../../types/context';
+import { ContextProps } from '../utils/types';
 import { titleCase, snowflakeRegex } from '../utils/utils.ts';
 
 export default function Breadcrumb({ context: { user: { guilds } } }: ContextProps) {

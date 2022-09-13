@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { BrowserRouter } from "react-router-dom";
 
-import { ContextData } from '../../../../types/context';
+import { ContextData } from '../utils/types';
 import { PartialGuild } from '../../../../types/guild';
 
 import { socket, connect, contextResolver } from './socket.ts';
