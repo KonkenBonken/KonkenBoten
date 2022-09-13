@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 import useLocalState from "@phntms/use-local-state";
 
 import { socket } from '../utils/socket.ts';
@@ -15,9 +16,11 @@ import '../styles/routes/guild.scss';
 
 export default function Guild({ context, context: { guild, user }, setContext, changes }: ContextProps) {
   const { guildId, section, child } = useParams();
-
   const [, setLastVisited] = useLocalState<string[]>('last-visited-guild', []);
-  setLastVisited(lastVisited => [...new Set([guildId, ...lastVisited])]);
+
+  useEffect(() => {
+    setLastVisited(lastVisited => [...new Set([guildId, ...lastVisited])]);
+  }, [guildId]);
 
   if (!guild)
     socket.emit('getGuild', guildId, (res, err) => {
