@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { NavLink } from "react-router-dom";
-import normalizeString from 'any-ascii';
 
 import { DiscordImage, GuildPlaceholder } from './DiscordImage.tsx';
 import searchIcon from '../assets/search.svg';
+
+let normalizeString = (label: string) => label;
+import('any-ascii').then(pkg => normalizeString = pkg.default)
 
 export function Select({ options, guildIcons = true, onChoice, link }: { options: { id?: string, label: string, icon?: string }[], onChoice?: (string) => void, link?: string }) {
   for (const option of options)
