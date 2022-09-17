@@ -2,12 +2,13 @@ import { NavLink } from "react-router-dom";
 import useLocalState from "@phntms/use-local-state";
 
 import { DiscordImage, GuildPlaceholder } from '../components/DiscordImage.tsx';
-import { ContextProps } from '../utils/types';
+import { useContext } from '../hooks/Context.ts';
 
 import '../styles/routes/guild-selector.scss';
 
-export default function GuildSelector({ context: { user: { guilds } } }: ContextProps) {
-  const [lastVisited] = useLocalState<string[]>('last-visited-guild', []);
+export default function GuildSelector() {
+  const [{ user: { guilds } }] = useContext(),
+    [lastVisited] = useLocalState<string[]>('last-visited-guild', []);
 
   return <section id="selector">
     {guilds.slice()

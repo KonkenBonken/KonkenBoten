@@ -1,13 +1,13 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 
-import ContextHandler from './utils/ContextHandler.tsx';
+import Router from './utils/Router.tsx';
 
 import './styles/index.scss';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <StrictMode>
-    <ContextHandler />
+    <Router />
   </StrictMode>
 );

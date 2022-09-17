@@ -49,9 +49,3 @@ export interface ContextData {
     }
   }
 }
-
-export interface ContextProps {
-  context: ContextData
-  setContext(context: ContextData): void
-  setContext(setter: (old: ContextData) => ContextData): void
-}

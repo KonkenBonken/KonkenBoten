@@ -3,9 +3,8 @@ import { useEffect } from "react";
 import useLocalState from "@phntms/use-local-state";
 
 import { socket } from '../utils/socket.ts';
-import { ContextProps } from '../utils/types';
 import { titleCase as TC } from '../utils/utils.ts';
-import { saveChanges } from '../utils/socket.ts';
+import { useContext } from '../hooks/Context.ts';
 import { useChanges } from '../hooks/Changes.ts';
 
 import { Navigation } from '../components/Navigation.tsx';
@@ -16,8 +15,9 @@ const ChangesPopup = lazy(() => import('../components/ChangesPopup.tsx'), true);
 
 import '../styles/routes/guild.scss';
 
-export default function Guild({ context, context: { guild, user }, setContext }: ContextProps) {
+export default function Guild() {
   const { guildId, section, child } = useParams(),
+    [{ guild, user }, setContext] = useContext(),
     [, setLastVisited] = useLocalState<string[]>('last-visited-guild', []),
     [changes] = useChanges();
 
@@ -36,9 +36,7 @@ export default function Guild({ context, context: { guild, user }, setContext }:
   function Child(child: string, Render: () => JSX.Element) {
     return (<>
       <h3>{TC(child)}</h3>
-      {Render ?
-        <Render {...{ context, setContext }} />
-        : <section />
+      {Render ? <Render /> : <section />
       }
     </>);
   }

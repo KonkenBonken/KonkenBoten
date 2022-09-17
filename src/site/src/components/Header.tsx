@@ -3,15 +3,16 @@ import { useMediaQuery } from 'react-responsive';
 
 import { DiscordImage } from './DiscordImage.tsx';
 import { ServerSelect } from './ServerSelect.tsx';
-import { ContextProps } from '../utils/types';
+import { useContext } from '../hooks/Context.ts';
 import { lazy } from './Loading.tsx';
 import { isMobile } from '../utils/utils.ts';
 
 const NavButton = lazy(() => import('../components/NavButton.tsx'));
 const Breadcrumb = lazy(() => import('./Breadcrumb.tsx'), true);
 
-export function Header({ context, context: { user } }: ContextProps) {
-  const { pathname } = useLocation();
+export function Header() {
+  const { pathname } = useLocation(),
+    [{ user }] = useContext();
 
   return (
     <header>
@@ -20,11 +21,11 @@ export function Header({ context, context: { user } }: ContextProps) {
         <NavLink to="/">
           <img className="logo" src="/icon.svg" alt="KonkenBoten's Logo" />
         </NavLink>}
-      {!isMobile() && <Breadcrumb context={context} />}
+      {!isMobile() && <Breadcrumb />}
       {user ?
         [
           !isMobile() && <DiscordImage src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`} srcSizes={[64]} className="avatar" />,
-          <ServerSelect servers={user.guilds} context={context} />
+          <ServerSelect servers={user.guilds} />
         ] :
         (<a href="/oauth" class="login">
           <img src="/discord.svg" alt="Discord's Logo" />

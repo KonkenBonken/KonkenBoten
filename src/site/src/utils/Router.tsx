@@ -1,30 +1,29 @@
 import { useState } from 'react';
 import { BrowserRouter } from "react-router-dom";
 
+import { useContext } from '../hooks/Context.ts';
 import { ContextData } from '../utils/types';
 import { PartialGuild } from '../../../../types/guild';
 
-import { socket, connect, contextResolver } from './socket.ts';
+import { socket, connect } from './socket.ts';
 
 import { RouteHandler } from '../route/RouteHandler.tsx';
 import { Header } from '../components/Header.tsx';
 import { BackgroundImage } from '../components/BackgroundImage.tsx';
 
-export default function ContextHandler() {
-  const [context, setContext] = useState<ContextData>(contextData);
+export default function Router() {
+  const [{ user }] = useContext();
 
-  contextResolver([setContext]);
-
-  if (context.user)
-    connect(context.user.id)
+  if (user)
+    connect(user.id)
   else
     socket.disconnect();
 
   return (
     <BrowserRouter>
       <BackgroundImage />
-      <Header context={context} />
-      <RouteHandler {...{ context, setContext }} />
+      <Header />
+      <RouteHandler />
     </BrowserRouter >
   );
 }
