@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { ContextProps } from '../utils/types';
 import { saveChanges } from '../utils/socket.ts';
-import { useForceRerender } from '../utils/utils.ts';
+import { useForceRerender } from '../hooks/ForceRerender.ts';
 
 let forceRerender: () => void;
 window.addEventListener('rerenderChanges', () => forceRerender && forceRerender());
