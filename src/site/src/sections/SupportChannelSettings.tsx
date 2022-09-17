@@ -1,11 +1,17 @@
 import { ContextProps } from '../utils/types';
 import Toggle from '../components/Toggle.tsx';
+import { useChanges } from '../hooks/Changes.ts';
 
 export default function SupportChannelSettings({ context: { guild: { database: { Tickets } } } }: ContextProps) {
+  const [, addChange] = useChanges();
+
   console.log(Tickets);
 
   return (<section>
-    <button onClick={() => console.log('Clicked!')}>Save</button>
+    <button onClick={() => {
+      console.log('Clicked');
+      addChange({ testChange: true })
+    }}>Add Change</button>
     <Toggle toggled={Tickets.enabled} />
     <input />
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt risus nec dapibus ultrices. Nulla eget auctor enim. Praesent ac nisl sit amet ligula tempus aliquam. Maecenas id euismod urna. Nulla mattis rutrum nibh, a molestie leo tempor et. Phasellus volutpat velit quis consectetur ultrices. Aenean nec nisl et urna molestie lacinia id eu nisl. Quisque vel sollicitudin mi, quis pretium enim. Aenean tempor est vitae facilisis dictum. Ut non turpis vel leo porta sodales eget in mauris. Praesent vehicula in odio at fringilla.<br /><br /><br />

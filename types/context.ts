@@ -51,7 +51,6 @@ export interface ContextData {
 }
 
 export interface ContextProps {
-  changes: PartialGuild[]
   context: ContextData
   setContext(context: ContextData): void
   setContext(setter: (old: ContextData) => ContextData): void

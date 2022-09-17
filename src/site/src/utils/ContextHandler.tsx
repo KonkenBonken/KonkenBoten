@@ -11,10 +11,9 @@ import { Header } from '../components/Header.tsx';
 import { BackgroundImage } from '../components/BackgroundImage.tsx';
 
 export default function ContextHandler() {
-  const [context, setContext] = useState<ContextData>(contextData),
-    [changes, setChanges] = useState<PartialGuild[]>([]);
+  const [context, setContext] = useState<ContextData>(contextData);
 
-  contextResolver([setContext, setChanges]);
+  contextResolver([setContext]);
 
   if (context.user)
     connect(context.user.id)
@@ -25,7 +24,7 @@ export default function ContextHandler() {
     <BrowserRouter>
       <BackgroundImage />
       <Header context={context} />
-      <RouteHandler {...{ context, setContext, changes }} />
+      <RouteHandler {...{ context, setContext }} />
     </BrowserRouter >
   );
 }

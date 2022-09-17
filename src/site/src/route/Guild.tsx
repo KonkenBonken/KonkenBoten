@@ -5,6 +5,8 @@ import useLocalState from "@phntms/use-local-state";
 import { socket } from '../utils/socket.ts';
 import { ContextProps } from '../utils/types';
 import { titleCase as TC } from '../utils/utils.ts';
+import { saveChanges } from '../utils/socket.ts';
+import { useChanges } from '../hooks/Changes.ts';
 
 import { Navigation } from '../components/Navigation.tsx';
 import { Loading, lazy } from '../components/Loading.tsx';
@@ -14,9 +16,10 @@ const ChangesPopup = lazy(() => import('../components/ChangesPopup.tsx'), true);
 
 import '../styles/routes/guild.scss';
 
-export default function Guild({ context, context: { guild, user }, setContext, changes }: ContextProps) {
-  const { guildId, section, child } = useParams();
-  const [, setLastVisited] = useLocalState<string[]>('last-visited-guild', []);
+export default function Guild({ context, context: { guild, user }, setContext }: ContextProps) {
+  const { guildId, section, child } = useParams(),
+    [, setLastVisited] = useLocalState<string[]>('last-visited-guild', []),
+    [changes] = useChanges();
 
   useEffect(() => {
     setLastVisited(lastVisited => [...new Set([guildId, ...lastVisited])]);

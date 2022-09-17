@@ -1,16 +1,13 @@
 import { useState } from 'react';
 
-import { ContextProps } from '../utils/types';
 import { saveChanges } from '../utils/socket.ts';
+import { useChanges } from '../hooks/Changes.ts';
 import { useForceRerender } from '../hooks/ForceRerender.ts';
 
-let forceRerender: () => void;
-window.addEventListener('rerenderChanges', () => forceRerender && forceRerender());
+export default function ChangesPopup() {
+  const [loading, setLoading] = useState(false),
+    [changes, addChange] = useChanges(useForceRerender());
 
-export default function ChangesPopup({ changes }: ContextProps) {
-  const [loading, setLoading] = useState(false);
-
-  forceRerender = useForceRerender();
 
   function onClick() {
     setLoading(true);
