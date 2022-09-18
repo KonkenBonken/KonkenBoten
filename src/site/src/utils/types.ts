@@ -1,4 +1,5 @@
 export * from '../../../../types/context';
+export * from '../../../../types/guild';
 
 export interface SelectOptions {
   options: {

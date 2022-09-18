@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PartialGuild } from '../../../../types/guild';
+import { PartialGuild } from '../utils/types';
 
 export const globalChanges: PartialGuild[] = [];
 
