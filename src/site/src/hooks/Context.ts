@@ -3,10 +3,10 @@ import { ContextData } from '../utils/types';
 
 export let globalContext: ContextData = contextData;
 
-const setStates = new Set(),
-  forceRerenders = new Set();
+const setStates = new Set<ContextData | ((prev: ContextData) => ContextData)>(),
+  forceRerenders = new Set<() => void>();
 
-export function useContext(forceRerender) {
+export function useContext(forceRerender: () => void) {
   const [context, setState] = useState<ContextData>(globalContext);
 
   setStates.add(setState);
@@ -26,6 +26,5 @@ export function useContext(forceRerender) {
       forceRerender();
   }
 
-  return [context, setContext];
+  return [context, setContext] as const;
 }
-

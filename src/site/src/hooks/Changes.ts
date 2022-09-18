@@ -3,10 +3,10 @@ import { PartialGuild } from '../../../../types/guild';
 
 export const globalChanges: PartialGuild[] = [];
 
-const setStates = new Set(),
-  forceRerenders = new Set();
+const setStates = new Set<PartialGuild[] | ((prev: PartialGuild[]) => PartialGuild[])>(),
+  forceRerenders = new Set<() => void>();
 
-export function useChanges(forceRerender) {
+export function useChanges(forceRerender: () => void) {
   const [changes, setChanges] = useState<PartialGuild[]>(globalChanges);
 
   setStates.add(setChanges);
@@ -28,7 +28,7 @@ export function useChanges(forceRerender) {
       forceRerender();
   }
 
-  return [changes, addChange, clearChanges];
+  return [changes, addChange, clearChanges] as const;
 }
 
 export function clearChanges() {
