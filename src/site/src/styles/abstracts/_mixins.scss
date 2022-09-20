@@ -92,10 +92,10 @@
 
     &-thumb {
       border-radius: $thumb-width / 2;
-      background-image: thumb-gradient(.2);
+      background-image: thumb-gradient(.2, $thumb-width);
 
       &:hover {
-        background-image: thumb-gradient(.8);
+        background-image: thumb-gradient(.8, $thumb-width);
       }
     }
   }
