@@ -106,11 +106,11 @@
   }
 }
 @mixin section-shadow {
-  box-shadow: .3ch .3em 2em $off-black;
+  box-shadow: -2ch 1em 2em rgba($off-black, .7);
   transition: box-shadow ease-out .5s;
 
   &:focus-within,
   &:hover {
-    box-shadow: .7ch .7em 4em $off-black;
+    box-shadow: -2.5ch 1em 2em rgba($off-black, .85);
   }
 }
