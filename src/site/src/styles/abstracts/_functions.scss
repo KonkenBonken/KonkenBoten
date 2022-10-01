@@ -1,10 +1,13 @@
 @use 'constants.scss' as *;
+
 @function clr($weight, $opacity: 1) {
-  @return hsl(hue($theme) + 190 - $weight * 2 , $weight * -.8% + 30%, $weight * 3% + 10%, $opacity);
+    @return hsl(hue($theme) + 190 - $weight * 2, $weight * -0.8% + 30%, $weight * 3% + 10%, $opacity);
 }
+
 @function border($width: 1, $clr-weight: 15) {
-  @return clr($clr-weight) solid $outline-width * $width;
+    @return clr($clr-weight) solid $outline-width * $width;
 }
+
 @function thumb-gradient($opacity, $thumb-width) {
-  @return linear-gradient(to left, clr(10, $opacity) $thumb-width, transparent $thumb-width);
+    @return linear-gradient(to left, clr(10, $opacity) $thumb-width, transparent $thumb-width);
 }

@@ -3,25 +3,26 @@ $width: 80%;
 $height: 3em;
 
 #changes-popup {
-  @include glass(1, .8, .4rem);
-  position: absolute;
-  bottom: 1em;
-  left: (100% - $width) / 2;
-  z-index: 2;
-  padding: 1em 3ch;
-  width: $width;
-  height: $height;
-  border-radius: 1.4em;
-  box-shadow: -.2ch .4em 1em clr(.5);
-  animation: changes-popup-slide-in .5s ease-out;
+    @include glass(1, 0.8, 0.4rem);
+    position: absolute;
+    bottom: 1em;
+    left: (100% - $width) / 2;
+    z-index: 2;
+    padding: 1em 3ch;
+    width: $width;
+    height: $height;
+    border-radius: 1.4em;
+    box-shadow: -0.2ch 0.4em 1em clr(0.5);
+    animation: changes-popup-slide-in 0.5s ease-out;
 
-  > button {
-    bottom: $input-height / 2;
-    float: right;
-  }
+    > button {
+        bottom: $input-height / 2;
+        float: right;
+    }
 }
+
 @keyframes changes-popup-slide-in {
-  from {
-    bottom: -$height;
-  }
+    from {
+        bottom: -$height;
+    }
 }

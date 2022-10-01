@@ -5,21 +5,22 @@
 #root,
 :root,
 body {
-  overflow: hidden;
-  width: 100vw;
-  height: 100vh;
-  color: $off-white;
-  font-size: 16px;
-  font-family: sans-serif;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    color: $off-white;
+    font-size: 16px;
+    font-family: sans-serif;
 }
 
 #root {
-  @include mobile {
-    grid-template-columns: 0 1fr;
-  }
-  display: grid;
-  background: linear-gradient(220deg, clr(6, .9), clr(5) 80%);
-  grid-template-areas: 'header header' 'nav main';
-  grid-template-rows: $header-size 1fr;
-  grid-template-columns: $nav-size 1fr;
+    @include mobile {
+        grid-template-columns: 0 1fr;
+    }
+
+    display: grid;
+    background: linear-gradient(220deg, clr(6, 0.9), clr(5) 80%);
+    grid-template-areas: 'header header''nav main';
+    grid-template-rows: $header-size 1fr;
+    grid-template-columns: $nav-size 1fr;
 }

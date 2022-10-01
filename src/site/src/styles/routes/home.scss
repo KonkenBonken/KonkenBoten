@@ -3,17 +3,18 @@
 $ani-dur: 1.2s;
 
 a#select-server {
-  @include base-button;
-  margin: auto;
-  width: 3.28rem * 3;
-  height: $input-height * 2;
-  background-color: $theme;
-  font-size: 1.5rem;
-  animation: load-button ($ani-dur / 2) ease-in-out $ani-dur backwards;
-  grid-area: $fill-grid;
+    @include base-button;
+    margin: auto;
+    width: 3.28rem * 3;
+    height: $input-height * 2;
+    background-color: $theme;
+    font-size: 1.5rem;
+    animation: load-button ($ani-dur / 2) ease-in-out $ani-dur backwards;
+    grid-area: $fill-grid;
 }
+
 @keyframes load-button {
-  from {
-    opacity: 0;
-  }
+    from {
+        opacity: 0;
+    }
 }

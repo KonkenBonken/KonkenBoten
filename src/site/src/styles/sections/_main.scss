@@ -2,38 +2,38 @@
 @use '../components/guild.scss';
 
 main {
-  @include main-scrollbar;
-  position: relative;
-  overflow-y: scroll;
-  padding: 0 $main-side-padding 2rem;
-  grid-area: main;
+    @include main-scrollbar;
+    position: relative;
+    overflow-y: scroll;
+    padding: 0 $main-side-padding 2rem;
+    grid-area: main;
 
-  > h2 {
-    margin-top: 2rem;
-    margin-left: -1ch;
-  }
-
-  > h3 {
-    margin-top: 1rem;
-    margin-bottom: .5rem;
-  }
-
-  > section {
-    @include glass;
-    @include section-shadow;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 1ch;
-    border-radius: 1rem;
-    gap: 1rem;
-
-    > input {
-      display: block;
-      padding-left: 2ch;
-      width: 20ch;
-      height: 2em;
-      border-radius: .4em;
-      background-color: clr(2, .2);
+    > h2 {
+        margin-top: 2rem;
+        margin-left: -1ch;
     }
-  }
+
+    > h3 {
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    > section {
+        @include glass;
+        @include section-shadow;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 1ch;
+        border-radius: 1rem;
+        gap: 1rem;
+
+        > input {
+            display: block;
+            padding-left: 2ch;
+            width: 20ch;
+            height: 2em;
+            border-radius: 0.4em;
+            background-color: clr(2, 0.2);
+        }
+    }
 }

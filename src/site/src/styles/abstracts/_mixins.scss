@@ -1,116 +1,126 @@
 @use 'constants.scss' as *;
 @use 'functions.scss' as *;
+
 @mixin outline($width: 1, $clr-weight: 10) {
-  outline: border($width,$clr-weight);
-  outline-offset: -$outline-width * $width;
+    outline: border($width, $clr-weight);
+    outline-offset: -$outline-width * $width;
 }
-@mixin glass($clr-weight: 2, $opacity: .4, $blur: .3rem) {
-  background-color: clr($clr-weight, $opacity);
-  backdrop-filter:blur($blur);
+
+@mixin glass($clr-weight: 2, $opacity: 0.4, $blur: 0.3rem) {
+    background-color: clr($clr-weight, $opacity);
+    backdrop-filter: blur($blur);
 }
+
 @mixin avatar {
-  border-radius: 50%;
-  transition: border-radius ease-out .2s;
-  aspect-ratio: 1 / 1;
-
-  &:focus,
-  &:hover {
-    border-radius: 35%;
-  }
-}
-@mixin button-colors($clr1, $clr2, $clr3, $clr4, $clr5) {
-  @include glass($clr1);
-
-  &.active,
-  &:active,
-  &:focus-within,
-  &:hover {
-    @include glass($clr2);
-  }
-
-  &.active:active,
-  &.active:focus-within,
-  &.active:hover,
-  &:focus-within:active,
-  &:hover:active,
-  &:hover:focus-within {
-    @include glass($clr3);
-  }
-
-  &.active:active:focus-within,
-  &.active:active:hover,
-  &.active:focus-within:hover,
-  &:active:focus-within:hover {
-    @include glass($clr4);
-  }
-
-  &.active:active:focus-within:hover {
-    @include glass($clr5);
-  }
-}
-@mixin spinner {
-  @keyframes spinner {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  color: transparent;
-
-  &::after,
-  &::before {
-    position: absolute;
-    width: 1.5em;
-    height: 1.5em;
-    border: solid .25em transparent;
-    border-top-color: #fffc;
     border-radius: 50%;
-    content: '';
-    animation: spinner .7s cubic-bezier(.2, 0, .9, 1) infinite -.3s;
-  }
+    transition: border-radius ease-out 0.2s;
+    aspect-ratio: 1 / 1;
 
-  &::before {
-    border-right-color: #fffc;
-    animation-duration: 1.1s;
-    animation-delay: -.7s;
-  }
-}
-@mixin base-button {
-  position: relative;
-  display: grid;
-  padding: .125rem $input-side-padding;
-  width: 3.28rem;
-  height: $input-height;
-  border-radius: $input-border-radius;
-  font-size: 1rem;
-  cursor: pointer;
-  place-items: center;
-}
-@mixin main-scrollbar {
-  &::-webkit-scrollbar {
-    $thumb-width: 5px;
-    width: $main-side-padding;
-
-    &-thumb {
-      border-radius: $thumb-width / 2;
-      background-image: thumb-gradient(.2, $thumb-width);
-
-      &:hover {
-        background-image: thumb-gradient(.8, $thumb-width);
-      }
+    &:focus,
+    &:hover {
+        border-radius: 35%;
     }
-  }
 }
-@mixin mobile {
-  @media (max-aspect-ratio: 3 / 5) {
-    @content;
-  }
-}
-@mixin section-shadow {
-  box-shadow: -2ch 1em 2em rgba($off-black, .7);
-  transition: box-shadow ease-out .5s;
 
-  &:focus-within,
-  &:hover {
-    box-shadow: -2.5ch 1em 2em rgba($off-black, .85);
-  }
+@mixin button-colors($clr1, $clr2, $clr3, $clr4, $clr5) {
+    @include glass($clr1); //TODO change to :is
+
+    &.active,
+    &:active,
+    &:focus-within,
+    &:hover {
+        @include glass($clr2);
+    }
+
+    &.active:active,
+    &.active:focus-within,
+    &.active:hover,
+    &:focus-within:active,
+    &:hover:active,
+    &:hover:focus-within {
+        @include glass($clr3);
+    }
+
+    &.active:active:focus-within,
+    &.active:active:hover,
+    &.active:focus-within:hover,
+    &:active:focus-within:hover {
+        @include glass($clr4);
+    }
+
+    &.active:active:focus-within:hover {
+        @include glass($clr5);
+    }
+}
+
+@mixin spinner {
+    @keyframes spinner {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    color: transparent;
+
+    &::after,
+    &::before {
+        position: absolute;
+        width: 1.5em;
+        height: 1.5em;
+        border: solid 0.25em transparent;
+        border-top-color: #fffc;
+        border-radius: 50%;
+        content: '';
+        animation: spinner 0.7s cubic-bezier(0.2, 0, 0.9, 1) infinite -0.3s;
+    }
+
+    &::before {
+        border-right-color: #fffc;
+        animation-duration: 1.1s;
+        animation-delay: -0.7s;
+    }
+}
+
+@mixin base-button {
+    position: relative;
+    display: grid;
+    padding: 0.125rem $input-side-padding;
+    width: 3.28rem;
+    height: $input-height;
+    border-radius: $input-border-radius;
+    font-size: 1rem;
+    cursor: pointer;
+    place-items: center;
+}
+
+@mixin main-scrollbar($thumb-width: $thumb-width) {
+    &::-webkit-scrollbar {
+        $thumb-width: 5px;
+        width: $main-side-padding;
+
+        &-thumb {
+            border-radius: $thumb-width / 2;
+            background-image: thumb-gradient(0.2, $thumb-width);
+
+            &:hover {
+                background-image: thumb-gradient(0.8, $thumb-width);
+            }
+        }
+    }
+}
+
+@mixin mobile {
+    @media (max-aspect-ratio: 3 / 5) {
+        @content;
+    }
+}
+
+@mixin section-shadow {
+    box-shadow: -2ch 1em 2em rgba($off-black, 0.7);
+    transition: box-shadow ease-out 0.5s;
+
+    &:focus-within,
+    &:hover {
+        box-shadow: -2.5ch 1em 2em rgba($off-black, 0.85);
+    }
 }

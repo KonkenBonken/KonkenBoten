@@ -1,29 +1,29 @@
 @use '../abstracts' as *;
 
 .toggle {
-  @include base-button;
-  background-color: $gray;
-  transition: background-color .4s ease-out;
+    @include base-button;
+    background-color: $gray;
+    transition: background-color 0.4s ease-out;
 
-  > input {
-    display: none;
-  }
-
-  > div {
-    position: absolute;
-    right: 2.5rem - $input-height + $input-side-padding * 6;
-    width: $input-height;
-    height: $input-height;
-    border-radius: $input-border-radius * 2;
-    background-color: $off-white;
-    transition: right .4s ease-out;
-  }
-
-  &.checked {
-    background-color: $theme;
+    > input {
+        display: none;
+    }
 
     > div {
-      right: $input-side-padding;
+        position: absolute;
+        right: 2.5rem - $input-height + $input-side-padding * 6;
+        width: $input-height;
+        height: $input-height;
+        border-radius: $input-border-radius * 2;
+        background-color: $off-white;
+        transition: right 0.4s ease-out;
     }
-  }
+
+    &.checked {
+        background-color: $theme;
+
+        > div {
+            right: $input-side-padding;
+        }
+    }
 }

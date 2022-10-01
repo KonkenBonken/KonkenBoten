@@ -1,11 +1,11 @@
 @use '../abstracts' as *;
 
 button {
-  @include base-button;
-  background-color: $theme;
-  all: unset;
+    @include base-button;
+    background-color: $theme;
+    all: unset;
 
-  &.loading {
-    @include spinner;
-  }
+    &.loading {
+        @include spinner;
+    }
 }
