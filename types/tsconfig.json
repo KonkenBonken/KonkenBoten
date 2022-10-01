@@ -1,5 +1,7 @@
 {
-  "include": ["DataBase.ts"],
+  "include": [
+    "DataBase.ts"
+  ],
   "compilerOptions": {
     "outDir": "../build",
     "strict": true,

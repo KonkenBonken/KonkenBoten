@@ -2,8 +2,8 @@ import fs from 'fs';
 import { Snowflake } from './Utils';
 
 import { Guild } from './guild';
-import { Temp } from './temp';
 import { LoggedInUser } from './loggedInUser';
+import { Temp } from './temp';
 
 interface DataBaseData {
   guilds: Record<Snowflake, Guild>;

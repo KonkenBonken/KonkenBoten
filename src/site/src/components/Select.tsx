@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { NavLink } from "react-router-dom";
-import { ContextData, SelectOptions } from '../utils/types';
+import { SelectOptions } from '../utils/types';
 
-import { DiscordImage, GuildPlaceholder } from './DiscordImage.tsx';
 import searchIcon from '../assets/search.svg';
+import { DiscordImage, GuildPlaceholder } from './DiscordImage.tsx';
 
 let normalizeString = (label: string) => label;
 import('any-ascii').then(pkg => normalizeString = pkg.default)

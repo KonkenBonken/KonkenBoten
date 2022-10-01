@@ -1,4 +1,4 @@
-import { useState, useMemo, CSSProperties } from 'react';
+import { CSSProperties, useMemo, useState } from 'react';
 
 let sizes = [
   [document.body.clientWidth, document.body.clientHeight]

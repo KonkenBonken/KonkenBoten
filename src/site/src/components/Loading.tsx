@@ -1,4 +1,4 @@
-import { Suspense, lazy as ReactLazy } from 'react';
+import { lazy as ReactLazy, Suspense } from 'react';
 import { ReactComponent as LogoClip } from "../assets/logo-clip.svg";
 
 const letters = ['a', 'b', 'c', 'd'] as const;

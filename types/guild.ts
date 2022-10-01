@@ -1,9 +1,9 @@
-import { Snowflake, DeepPartial, DeepRequired } from './Utils';
+import { DeepPartial, DeepRequired, Snowflake } from './Utils';
 
+import { ModerationSettings } from './ModerationSettings';
+import { SuggestionSettings } from './SuggestionSettings';
 import { TextCommandRule } from './TextCommandRule';
 import { TicketSettings } from './TicketSettings';
-import { SuggestionSettings } from './SuggestionSettings';
-import { ModerationSettings } from './ModerationSettings';
 
 interface VoiceCommandRule {
   channel: Snowflake;

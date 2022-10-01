@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
 import useLocalState from "@phntms/use-local-state";
+import { NavLink } from "react-router-dom";
 
 import { DiscordImage, GuildPlaceholder } from '../components/DiscordImage.tsx';
 import { useContext } from '../hooks/Context.ts';

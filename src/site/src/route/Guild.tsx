@@ -1,14 +1,14 @@
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
 import useLocalState from "@phntms/use-local-state";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
+import { useChanges } from '../hooks/Changes.ts';
+import { useContext } from '../hooks/Context.ts';
 import { socket } from '../utils/socket.ts';
 import { titleCase as TC } from '../utils/utils.ts';
-import { useContext } from '../hooks/Context.ts';
-import { useChanges } from '../hooks/Changes.ts';
 
+import { lazy, Loading } from '../components/Loading.tsx';
 import { Navigation } from '../components/Navigation.tsx';
-import { Loading, lazy } from '../components/Loading.tsx';
 import sections from '../sections/sections.ts';
 
 const ChangesPopup = lazy(() => import('../components/ChangesPopup.tsx'), true);

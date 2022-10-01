@@ -24,23 +24,23 @@ console.timeEnd('Packages');
 console.time('Consts');
 
 const intents = new Discord.Intents( // https://discord.com/developers/docs/topics/gateway#list-of-intents
-		(1 << 0) + //GUILDS
-		(1 << 1) + //GUILD_MEMBERS
-		(1 << 2) + //GUILD_BANS
-		(1 << 3) + //GUILD_EMOJIS_AND_STICKERS
-		// (1 << 4)+//GUILD_INTEGRATIONS
-		// (1 << 5)+//GUILD_WEBHOOKS
-		(1 << 6) + //GUILD_INVITES
-		(1 << 7) + //GUILD_VOICE_STATES
-		//	(1 << 8) + //GUILD_PRESENCES
-		(1 << 9) + //GUILD_MESSAGES
-		(1 << 10) + //GUILD_MESSAGE_REACTIONS
-		// (1 << 11)+//GUILD_MESSAGE_TYPING
-		(1 << 12) + //DIRECT_MESSAGES
-		// (1 << 13)+//DIRECT_MESSAGE_REACTIONS
-		// (1 << 14)+//DIRECT_MESSAGE_TYPING
-		(1 << 16) //GUILD_SCHEDULED_EVENTS
-	),
+	(1 << 0) + //GUILDS
+	(1 << 1) + //GUILD_MEMBERS
+	(1 << 2) + //GUILD_BANS
+	(1 << 3) + //GUILD_EMOJIS_AND_STICKERS
+	// (1 << 4)+//GUILD_INTEGRATIONS
+	// (1 << 5)+//GUILD_WEBHOOKS
+	(1 << 6) + //GUILD_INVITES
+	(1 << 7) + //GUILD_VOICE_STATES
+	//	(1 << 8) + //GUILD_PRESENCES
+	(1 << 9) + //GUILD_MESSAGES
+	(1 << 10) + //GUILD_MESSAGE_REACTIONS
+	// (1 << 11)+//GUILD_MESSAGE_TYPING
+	(1 << 12) + //DIRECT_MESSAGES
+	// (1 << 13)+//DIRECT_MESSAGE_REACTIONS
+	// (1 << 14)+//DIRECT_MESSAGE_TYPING
+	(1 << 16) //GUILD_SCHEDULED_EVENTS
+),
 	client = new Discord.Client({
 		intents,
 		waitGuildTimeout: 5e3
@@ -48,9 +48,9 @@ const intents = new Discord.Intents( // https://discord.com/developers/docs/topi
 console.time('Login');
 client.login(process.env.TOKEN);
 
-const topggApi = new(Import_topGgSdk.Api)('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMzgwMzU3NTI2NDAxODQzMyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4NjYzNDU4fQ.gqGp-wnvzaFk69HGOohqYPlJ2J4bEjL7RRAvWFCroMQ'),
+const topggApi = new (Import_topGgSdk.Api)('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMzgwMzU3NTI2NDAxODQzMyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4NjYzNDU4fQ.gqGp-wnvzaFk69HGOohqYPlJ2J4bEjL7RRAvWFCroMQ'),
 	TopggSend = () => topggApi.postStats({ serverCount: client.guilds.cache.size }),
-	Cache = new(Import_nodeCache)();
+	Cache = new (Import_nodeCache)();
 
 const NewGuildSubrcibers = [],
 	ClientID = '813803575264018433',
@@ -509,7 +509,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						let e = m.embeds[0];
 						content = e.title ? `**${e.title}**` : '';
 						content += e.description ? `\n**${e.description}**` : '';
-						content += e.description ? `\n${e.fields.map(f=>`**${f.name}**\n${f.value}`)}` : '';
+						content += e.description ? `\n${e.fields.map(f => `**${f.name}**\n${f.value}`)}` : '';
 						content += e.footer ? `\n\`${e.footer}\`` : '';
 						content = content.replace(/\n\n+/g, '\n').trim();
 					}
@@ -542,7 +542,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						let e = m.embeds[0];
 						content = e.title ? `**${e.title}**` : '';
 						content += e.description ? `\n**${e.description}**` : '';
-						content += e.description ? `\n${e.fields.map(f=>`**${f.name}**\n${f.value}`)}` : '';
+						content += e.description ? `\n${e.fields.map(f => `**${f.name}**\n${f.value}`)}` : '';
 						content += e.footer ? `\n\`${e.footer}\`` : '';
 						content = content.replace(/\n\n+/g, '\n').trim();
 					}
@@ -582,7 +582,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Messages Cleared',
 			decription: 'Emits whenever messages is deleted using the $clear command',
 			color: CssColors.red,
-			function: async ([amt, c, m] /*,audit*/ ) => {
+			function: async ([amt, c, m] /*,audit*/) => {
 				return {
 					author: `Messages cleared`,
 					fields: [
@@ -729,7 +729,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Support Claimed',
 			decription: 'Emits whenever a moderator claims a Support Channel',
 			color: CssColors.green,
-			function: ([channel, user] /*,audit*/ ) => ({
+			function: ([channel, user] /*,audit*/) => ({
 				author: 'Support channel claimed',
 				fields: [
 					['Executor:', user, true],
@@ -741,7 +741,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Support Claim Invite',
 			decription: 'Emits whenever a moderator adds another moderator to a claimed Support Channel',
 			color: CssColors.green,
-			function: ([channel, user, ids] /*,audit*/ ) => ({
+			function: ([channel, user, ids] /*,audit*/) => ({
 				author: 'Support channel claimed',
 				fields: [
 					['Executor:', user, true],
@@ -754,7 +754,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Support Unlaimed',
 			decription: 'Emits whenever a moderator unclaims a Support Channel',
 			color: CssColors.red,
-			function: ([channel, user] /*,audit*/ ) => ({
+			function: ([channel, user] /*,audit*/) => ({
 				author: 'Support channel unclaimed',
 				fields: [
 					['Executor:', user, true],
@@ -780,7 +780,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Member Connect',
 			decription: 'Emits whenever a member connects to a Voice Channel',
 			color: CssColors.green,
-			function: async ([newState] /*,audit*/ ) => {
+			function: async ([newState] /*,audit*/) => {
 				return {
 					author: `Member joined a voice channel`,
 					fields: [
@@ -834,7 +834,7 @@ const capitalType = s => capital(s.split('_').pop()),
 				if (audit) audit = AuditLog(newState.guild, 24, newState.member.id);
 
 				return {
-					author: `Member server ${newState.serverMute?'':'un'}muted`,
+					author: `Member server ${newState.serverMute ? '' : 'un'}muted`,
 					fields: [
 						['Member:', newState.member],
 						['Channel:', newState.channel]
@@ -853,7 +853,7 @@ const capitalType = s => capital(s.split('_').pop()),
 				if (audit) audit = AuditLog(newState.guild, 24, newState.member.id);
 
 				return {
-					author: `Member server ${newState.serverDeaf?'':'un'}deafened`,
+					author: `Member server ${newState.serverDeaf ? '' : 'un'}deafened`,
 					fields: [
 						['Member:', newState.member],
 						['Channel:', newState.channel]
@@ -1038,7 +1038,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Thread Members',
 			decription: 'Emits whenever a member is added to or removed from a thread',
 			color: CssColors.yellow,
-			function: async ([oldM, newM] /*,audit*/ ) => {
+			function: async ([oldM, newM] /*,audit*/) => {
 				newM.filter(([...args]) => console.log({ args }));
 				const t = newM.thred,
 					addedMembers = newM.filter(m => !oldM.has(m.id) && m.user).map(m => m.user.toString()).join(',\n'),
@@ -1059,7 +1059,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Event Created',
 			decription: 'Emits whenever a new event is scheduled',
 			color: CssColors.green,
-			function: async ([e] /*,audit*/ ) => {
+			function: async ([e] /*,audit*/) => {
 				return {
 					author: `Event created: ${e.name}`,
 					fields: [
@@ -1118,7 +1118,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Event Member Added',
 			decription: 'Emits whenever an member subscribes to an event',
 			color: CssColors.green,
-			function: async ([e, u] /*,audit*/ ) => {
+			function: async ([e, u] /*,audit*/) => {
 				return {
 					author: `Event member added: ${e.name}`,
 					fields: [
@@ -1135,7 +1135,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Event Member Removed',
 			decription: 'Emits whenever an member unsubscribes to an event',
 			color: CssColors.red,
-			function: async ([e, u] /*,audit*/ ) => {
+			function: async ([e, u] /*,audit*/) => {
 				return {
 					author: `Event member removed: ${e.name}`,
 					fields: [
@@ -1164,116 +1164,116 @@ const encodeT = n => Math.round((n || Date.now()) / 6e4 - 271e5), // Date ->  T
 	decryptString = s => nextChar(s, -3);
 
 const AllMessages = channel => new Promise(async resolver => {
-		try {
-			let messages = [],
-				temp;
-			do {
-				let last = messages.map(x => x).reverse()[0]?.id;
-				temp = [...(await channel.messages.fetch({ before: last, limit: 100 }).catch(e => null))?.values()];
-				if (temp) messages.push(...temp);
-			} while (temp?.length == 100);
-			resolver(messages)
-		} catch (e) {
-			console.error(e);
-			resolver([])
-		}
-	}),
+	try {
+		let messages = [],
+			temp;
+		do {
+			let last = messages.map(x => x).reverse()[0]?.id;
+			temp = [...(await channel.messages.fetch({ before: last, limit: 100 }).catch(e => null))?.values()];
+			if (temp) messages.push(...temp);
+		} while (temp?.length == 100);
+		resolver(messages)
+	} catch (e) {
+		console.error(e);
+		resolver([])
+	}
+}),
 
 	TicketSetup = async (guildID, oldChannelId) => {
-			let DataBaseGuild = DataBase.guilds[guildID],
-				Rule = DataBaseGuild.Tickets;
-			try {
-				var guild = await client.guilds.fetch(guildID),
-					oldChannel = oldChannelId && await client.channels.fetch(oldChannelId).catch(x => false),
-					channel = await client.channels.fetch(Rule.channel);
-			} catch { return }
-			let reactMessage = Rule.existingMessage ? await (oldChannel || channel).messages.fetch(Rule.existingMessage).catch(x => false) : false,
-				// reactFilter = e => ({ filter: (r, u) => !u.bot && [...e].includes(r.emoji.name) }),
-				reactMessageObj = {
-					embeds: [{
-						color: parseInt(Rule.color?.slice(1), 16) || 14396689,
-						author: { name: Rule.author || 'Support' },
-						description: Rule.content || 'By clicking 💬 you can open a private text channel with only you and the staff team,\nyou can do this to report an error or a person or if you just want to ask a question'
-					}],
-					components: [{
-						components: [{ emoji: Rule.emoji || '💬', customId: 'ticket-start', type: 2, style: 1 }],
-						type: 1
-					}]
-				};
-
-			if (reactMessage) {
-				if (Rule.channel == reactMessage.channel.id)
-					reactMessage.edit(reactMessageObj);
-				else {
-					reactMessage.delete();
-					reactMessage = await channel.send(reactMessageObj);
-				}
-			} else reactMessage = await channel.send(reactMessageObj);
-			DataBaseGuild.Tickets.existingMessage = reactMessage?.id;
-
-			WriteDataBase();
-			// "enabled": true,"channel": "798590264511037450","staff": "825378302579048448","author": "tesst au2","content": "By clicking 💬 tesst3","emoji": "","color": "#5dac79","existingMessage": "827248807896809542"
-		}, //TicketSetup
-
-		SuggestRespond = (guild, user, reason, index, responseType) => new Promise(async (resolver, reject) => {
-			//responseType == 'approve'|'deny'|'consider'
-			if (!(guild && user && reason && +index && responseType)) return reject('Unknown error');
-			let Rule = DataBase.guilds[guild.id].Suggestions,
-				suggestion = Rule.suggestions[index];
-			if (!suggestion) return reject('Suggestion not found');
-
-			let channel = await client.channels.fetch(Rule.channels.response).catch(() => false),
-				member = await guild.members.fetch(suggestion.user).catch(() => false);
-
-			if (!channel) return reject('Response Channel not found');
-			if (!member) return reject('Member not found');
-
-			reason = reason.substr(0, 1024);
-
-			let [msg, suggestChannel] = await Promise.all([channel.send({
-						embeds: [{
-							color: parseInt(Rule.embed.colors[responseType], 16),
-							author: {
-								iconURL: member.displayAvatarURL(),
-								name: member.user.tag
-							},
-							title: `${Rule.embed.suggestion} #${index} ${Rule.embed[responseType]}`,
-							description: suggestion.suggestion,
-							fields: [{
-								name: `${Rule.embed.reasonFrom} ${user.tag}:`,
-								value: reason,
-							}]
-						}]
-					}).catch(e => false),
-					client.channels.fetch(Rule.channels.suggest).catch(e => false)
-				]),
-				suggestionMsg = await suggestChannel.messages.fetch(suggestion.msg).catch(e => false);
-
-			if (!msg) return reject('Could not send message');
-			if (!suggestChannel) return reject('Suggestion Channel not found');
-
-			suggestChannel.messages.edit(suggestionMsg, {
+		let DataBaseGuild = DataBase.guilds[guildID],
+			Rule = DataBaseGuild.Tickets;
+		try {
+			var guild = await client.guilds.fetch(guildID),
+				oldChannel = oldChannelId && await client.channels.fetch(oldChannelId).catch(x => false),
+				channel = await client.channels.fetch(Rule.channel);
+		} catch { return }
+		let reactMessage = Rule.existingMessage ? await (oldChannel || channel).messages.fetch(Rule.existingMessage).catch(x => false) : false,
+			// reactFilter = e => ({ filter: (r, u) => !u.bot && [...e].includes(r.emoji.name) }),
+			reactMessageObj = {
 				embeds: [{
-					...suggestionMsg.embeds[0].toJSON(),
-					color: parseInt(Rule.embed.colors[responseType], 16)
+					color: parseInt(Rule.color?.slice(1), 16) || 14396689,
+					author: { name: Rule.author || 'Support' },
+					description: Rule.content || 'By clicking 💬 you can open a private text channel with only you and the staff team,\nyou can do this to report an error or a person or if you just want to ask a question'
+				}],
+				components: [{
+					components: [{ emoji: Rule.emoji || '💬', customId: 'ticket-start', type: 2, style: 1 }],
+					type: 1
 				}]
-			}).catch(() => false);
+			};
 
-			suggestion.answer = {
-				type: responseType,
-				user: user.id,
-				reason
+		if (reactMessage) {
+			if (Rule.channel == reactMessage.channel.id)
+				reactMessage.edit(reactMessageObj);
+			else {
+				reactMessage.delete();
+				reactMessage = await channel.send(reactMessageObj);
 			}
+		} else reactMessage = await channel.send(reactMessageObj);
+		DataBaseGuild.Tickets.existingMessage = reactMessage?.id;
 
-			resolver(msg);
-			WriteDataBase();
-		}),
-		MutedPermissions = async role => {
-			try {
-				if (role && role instanceof Discord.Role) {
-					let { guild } = role,
+		WriteDataBase();
+		// "enabled": true,"channel": "798590264511037450","staff": "825378302579048448","author": "tesst au2","content": "By clicking 💬 tesst3","emoji": "","color": "#5dac79","existingMessage": "827248807896809542"
+	}, //TicketSetup
+
+	SuggestRespond = (guild, user, reason, index, responseType) => new Promise(async (resolver, reject) => {
+		//responseType == 'approve'|'deny'|'consider'
+		if (!(guild && user && reason && +index && responseType)) return reject('Unknown error');
+		let Rule = DataBase.guilds[guild.id].Suggestions,
+			suggestion = Rule.suggestions[index];
+		if (!suggestion) return reject('Suggestion not found');
+
+		let channel = await client.channels.fetch(Rule.channels.response).catch(() => false),
+			member = await guild.members.fetch(suggestion.user).catch(() => false);
+
+		if (!channel) return reject('Response Channel not found');
+		if (!member) return reject('Member not found');
+
+		reason = reason.substr(0, 1024);
+
+		let [msg, suggestChannel] = await Promise.all([channel.send({
+			embeds: [{
+				color: parseInt(Rule.embed.colors[responseType], 16),
+				author: {
+					iconURL: member.displayAvatarURL(),
+					name: member.user.tag
+				},
+				title: `${Rule.embed.suggestion} #${index} ${Rule.embed[responseType]}`,
+				description: suggestion.suggestion,
+				fields: [{
+					name: `${Rule.embed.reasonFrom} ${user.tag}:`,
+					value: reason,
+				}]
+			}]
+		}).catch(e => false),
+		client.channels.fetch(Rule.channels.suggest).catch(e => false)
+		]),
+			suggestionMsg = await suggestChannel.messages.fetch(suggestion.msg).catch(e => false);
+
+		if (!msg) return reject('Could not send message');
+		if (!suggestChannel) return reject('Suggestion Channel not found');
+
+		suggestChannel.messages.edit(suggestionMsg, {
+			embeds: [{
+				...suggestionMsg.embeds[0].toJSON(),
+				color: parseInt(Rule.embed.colors[responseType], 16)
+			}]
+		}).catch(() => false);
+
+		suggestion.answer = {
+			type: responseType,
+			user: user.id,
+			reason
+		}
+
+		resolver(msg);
+		WriteDataBase();
+	}),
+	MutedPermissions = async role => {
+		try {
+			if (role && role instanceof Discord.Role) {
+				let { guild } = role,
 					DataBaseGuild = DataBase.guilds[guild.id],
-						channels = [...guild.channels.cache.values()]
+					channels = [...guild.channels.cache.values()]
 						.filter(c => //&&c.permissionsFor(role).bitfield    // ['GUILD_TEXT', 'GUILD_PRIVATE_THREAD', 'GUILD_PUBLIC_THREAD'].includes(c.type )
 							c.type != 'GUILD_CATEGORY' &&
 							c.permissionOverwrites &&
@@ -1281,25 +1281,25 @@ const AllMessages = channel => new Promise(async resolver => {
 							//  &&c.messages && !c.messages.fetch().then(messages => { console.log(messages); return messages.values().find(m => m.author.id == ClientID && m.components[0].components[0].customId == 'ticket-close') })
 							/*&& !DataBaseGuild.Tickets.ticketsCreated.includes(c.id)*/
 						);
-					// console.log(channels.map(c => c.name));
-					return Promise.all(channels.map(channel =>
-						channel.isText() ?
+				// console.log(channels.map(c => c.name));
+				return Promise.all(channels.map(channel =>
+					channel.isText() ?
 						channel.permissionOverwrites.create(role, { SEND_MESSAGES: false }, 'Muted Role Setup') :
 						channel.permissionOverwrites.create(role, { SPEAK: false }, 'Muted Role Setup')
-						// channel.permissionOverwrites.create(role, { CONNECT: false }, 'Muted Role Setup')
-					));
-				}
-			} catch (e) { console.log(e) }
-		};
+					// channel.permissionOverwrites.create(role, { CONNECT: false }, 'Muted Role Setup')
+				));
+			}
+		} catch (e) { console.log(e) }
+	};
 const ReactionFilters = {
-		/*undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/
-		0: () => true,
-		1: m => m.author.bot,
-		2: m => !m.author.bot,
-		3: m => !!m.embeds.length,
-		4: (m, id) => m.author.id == id,
-		5: (m, id) => m.member.roles.cache.has(id),
-	},
+	/*undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/
+	0: () => true,
+	1: m => m.author.bot,
+	2: m => !m.author.bot,
+	3: m => !!m.embeds.length,
+	4: (m, id) => m.author.id == id,
+	5: (m, id) => m.member.roles.cache.has(id),
+},
 	idleFunctionsQueue = [];
 const defaultReasons = {
 	words: 'Used a bad word',
@@ -1323,20 +1323,20 @@ const setGuildCustomCommands = (guild, lazy = false) => {
 	}
 
 	return guild.commands.set(TextCommandRules.map(rule => ({
-			name: rule.command.substring(0, 32).toLowerCase(),
-			description: (rule.embed ?
-					rule.content.ttl || rule.content.desc :
-					rule.content.substring(0, 100)) ||
-				'Custom Command',
-			options: [{
-				name: 'private',
-				type: 'BOOLEAN',
-				description: 'Only show output to the executor',
-				required: false
-			}],
-			defaultPermission: false,
-			dm_permission: false
-		})))
+		name: rule.command.substring(0, 32).toLowerCase(),
+		description: (rule.embed ?
+			rule.content.ttl || rule.content.desc :
+			rule.content.substring(0, 100)) ||
+			'Custom Command',
+		options: [{
+			name: 'private',
+			type: 'BOOLEAN',
+			description: 'Only show output to the executor',
+			required: false
+		}],
+		defaultPermission: false,
+		dm_permission: false
+	})))
 		.catch(() => console.log('No commands scope in', guild.name, guild.id))
 };
 
@@ -1385,7 +1385,7 @@ DataBase.loggedIn = DataBase.loggedIn || {};
 // DataBase.loggedIn = {};
 Object.entries(DataBase.loggedIn).forEach(([id, data]) => {
 	const [{ expires }, guilds] = data,
-	duration = expires - Date.now();
+		duration = expires - Date.now();
 	console.log(id, CleanDate(duration / 1000, 'm'));
 
 	if (duration <= 0) return delete DataBase.loggedIn[id]
@@ -1427,7 +1427,7 @@ client.on('ready', async () => {
 	console.log(`logged in as ${client.user.username}!`);
 
 	console.log(client.guilds.cache.filter(g => g.available).size, 'available of', client.guilds.cache.size, 'Guilds before fetch');
-	await client.guilds.fetch( /*{ force: true }*/ );
+	await client.guilds.fetch( /*{ force: true }*/);
 	console.log(client.guilds.cache.filter(g => g.available).size, 'available of', client.guilds.cache.size, 'Guilds after fetch');
 	setTimeout(() => {
 		// Promise.all(client.guilds.cache.map(g => g.available || client.guilds.fetch(g.id)))
@@ -1452,15 +1452,15 @@ client.on('ready', async () => {
 		let reason = `Temporarily ${temp.type} expired`,
 
 			fun = temp.type == 'mute' ?
-			() => guild.members.fetch(temp.m).then(m => m.roles.remove(temp.role, reason)) :
-			() => guild.members.unban(temp.m, reason),
+				() => guild.members.fetch(temp.m).then(m => m.roles.remove(temp.role, reason)) :
+				() => guild.members.unban(temp.m, reason),
 
 			prom = x => x
-			.then(() => delete DataBase.temp[i])
-			.catch(e =>
-				setTimeout(
-					() => fun().finally(() => delete DataBase.temp[i]),
-					108e5));
+				.then(() => delete DataBase.temp[i])
+				.catch(e =>
+					setTimeout(
+						() => fun().finally(() => delete DataBase.temp[i]),
+						108e5));
 
 		setTimeout(() => prom(fun()), duration)
 	});
@@ -1481,9 +1481,9 @@ client.on('ready', async () => {
 			if (!transcript) return delete transcripts[i];
 			let { closeAt, channelName, fromto } = transcript;
 			if (!(
-					Math.min(+decodeT(closeAt), +decodeT(fromto[0]) + 2592e6) > //30d
-					Date.now()
-				)) { // if !keep
+				Math.min(+decodeT(closeAt), +decodeT(fromto[0]) + 2592e6) > //30d
+				Date.now()
+			)) { // if !keep
 				delete transcripts[i];
 				DataBase.guilds[guildId].Tickets.transcripts = transcripts.filter(x => x);
 				console.log(`Deleted transcript: "${channelName}" in ${guildId}`);
@@ -1577,7 +1577,7 @@ client.on('messageCreate', async m => { //Not Prefixed
 		return;
 	}
 
-	if (!m.guild || !m.member /*|| m.author.bot*/ ) return;
+	if (!m.guild || !m.member /*|| m.author.bot*/) return;
 
 	const GuildData = DataBase.guilds[m.guild.id] || {};
 
@@ -1686,10 +1686,10 @@ client.on('messageCreate', async m => { //deprecated commands warning
 	const GuildData = DataBase.guilds[m.guild.id] ?? {};
 
 	if (!(
-			[...commands, ...Object.values(GuildData.commands || {})]
+		[...commands, ...Object.values(GuildData.commands || {})]
 			.some(({ com }) => m.content.startsWith((GuildData.prefix || '$') + com)) ||
-			m.content.startsWith('<@813803575264018433>')
-		)) return;
+		m.content.startsWith('<@813803575264018433>')
+	)) return;
 
 	m.reply({
 		embeds: [{
@@ -1750,7 +1750,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 			},
 			thumbnail: { url: rule.content.thmb },
 			image: { url: rule.content.img },
-			color: `#${rule.content.clr||'dbad11'}`
+			color: `#${rule.content.clr || 'dbad11'}`
 		}],
 		ephemeral: priv
 	};
@@ -1789,10 +1789,10 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 				let Rule = Rules[RulesIDs.indexOf(newState.channelId)];
 				if (Rule && !Rule.disabled) {
 					let options = {
-							type: 'GUILD_VOICE',
-							parent: newState.channel.parent,
-							permissionOverwrites: newState.channel.permissionOverwrites.cache
-						},
+						type: 'GUILD_VOICE',
+						parent: newState.channel.parent,
+						permissionOverwrites: newState.channel.permissionOverwrites.cache
+					},
 						index = [...guild.channels.cache.values()].filter(c => Created.includes(c.id) && RegExp(Rule.channelname.replace('{i}', '\\d'), 'g').test(c.name)).length + 1;
 
 					if (Rule.Userlimit) options.userLimit = Rule.Userlimit;
@@ -1834,7 +1834,7 @@ Object.entries(LogRules).forEach(([Event, Rule]) =>
 		if (a[0].author && a[0].author?.id == ClientID) return;
 		let guild = a.find(x => x instanceof Discord.Guild) || a.find(x => x.guild)?.guild || a.find(x => x.message)?.message?.channel?.guild || (a[0].first && a[0].first()?.guild);
 		if (!guild) {
-			if (Event == 'userUpdate')[...client.guilds.cache.values()].filter(g => g.members.cache.has(a[0].id))
+			if (Event == 'userUpdate') [...client.guilds.cache.values()].filter(g => g.members.cache.has(a[0].id))
 				.forEach(g => client.emit('userUpdate', ...a, g));
 			else if (Event != 'messageCreate') console.error('Error - no Guild found', [`Event: ${Event}`, ...a]);
 			return;
@@ -1876,17 +1876,17 @@ Object.entries(LogRules).forEach(([Event, Rule]) =>
 	}));
 
 client.on('interactionCreate', async interaction => {
-	const { customId, guild, channel, user, message /*,component*/ , member } = interaction;
-	if (!(customId && guild && channel && message /*&&component*/ )) return;
+	const { customId, guild, channel, user, message /*,component*/, member } = interaction;
+	if (!(customId && guild && channel && message /*&&component*/)) return;
 
 	if (customId.startsWith('ticket')) {
 		const DataBaseGuild = DataBase.guilds[guild.id],
 			Rule = DataBaseGuild?.Tickets;
 		if (!Rule) return;
 		const embedTemplate = {
-				color: parseInt(Rule.color?.slice(1), 16) || 14396689,
-				author: { name: Rule.author }
-			},
+			color: parseInt(Rule.color?.slice(1), 16) || 14396689,
+			author: { name: Rule.author }
+		},
 			staffRole = await guild.roles.fetch(Rule.staff).catch(e => null);
 		if (!staffRole) return console.log('Error 897', guild.name);
 
@@ -1937,7 +1937,7 @@ client.on('interactionCreate', async interaction => {
 		} // if ticket-start
 		else if (customId == 'ticket-close') {
 			if (interaction.channel?.lastMessageId == message.id) {
-				channel.delete(`Support Channel closed by: ${user.tag||'Unknown'}`);
+				channel.delete(`Support Channel closed by: ${user.tag || 'Unknown'}`);
 				return client.emit('ticketEnd', channel, user, false);
 			}
 
@@ -2024,7 +2024,7 @@ client.on('interactionCreate', async interaction => {
 				ephemeral: false,
 				embeds: [{
 					...embedTemplate,
-					description: `${user} have now added ${interaction.values.map(id=>`<@${id}>`).join(',')} to write in this channel`
+					description: `${user} have now added ${interaction.values.map(id => `<@${id}>`).join(',')} to write in this channel`
 				}]
 			})
 
@@ -2113,7 +2113,7 @@ client.on('interactionCreate', async interaction => {
 					fromto: [encodeT(channel.createdTimestamp), encodeT()]
 				})
 			};
-			channel.delete(`Support Channel closed by: ${user.tag||'Unknown'}`);
+			channel.delete(`Support Channel closed by: ${user.tag || 'Unknown'}`);
 
 			let url = customId.endsWith('Yes') && `https://bot.konkenbonken.se/Guild/${guild.id}/transcript/${id}`;
 			client.emit('ticketEnd', channel, user, customId.endsWith('Yes'), url);
@@ -2135,13 +2135,13 @@ client.on('interactionCreate', async interaction => {
 
 		let embed = {
 			footer: { text: `Requested by: ${user.tag} | ${user.id}` },
-			author: { name: `Permissons for ${object.displayName||object.name}` },
+			author: { name: `Permissons for ${object.displayName || object.name}` },
 			color: object.displayColor || object.color || 'dbad11',
 			fields: [
-					['Permissons:', columns[0]],
-					['⠀', columns[1]],
-					['⠀', columns[2]]
-				].filter(([, value]) => value)
+				['Permissons:', columns[0]],
+				['⠀', columns[1]],
+				['⠀', columns[2]]
+			].filter(([, value]) => value)
 				.map(([name, value]) => ({ name, value: value.toString(), inline: true }))
 
 		};

@@ -1,4 +1,4 @@
-import { Snowflake, EncodedT } from './Utils';
+import { EncodedT, Snowflake } from './Utils';
 
 export interface ModerationSettings {
   color?: string;
@@ -23,11 +23,11 @@ export interface ModerationSettings {
   }[]>;
   tellWho?: 1;
   coms: Record<
-  'warn' | 'kick' | 'ban' | 'tempban' | 'unban' | 'mute' | 'tempmute' | 'unmute',
-  {
-    txt: string;
+    'warn' | 'kick' | 'ban' | 'tempban' | 'unban' | 'mute' | 'tempmute' | 'unmute',
+    {
+      txt: string;
     /** @deprecated */ role: Snowflake;
-  }
+    }
   >;
   dmInvite?: 1;
   timeout?: 1;

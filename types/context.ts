@@ -1,5 +1,5 @@
+import { Guild } from './guild';
 import { LoggedInUserGuild } from './loggedInUser';
-import { Guild, PartialGuild } from './guild';
 import { Snowflake } from './Utils';
 
 export interface ContextData {

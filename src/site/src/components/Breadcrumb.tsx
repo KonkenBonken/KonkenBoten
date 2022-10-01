@@ -1,4 +1,4 @@
-import { useLocation, NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { useContext } from '../hooks/Context.ts';
 import { titleCase } from '../utils/utils.ts';
@@ -9,8 +9,8 @@ export default function Breadcrumb() {
     pathnames = pathname.split('/'),
     entries = pathnames
       .map(entry =>
-        guilds.find(guild => guild.id == entry) ?.name
-          ?? titleCase(entry) as string
+        guilds.find(guild => guild.id == entry)?.name
+        ?? titleCase(entry) as string
       )
       .filter(Boolean)
       .map((entry, i, paths) => (

@@ -1,6 +1,6 @@
-import { useContext } from '../hooks/Context.ts';
 import Toggle from '../components/Toggle.tsx';
 import { useChanges } from '../hooks/Changes.ts';
+import { useContext } from '../hooks/Context.ts';
 
 export default function SupportChannelSettings() {
   const [{ guild: { database: { Tickets } } }] = useContext(),

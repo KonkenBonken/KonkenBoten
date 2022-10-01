@@ -5,9 +5,9 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const intents = new Discord.Intents(
-		(1 << 0) + //GUILDS
-		(1 << 1) //  GUILD_MEMBERS
-	),
+	(1 << 0) + //GUILDS
+	(1 << 1) //  GUILD_MEMBERS
+),
 	client = new Discord.Client({
 		intents,
 		waitGuildTimeout: 3e3

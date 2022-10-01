@@ -1,11 +1,10 @@
-import { useLocation, NavLink } from "react-router-dom";
-import { useMediaQuery } from 'react-responsive';
+import { NavLink, useLocation } from "react-router-dom";
 
-import { DiscordImage } from './DiscordImage.tsx';
-import { ServerSelect } from './ServerSelect.tsx';
 import { useContext } from '../hooks/Context.ts';
-import { lazy } from './Loading.tsx';
 import { isMobile } from '../utils/utils.ts';
+import { DiscordImage } from './DiscordImage.tsx';
+import { lazy } from './Loading.tsx';
+import { ServerSelect } from './ServerSelect.tsx';
 
 const NavButton = lazy(() => import('../components/NavButton.tsx'));
 const Breadcrumb = lazy(() => import('./Breadcrumb.tsx'), true);

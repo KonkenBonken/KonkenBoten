@@ -1,14 +1,12 @@
-import { useState } from 'react';
 import { BrowserRouter } from "react-router-dom";
 
 import { useContext } from '../hooks/Context.ts';
-import { ContextData, PartialGuild } from '../utils/types';
 
-import { socket, connect } from './socket.ts';
+import { connect, socket } from './socket.ts';
 
-import { RouteHandler } from '../route/RouteHandler.tsx';
-import { Header } from '../components/Header.tsx';
 import { BackgroundImage } from '../components/BackgroundImage.tsx';
+import { Header } from '../components/Header.tsx';
+import { RouteHandler } from '../route/RouteHandler.tsx';
 
 export default function Router() {
   const [{ user }] = useContext();

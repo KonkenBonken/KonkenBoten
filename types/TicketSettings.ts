@@ -1,4 +1,4 @@
-import { Snowflake, EncodedT } from './Utils';
+import { EncodedT, Snowflake } from './Utils';
 
 declare enum TicketSaveMode {
   always = 'always',
