@@ -82,6 +82,7 @@ $select-height: $header-space;
     display: none;
   }
 }
+
 @mixin select-height($height) {
   > input {
     height: $height;

@@ -2,7 +2,7 @@
   "type": "module",
   "browserslist": {
     "production": [
-    "last 1 chrome version"
+      "last 1 chrome version"
     ],
     "development": [
       "last 2 versions",
