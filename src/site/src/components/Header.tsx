@@ -5,7 +5,7 @@ import { useContext } from '../hooks/Context.ts';
 import { isMobile } from '../utils/utils.ts';
 import { DiscordImage } from './DiscordImage.tsx';
 import { lazy } from './Loading.tsx';
-import { ServerSelect } from './ServerSelect.tsx';
+import { ServerSelect } from './ServerSelect.ts';
 
 const NavButton = lazy(() => import(/* webpackChunkName: "NavButton" */ '../components/NavButton.tsx'));
 const Breadcrumb = lazy(() => import(/* webpackChunkName: "Breadcrumb", webpackPreload: true */ './Breadcrumb.tsx'), true);
