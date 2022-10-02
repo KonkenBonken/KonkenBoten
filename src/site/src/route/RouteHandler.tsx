@@ -2,8 +2,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import { lazy } from '../components/Loading.tsx';
 
-const Home = lazy(() => import(/* webpackChunkName: "Home" */ './Home.tsx'));
-const Guild = lazy(() => import(/* webpackChunkName: "Guild" */ './Guild.tsx'));
+const Home = lazy(() => import(/* webpackChunkName: "Home", webpackPrefetch: true */ './Home.tsx'));
+const Guild = lazy(() => import(/* webpackChunkName: "Guild", webpackPrefetch: true */ './Guild.tsx'));
 const GuildSelector = lazy(() => import(/* webpackChunkName: "GuildSelector" */ './GuildSelector.tsx'));
 
 export function RouteHandler() {
