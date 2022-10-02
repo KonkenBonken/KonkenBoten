@@ -103,7 +103,6 @@
             display: none;
             position: relative;
             z-index: 3;
-
             padding-left: 3%;
             min-height: $height;
             cursor: pointer;
@@ -111,6 +110,7 @@
             grid-template-columns: $icon-size 1fr;
             gap: 10px;
             place-items: center left;
+            color: var(--color);
 
             > img {
                 @include avatar;

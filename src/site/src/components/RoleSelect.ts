@@ -7,7 +7,7 @@ export function RoleSelect({ onChoice }: { onChoice?(string): void }) {
   const [{ guild: { discord: { roles } } }] = useContext() as [Required<ContextData>];
 
   return Select({
-    options: roles.map(({ id, name }) => ({ id, label: name })),
+    options: roles.map(({ id, name, color }) => ({ id, label: name, color })),
     onChoice
   });
 }

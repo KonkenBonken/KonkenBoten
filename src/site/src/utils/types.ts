@@ -4,6 +4,7 @@ export interface SelectOptionsItem {
   id?: string
   label: string
   icon?: string
+  color?: string
 }
 export interface SelectOptionsItemWithId extends SelectOptionsItem {
   id: string;

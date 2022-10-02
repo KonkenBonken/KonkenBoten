@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, CSSProperties } from 'react';
 import { NavLink } from "react-router-dom";
 
 import { SelectOptions, SelectOptionsItem, SelectOptionsItemWithId } from '../utils/types';
@@ -21,7 +21,7 @@ export function Select({ options, onChoice, link }: SelectOptions) {
     [searchQuery, setSearchQuery] = useState(''),
     [active, setActive] = useState<string>();
 
-  function Option({ id, label, icon }: SelectOptionsItemWithId) {
+  function Option({ id, label, icon, color }: SelectOptionsItemWithId) {
     let Icon = <></>;
     if (displayIcons) {
       if (icon)
@@ -45,7 +45,11 @@ export function Select({ options, onChoice, link }: SelectOptions) {
         setActive(id);
       }
 
-      return <div id={id} className={active == id ? 'active' : ''} onClick={onClick} tabIndex={0}>
+      return <div id={id}
+        className={active == id ? 'active' : ''}
+        onClick={onClick} tabIndex={0}
+        style={{ '--color': color } as CSSProperties}
+      >
         {Icon}
         <span title={label}>{label}</span>
       </div>
