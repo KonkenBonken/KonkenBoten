@@ -93,9 +93,8 @@
     place-items: center;
 }
 
-@mixin main-scrollbar($thumb-width: $thumb-width) {
+@mixin main-scrollbar($thumb-width: 5px) {
     &::-webkit-scrollbar {
-        $thumb-width: 5px;
         width: $main-side-padding;
 
         &-thumb {
