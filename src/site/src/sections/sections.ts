@@ -1,6 +1,6 @@
 import { lazy } from '../components/Loading.tsx';
 
-const sections = [
+export default [
   {
     name: 'commands',
     children: {
@@ -34,25 +34,13 @@ const sections = [
   {
     name: 'support_channels',
     children: {
-      settings: 'SupportChannelSettings',
+      settings: lazy(() => import(
+        /* webpackChunkName: "SupportChannelSettings", webpackPrefetch: true */
+        './SupportChannelSettings.tsx')),
       transcripts: null,
     }
   }
 ] as {
   name: string,
-  children: Record<string, string | null>
-}[]
-
-export default sections.map(({ name, children }) => {
-  for (const key in children)
-    if (children[key])
-      children[key] = lazy(() => import(
-        /* webpackChunkName: "[request]", webpackPrefetch: true */
-        `./${children[key]}.tsx`
-      ));
-
-  return { name, children };
-}) as {
-  name: string,
-  children: Record<string, null | (() => Promise)>
+  children: Record<string, null | ((props?: {}) => JSX.Element)>
 }[];
