@@ -47,7 +47,7 @@ export default sections.map(({ name, children }) => {
   for (const key in children)
     if (children[key])
       children[key] = lazy(() => import(
-        /* webpackChunkName: "[request]" */
+        /* webpackChunkName: "[request]", webpackPrefetch: true */
         `./${children[key]}.tsx`
       ));
 

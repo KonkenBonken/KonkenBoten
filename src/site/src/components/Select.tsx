@@ -6,7 +6,7 @@ import searchIcon from '../assets/search.svg';
 import { DiscordImage, GuildPlaceholder } from './DiscordImage.tsx';
 
 let normalizeString = (label: string) => label;
-import(/* webpackChunkName: "AnyAscii" */ 'any-ascii').then(pkg => normalizeString = pkg.default)
+import(/* webpackChunkName: "AnyAscii", webpackPreload: true */ 'any-ascii').then(pkg => normalizeString = pkg.default)
 
 export function Select({ options, guildIcons = true, onChoice, link }: SelectOptions) {
   for (const option of options)

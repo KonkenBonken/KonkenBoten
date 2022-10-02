@@ -11,7 +11,7 @@ import { lazy, Loading } from '../components/Loading.tsx';
 import { Navigation } from '../components/Navigation.tsx';
 import sections from '../sections/sections.ts';
 
-const ChangesPopup = lazy(() => import(/* webpackChunkName: "ChangesPopup" */ '../components/ChangesPopup.tsx'), true);
+const ChangesPopup = lazy(() => import(/* webpackChunkName: "ChangesPopup", webpackPreload: true */ '../components/ChangesPopup.tsx'), true);
 
 import '../styles/routes/guild.scss';
 

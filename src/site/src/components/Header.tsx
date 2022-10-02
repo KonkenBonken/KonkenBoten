@@ -7,7 +7,7 @@ import { lazy } from './Loading.tsx';
 import { ServerSelect } from './ServerSelect.tsx';
 
 const NavButton = lazy(() => import(/* webpackChunkName: "NavButton" */ '../components/NavButton.tsx'));
-const Breadcrumb = lazy(() => import(/* webpackChunkName: "Breadcrumb" */ './Breadcrumb.tsx'), true);
+const Breadcrumb = lazy(() => import(/* webpackChunkName: "Breadcrumb", webpackPreload: true */ './Breadcrumb.tsx'), true);
 
 export function Header() {
   const { pathname } = useLocation(),
