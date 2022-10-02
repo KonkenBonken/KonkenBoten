@@ -34,7 +34,7 @@ export default [
   {
     name: 'support_channels',
     children: {
-      settings: lazy(() => import('./SupportChannelSettings.tsx')),
+      settings: lazy(() => import(/* webpackChunkName: "SupportChannelSettings" */ './SupportChannelSettings.tsx')),
       transcripts: null,
     }
   }
