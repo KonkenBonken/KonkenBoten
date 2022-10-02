@@ -26,7 +26,7 @@ export function Header() {
           !isMobile() && <DiscordImage src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`} srcSizes={[64]} className="avatar" />,
           <ServerSelect servers={user.guilds} />
         ] :
-        (<a href="/oauth" class="login">
+        (<a href="/oauth" className="login">
           <img src="/discord.svg" alt="Discord's Logo" />
           <p>Login</p>
         </a>)}
