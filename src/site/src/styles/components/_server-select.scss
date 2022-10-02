@@ -2,15 +2,8 @@
 @use './select.scss' as *;
 
 header > .select {
-  @include select-height($header-space);
-  position: relative;
-  max-width: 20em;
-  height: 100%;
-  background-color: clr(4);
-  grid-area: server-select;
-
-  &:not(:focus-within) > .active > :is(.placeholder, img) {
-    margin-top: $header-space*.025;
-    height: $header-space*.95;
-  }
+    @include select($header-space, 4);
+    max-width: 20em;
+    height: 100%;
+    grid-area: server-select;
 }

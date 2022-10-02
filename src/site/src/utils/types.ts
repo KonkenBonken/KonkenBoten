@@ -1,13 +1,15 @@
 export * from '../../../../types/context';
 export * from '../../../../types/guild';
-
+export interface SelectOptionsItem {
+  id?: string
+  label: string
+  icon?: string
+}
+export interface SelectOptionsItemWithId extends SelectOptionsItem {
+  id: string;
+}
 export interface SelectOptions {
-  options: {
-    id?: string
-    label: string
-    icon?: string
-  }[]
+  options: SelectOptionsItem[]
   onChoice?(id: string): void
   link?: string
-  guildIcons?: boolean
 }

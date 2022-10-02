@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
-import { SelectOptions } from '../utils/types';
+
+import { SelectOptions, SelectOptionsItem, SelectOptionsItemWithId } from '../utils/types';
 
 import searchIcon from '../assets/search.svg';
 import { DiscordImage, GuildPlaceholder } from './DiscordImage.tsx';
@@ -8,43 +9,61 @@ import { DiscordImage, GuildPlaceholder } from './DiscordImage.tsx';
 let normalizeString = (label: string) => label;
 import(/* webpackChunkName: "AnyAscii", webpackPreload: true */ 'any-ascii').then(pkg => normalizeString = pkg.default)
 
-export function Select({ options, guildIcons = true, onChoice, link }: SelectOptions) {
-  for (const option of options)
-    option.id ??= option.label;
+export function Select({ options, onChoice, link }: SelectOptions) {
+  function defaultId(options: SelectOptionsItem[]): asserts options is SelectOptionsItemWithId[] {
+    for (const option of options)
+      option.id ??= option.label;
+  }
+  defaultId(options);
 
   const
-    displayIcons = guildIcons && options.some(option => option.icon),
-    [searchQuery, setSearchQuery] = useState('');
+    displayIcons = options.some(option => option.icon),
+    [searchQuery, setSearchQuery] = useState(''),
+    [active, setActive] = useState<string>();
 
-  function Option({ id, children }: { id: string }) {
-    function onClick() {
-      onChoice && onChoice(id);
-      document.activeElement.blur()
+  function Option({ id, label, icon }: SelectOptionsItemWithId) {
+    let Icon = <></>;
+    if (displayIcons) {
+      if (icon)
+        Icon = <DiscordImage
+          src={`https://cdn.discordapp.com/icons/${id}/${icon}`}
+          srcSizes={[64]}
+        />
+      else
+        Icon = <GuildPlaceholder name={label} />
     }
 
-    if (link)
-      return (<NavLink to={link + id} onClick={onClick}>{children}</NavLink>)
-    else
-      return (<div id={id} onClick={onClick}>{children}</div>)
+    if (link) {
+      return <NavLink id={id} to={link + id}>
+        {Icon}
+        <span title={label}>{label}</span>
+      </NavLink>
+    } else {
+      function onClick() {
+        if (onChoice)
+          onChoice(id);
+        setActive(id);
+      }
+
+      return <div id={id} className={active == id ? 'active' : ''} onClick={onClick} tabIndex={0}>
+        {Icon}
+        <span title={label}>{label}</span>
+      </div>
+    }
   }
 
-  return (<div className="select">
+  return <div className="select">
     <input className="search" type="search"
       placeholder="Search"
       onFocus={({ target }) => target.value = ''}
       onChange={({ target }) => setSearchQuery(target.value)}
     />
     <img src={searchIcon} />
-    {options.filter(({ label, id }) => [label, id, normalizeString(label)].some(text => text.toLowerCase().includes(searchQuery.toLowerCase())))
-      .map(({ label, id, icon }) => (
-        <Option id={id} key={id}>
-          {displayIcons && (icon ?
-            <DiscordImage src={`https://cdn.discordapp.com/icons/${id}/${icon}`}
-              srcSizes={[64]} /> :
-            <GuildPlaceholder name={label} />
-          )}
-          <span title={label}>{label}</span>
-        </Option>
-      ))}
-  </div>)
+    <div className="options">{
+      options.filter(({ label, id }) => [label, id, normalizeString(label)]
+        .some(text => text.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
+        .map(opt => <Option key={opt.id} {...opt} />)
+    }</div>
+  </div>
 }
