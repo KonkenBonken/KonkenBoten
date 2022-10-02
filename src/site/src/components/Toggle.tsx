@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export default function Toggle({ toggled = false, onoff }: { onoff: [string, string] }) {
   const [checked, setChecked] = useState(toggled)

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export function DiscordImage({ src, srcSizes, className, animateOnHover }: { src: string, srcSizes?: number[], className?: string, animateOnHover?: boolean }) {
   const [hovered, setHovered] = (animateOnHover ?? src.includes('a_')) ? useState(false) : [false, () => false];

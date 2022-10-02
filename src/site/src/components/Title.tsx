@@ -1,3 +1,4 @@
+import React from 'react';
 import { B, K } from "./LogoSvg.tsx";
 
 export function Title() {
