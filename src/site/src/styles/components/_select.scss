@@ -68,13 +68,16 @@
             background: none;
 
             > .active {
+                $active-icon: $header-space * 0.9;
                 position: absolute;
                 display: grid;
+                grid-template-columns: 1fr;
 
                 > .placeholder,
                 > img {
-                    margin-top: $header-space * 0.025;
-                    height: $header-space * 0.95;
+                    margin-top: ($header-space - $active-icon)/2;
+                    height: $active-icon;
+                    width: $active-icon;
                 }
             }
         }
@@ -122,6 +125,7 @@
             > img {
                 width: $icon-size;
                 grid-area: icon;
+                top: ($height - $icon-size)/2;
             }
 
             > span {
