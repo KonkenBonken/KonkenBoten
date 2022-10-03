@@ -21,29 +21,29 @@ export interface ContextData {
       categories: {
         id: Snowflake
         name: string
-        position: number
+        position?: number
       }[]
       channels: {
         id: Snowflake
         name: string
-        position: number
-        type: string
+        position?: number
+        type?: string
         parent?: Snowflake
-        permissions: string
+        permissions?: string
       }[]
       members: {
         id: Snowflake
         name: string
         tag: string
         avatar?: string
-        color: string
+        color?: string
         permissions: string
       }[]
       roles: {
         id: Snowflake
         name: string
-        position: number
-        color: string
+        position?: number
+        color?: string
         permissions: string
       }[]
     }
