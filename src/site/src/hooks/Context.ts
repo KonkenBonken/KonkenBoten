@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import { ContextData } from '../utils/types';
 
-export let globalContext: ContextData = contextData;
+declare global {
+  interface Window {
+    contextData: ContextData
+  }
+}
+
+const { contextData } = window;
+export let globalContext = contextData;
 
 const setStates = new Set<ContextData | ((prev: ContextData) => ContextData)>(),
   forceRerenders = new Set<() => void>();
