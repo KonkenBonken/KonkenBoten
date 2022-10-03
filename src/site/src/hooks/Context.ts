@@ -13,7 +13,7 @@ export let globalContext = contextData;
 const setStates = new Set<ContextData | ((prev: ContextData) => ContextData)>(),
   forceRerenders = new Set<() => void>();
 
-export function useContext(forceRerender: () => void) {
+export function useContext(forceRerender?: () => void) {
   const [context, setState] = useState<ContextData>(globalContext);
 
   setStates.add(setState);
