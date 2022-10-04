@@ -3020,6 +3020,10 @@ io.on('connection', async socket => {
 					getAll: async ([page = 0, filterIndex = 0, filterId]) => {
 						if (!Moderation?.logs) return err('No logs found');
 
+						for (const log of Object.values(Moderation.logs).flat()) 
+							if (typeof log.r !== 'string' || log.r === 'Unknown reason')
+								log.r = undefined;
+
 						const filterFunction = [
 								[],
 								[filterId],
