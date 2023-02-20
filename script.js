@@ -1425,6 +1425,7 @@ const Page = {
 			// 	content: 'pong',
 			// 	content: { athr: { img: 'url', nm: '' }, ttl: '', desc: '', clr: 'ff00ff', thmb: 'url', img: 'url', ftr: { img: 'url', nm: '' } }, //if embed
 			// 	roles: ['9764897', '925646'],
+			//  rolebtns: [['9764897','txt'],['925646','Event']]
 			// 	// 	disabled: false,
 			// 	planned: [{ c: '934787687', d: 1625590757 }] //sec | Math.floor(Date.now()/6e4)
 			// }
@@ -3574,7 +3575,8 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 
 	const priv = !!interaction.options.getBoolean('private');
 
-	let message = rule.content;
+	let message;
+
 	if (rule.embed) message = {
 		embeds: [{
 			author: {
@@ -3590,9 +3592,20 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 			thumbnail: { url: rule.content.thmb },
 			image: { url: rule.content.img },
 			color: `#${rule.content.clr||'dbad11'}`
-		}],
-		ephemeral: priv
+		}]
 	};
+	else message = { content: rule.content };
+
+	message.ephemeral = priv;
+
+	if (rule.rolebtns)
+		message.components = [{
+			components: rule.rolebtns.map(([roleId, txt]) => ({
+				label: txt, customId: 'toggle-role-' + roleId,
+				type: 2, style: 2
+			})),
+			type: 1
+		}]
 
 	if (priv)
 		interaction.reply(message);
@@ -3988,6 +4001,19 @@ client.on('interactionCreate', async interaction => {
 		message.edit({
 			embeds: [message.embeds[0], embed],
 			components: []
+		});
+
+	} else if (customId.startsWith('toggle-role-')) {
+		const roleId = customId.substr(12),
+			hasRole = member.roles.cache.has(roleId);
+		if (hasRole)
+			await member.roles.remove(roleId)
+		else
+			await member.roles.add(roleId);
+
+		interaction.reply({
+			content: `Role <@&${roleId}> ${hasRole ? 'removed' : 'added'}`,
+			ephemeral: true
 		});
 
 	} else if (customId == 'enable-custom-commands') {

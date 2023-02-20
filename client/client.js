@@ -726,12 +726,30 @@ let DebugTest; {
 				colorDiv = newDiv('div', 'color'),
 				color = newDiv('input');
 
+			const rolebtnsDiv = newDiv('div', 'rolebtns').Append(h6('Role Buttons', 'Buttons for users to click, giving them said role')),
+				addRolebtn = newDiv('div', 'rolebtn', 'add');
+
 			colorDiv.append(color);
-			embed.append(authorImg, authorText, thumbnail, title, contentInput, image, footerImg, footerText, colorDiv);
+			embed.append(authorImg, authorText, thumbnail, title, contentInput, image, footerImg, footerText, colorDiv, rolebtnsDiv);
 			color.type = 'color';
 
 			authorText.placeholder = 'Author', title.placeholder = 'Title', contentInput.placeholder = 'Description', footerText.placeholder = 'Footer';
 			authorText.maxLength = 256, title.maxLength = 256, contentInput.maxLength = 4096, footerText.maxLength = 2048;
+
+
+			function Rolebtn([roleId = '', txt = '']) {
+				return newDiv('div', 'rolebtn').Append(
+					newDiv('input', 'text').Value(txt),
+					newDiv('input', 'roleSelect').Value(roleId).Attribute('list', 'datalistroles'),
+				)
+			}
+
+			if (res.rolebtns) rolebtnsDiv.append(
+				...res.rolebtns.map(Rolebtn)
+			)
+
+			rolebtnsDiv.append(addRolebtn)
+			addRolebtn.On(() => rolebtnsDiv.append(Rolebtn()));
 
 			if (res.embed && res.content?.athr) {
 				authorText.placeholder = (authorText.value = res.content.athr.nm || '') || authorText.placeholder;
@@ -828,8 +846,15 @@ let DebugTest; {
 			} else {
 				data = {
 					command: commandInput.value = commandInput.value.replace(/\s/g, '').substr(0, 30).toLowerCase(),
-					embed: embedToggle.checked || undefined
+					embed: embedToggle.checked || undefined,
+					rolebtns: rolebtnsDiv.querySelectorAll('.rolebtn:not(.add)').map(rolebtn => [
+						rolebtn.querySelector('.roleSelect').value,
+						rolebtn.querySelector('.text').value
+					]).filter(values => values.every(v => v))
 				};
+
+				if (data.rolebtns.length === 0) data.rolebtns = undefined;
+
 				if (embedToggle.checked)
 					data.content = {
 						athr: {
