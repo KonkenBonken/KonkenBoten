@@ -726,8 +726,8 @@ let DebugTest; {
 				colorDiv = newDiv('div', 'color'),
 				color = newDiv('input');
 
-			const rolebtnsDiv = newDiv('div', 'rolebtns').Append(h6('Role Buttons', 'Buttons for users to click, giving them said role')),
-				addRolebtn = newDiv('div', 'rolebtn', 'add');
+			const rolebtnsDiv = newDiv('div', 'rolebtns').Append(h6('Role Buttons', infoPopup('Buttons for users to click, giving them said role'))),
+				addRolebtn = newDiv('div', 'addrolebtn');
 
 			colorDiv.append(color);
 			embed.append(authorImg, authorText, thumbnail, title, contentInput, image, footerImg, footerText, colorDiv, rolebtnsDiv);
@@ -737,7 +737,7 @@ let DebugTest; {
 			authorText.maxLength = 256, title.maxLength = 256, contentInput.maxLength = 4096, footerText.maxLength = 2048;
 
 
-			function Rolebtn([roleId = '', txt = '']) {
+			function Rolebtn([roleId, txt] = ['', '']) {
 				return newDiv('div', 'rolebtn').Append(
 					newDiv('input', 'text').Value(txt),
 					newDiv('input', 'roleSelect').Value(roleId).Attribute('list', 'datalistroles'),
@@ -847,7 +847,7 @@ let DebugTest; {
 				data = {
 					command: commandInput.value = commandInput.value.replace(/\s/g, '').substr(0, 30).toLowerCase(),
 					embed: embedToggle.checked || undefined,
-					rolebtns: rolebtnsDiv.querySelectorAll('.rolebtn:not(.add)').map(rolebtn => [
+					rolebtns: rolebtnsDiv.querySelectorAll('.rolebtn').map(rolebtn => [
 						rolebtn.querySelector('.roleSelect').value,
 						rolebtn.querySelector('.text').value
 					]).filter(values => values.every(v => v))
