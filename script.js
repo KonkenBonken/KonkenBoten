@@ -2704,6 +2704,8 @@ io.on('connection', async socket => {
 							...data
 						}
 
+						if (Rules[index].rolebtns?.length === 0) Rules[index].rolebtns = undefined;
+
 						sendLogLoad('Custom Command set: ' + socket.GuildData.prefix + command)
 						fun(true);
 					},

@@ -855,8 +855,6 @@ let DebugTest; {
 					]).filter(values => values.every(v => v))
 				};
 
-				if (data.rolebtns.length === 0) data.rolebtns = undefined;
-
 				if (embedToggle.checked)
 					data.content = {
 						athr: {
