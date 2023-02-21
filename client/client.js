@@ -674,7 +674,7 @@ let DebugTest; {
 			set = newDiv('div', 'set'),
 			channelSelect = newDiv('select'),
 			userLimit = newDiv('input', 'userlimit'),
-			embed, authorText, authorImg, thumbnail, footerImg, image, title, footerText, colorDiv, color;
+			embed, authorText, authorImg, thumbnail, footerImg, image, title, footerText, colorDiv, color, rolebtnsDiv;
 
 		commandInput.placeholder = res.command || res.channelname || command || voice ? 'Channel name' : 'command';
 		commandInput.value = res.command || res.channelname || command || '';
@@ -724,10 +724,9 @@ let DebugTest; {
 				title = newDiv('input', 'title'), // description = newDiv('div', 'content'),
 				footerText = newDiv('input', 'footer'),
 				colorDiv = newDiv('div', 'color'),
-				color = newDiv('input');
-
-			const rolebtnsDiv = newDiv('div', 'rolebtns').Append(h6('Role Buttons', infoPopup('Buttons for users to click, giving them said role'))),
-				addRolebtn = newDiv('div', 'addrolebtn');
+				color = newDiv('input'),
+				rolebtnsDiv = newDiv('div', 'rolebtns').Append(h6('Role Buttons', infoPopup('Buttons for users to click, giving them said role')));
+			const addRolebtn = newDiv('div', 'addrolebtn');
 
 			colorDiv.append(color);
 			embed.append(authorImg, authorText, thumbnail, title, contentInput, image, footerImg, footerText, colorDiv, rolebtnsDiv);
@@ -739,8 +738,10 @@ let DebugTest; {
 
 			function Rolebtn([roleId, txt] = ['', '']) {
 				return newDiv('div', 'rolebtn').Append(
-					newDiv('input', 'text').Value(txt),
-					newDiv('input', 'roleSelect').Value(roleId).Attribute('list', 'datalistroles'),
+					h6('Text', infoPopup('The text that will be shown on the button')),
+					newDiv('input', 'text').Value(txt).Attribute('placeholder', 'Text'),
+					h6('Role', infoPopup('The role that will be toggled when clicked')),
+					newDiv('input', 'roleSelect').Value(roleId).Attribute('list', 'datalistroles').Attribute('placeholder', 'Role Id'),
 				)
 			}
 
