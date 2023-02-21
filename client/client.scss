@@ -685,6 +685,9 @@ editrule {
       left: 105%;
       width: 50%;
       top: 2.75rem;
+      overflow-y: auto;
+      overflow-x: visible;
+      max-height: 18vh;
 
       > h6 {
         font-size: 1rem;
@@ -714,9 +717,7 @@ editrule {
         }
       }
       
-      &:has(:nth-child(5)) {
-        overflow-y: scroll;
-      }
+      
 
       > .rolebtn {
         margin-bottom: 1vh;
