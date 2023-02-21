@@ -720,10 +720,11 @@ editrule {
       
 
       > .rolebtn {
-        margin-bottom: 1vh;
+        margin-bottom: .75vh;
+        margin-top:.75vh;
 
         > h6 {
-          font-size: .5rem;
+          font-size: .75rem;
         }
 
         > input {
