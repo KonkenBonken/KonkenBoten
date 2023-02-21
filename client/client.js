@@ -750,7 +750,7 @@ let DebugTest; {
 			)
 
 			rolebtnsDiv.append(addRolebtn)
-			addRolebtn.On(() => rolebtnsDiv.append(Rolebtn()));
+			addRolebtn.On(() => rolebtnsDiv.append(Rolebtn(), addRolebtn));
 
 			if (res.embed && res.content?.athr) {
 				authorText.placeholder = (authorText.value = res.content.athr.nm || '') || authorText.placeholder;
