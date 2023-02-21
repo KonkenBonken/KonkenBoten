@@ -713,6 +713,23 @@ editrule {
           top: -0.125em;
         }
       }
+      
+      &:has(:nth-child(5)) {
+        overflow-y: scroll;
+      }
+
+      > .rolebtn {
+        margin-bottom: 1vh;
+
+        > h6 {
+          font-size: .5rem;
+        }
+
+        > input {
+          height: 3vh;
+          margin-bottom: 1vh;
+        }
+      }
     }
 
     .urlInput {
