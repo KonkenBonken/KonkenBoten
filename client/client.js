@@ -725,7 +725,7 @@ let DebugTest; {
 				footerText = newDiv('input', 'footer'),
 				colorDiv = newDiv('div', 'color'),
 				color = newDiv('input'),
-				rolebtnsDiv = newDiv('div', 'rolebtns').Append(h6('Role Buttons', infoPopup('Buttons for users to click, giving them said role')));
+				rolebtnsDiv = newDiv('div', 'rolebtns').Append(h6('Role Buttons', infoPopup('Buttons for users to click, toggling said role')));
 			const addRolebtn = newDiv('div', 'addrolebtn');
 
 			colorDiv.append(color);
