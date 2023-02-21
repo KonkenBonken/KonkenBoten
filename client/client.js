@@ -157,6 +157,7 @@ let DebugTest; {
 		awaitLoad.then(() => document.head.append(...[
 			['datalisttext', datalistText],
 			['datalistroles', datalistRoles],
+			['datalistroles-underKB', Object.fromEntries(Object.entries(datalistRoles).slice(Object.values(datalistRoles).findIndex(role => role.name === "KonkenBoten") + 1))],
 			['datalistvoice', datalistVoice]
 		].map(([id, datalist]) => {
 			let element = newDiv('datalist');
@@ -674,7 +675,7 @@ let DebugTest; {
 			set = newDiv('div', 'set'),
 			channelSelect = newDiv('select'),
 			userLimit = newDiv('input', 'userlimit'),
-			embed, authorText, authorImg, thumbnail, footerImg, image, title, footerText, colorDiv, color;
+			embed, authorText, authorImg, thumbnail, footerImg, image, title, footerText, colorDiv, color, rolebtnsDiv;
 
 		commandInput.placeholder = res.command || res.channelname || command || voice ? 'Channel name' : 'command';
 		commandInput.value = res.command || res.channelname || command || '';
@@ -724,14 +725,33 @@ let DebugTest; {
 				title = newDiv('input', 'title'), // description = newDiv('div', 'content'),
 				footerText = newDiv('input', 'footer'),
 				colorDiv = newDiv('div', 'color'),
-				color = newDiv('input');
+				color = newDiv('input'),
+				rolebtnsDiv = newDiv('div', 'rolebtns').Append(h6('Role Buttons', infoPopup('Buttons for users to click, toggling said role')));
+			const addRolebtn = newDiv('div', 'addrolebtn');
 
 			colorDiv.append(color);
-			embed.append(authorImg, authorText, thumbnail, title, contentInput, image, footerImg, footerText, colorDiv);
+			embed.append(authorImg, authorText, thumbnail, title, contentInput, image, footerImg, footerText, colorDiv, rolebtnsDiv);
 			color.type = 'color';
 
 			authorText.placeholder = 'Author', title.placeholder = 'Title', contentInput.placeholder = 'Description', footerText.placeholder = 'Footer';
 			authorText.maxLength = 256, title.maxLength = 256, contentInput.maxLength = 4096, footerText.maxLength = 2048;
+
+
+			function Rolebtn([roleId, txt] = ['', '']) {
+				return newDiv('div', 'rolebtn').Append(
+					h6('Text', infoPopup('The text that will be shown on the button')),
+					newDiv('input', 'text').Value(txt).Attribute('placeholder', 'Text'),
+					h6('Role', infoPopup('The role that will be toggled when clicked')),
+					newDiv('input', 'roleSelect').Value(roleId).Attribute('list', 'datalistroles-underKB').Attribute('placeholder', 'Role Id'),
+				)
+			}
+
+			if (res.rolebtns) rolebtnsDiv.append(
+				...res.rolebtns.map(Rolebtn)
+			)
+
+			rolebtnsDiv.append(addRolebtn)
+			addRolebtn.On(() => rolebtnsDiv.append(Rolebtn(), addRolebtn));
 
 			if (res.embed && res.content?.athr) {
 				authorText.placeholder = (authorText.value = res.content.athr.nm || '') || authorText.placeholder;
@@ -828,8 +848,15 @@ let DebugTest; {
 			} else {
 				data = {
 					command: commandInput.value = commandInput.value.replace(/\s/g, '').substr(0, 30).toLowerCase(),
-					embed: embedToggle.checked || undefined
+					embed: embedToggle.checked || undefined,
+					rolebtns: [...rolebtnsDiv.querySelectorAll('.rolebtn')].map(rolebtn => [
+						rolebtn.querySelector('.roleSelect').value,
+						rolebtn.querySelector('.text').value
+					]).filter(values => values.every(v => v))
 				};
+
+				if (data.rolebtns.length === 0) data.rolebtns = undefined;
+
 				if (embedToggle.checked)
 					data.content = {
 						athr: {

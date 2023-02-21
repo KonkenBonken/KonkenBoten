@@ -680,6 +680,60 @@ editrule {
       }
     }
 
+    .rolebtns {
+      position: absolute;
+      left: 105%;
+      width: 100%;
+      top: 2.75rem;
+      overflow-y: auto;
+      overflow-x: visible;
+      max-height: 18vh;
+
+      > h6 {
+        font-size: 1rem;
+      }
+
+      > .addrolebtn {
+        padding: .1em 2ch;
+        width: 0;
+        position: relative;
+        background: $color4;
+        color: $color7;
+        border-radius: .2em;
+        height: 1.5em;
+        cursor: pointer;
+
+        &:hover {
+          background: mix($color4, $blue, 90%);
+        }
+
+        &::after {
+          content: '+';
+          font-size: 2em;
+          text-align: center;
+          position: absolute;
+          inset: 0;
+          top: -0.125em;
+        }
+      }
+      
+      
+
+      > .rolebtn {
+        margin-bottom: .75vh;
+        margin-top:.75vh;
+
+        > h6 {
+          font-size: .75rem;
+        }
+
+        > input {
+          height: 3vh;
+          margin-bottom: 1vh;
+        }
+      }
+    }
+
     .urlInput {
       font-size: 1rem;
       position: absolute;
