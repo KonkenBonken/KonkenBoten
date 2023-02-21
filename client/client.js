@@ -157,6 +157,7 @@ let DebugTest; {
 		awaitLoad.then(() => document.head.append(...[
 			['datalisttext', datalistText],
 			['datalistroles', datalistRoles],
+			['datalistroles-underKB', Object.fromEntries(Object.entries(datalistRoles).slice(Object.values(datalistRoles).findIndex(role => role.name === "KonkenBoten") + 1))],
 			['datalistvoice', datalistVoice]
 		].map(([id, datalist]) => {
 			let element = newDiv('datalist');
@@ -741,7 +742,7 @@ let DebugTest; {
 					h6('Text', infoPopup('The text that will be shown on the button')),
 					newDiv('input', 'text').Value(txt).Attribute('placeholder', 'Text'),
 					h6('Role', infoPopup('The role that will be toggled when clicked')),
-					newDiv('input', 'roleSelect').Value(roleId).Attribute('list', 'datalistroles').Attribute('placeholder', 'Role Id'),
+					newDiv('input', 'roleSelect').Value(roleId).Attribute('list', 'datalistroles-underKB').Attribute('placeholder', 'Role Id'),
 				)
 			}
 
