@@ -715,9 +715,11 @@ editrule {
           inset: 0;
           top: -0.125em;
         }
+
+        *:nth-child(27) {
+          display: none;
+        }
       }
-      
-      
 
       > .rolebtn {
         margin-bottom: .75vh;

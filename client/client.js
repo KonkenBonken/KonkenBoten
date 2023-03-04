@@ -852,7 +852,7 @@ let DebugTest; {
 					rolebtns: [...rolebtnsDiv.querySelectorAll('.rolebtn')].map(rolebtn => [
 						rolebtn.querySelector('.roleSelect').value,
 						rolebtn.querySelector('.text').value
-					]).filter(values => values.every(v => v))
+					]).filter(values => values.every(v => v)).slice(0, 25)
 				};
 
 				if (embedToggle.checked)

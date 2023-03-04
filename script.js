@@ -3600,14 +3600,20 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 
 	message.ephemeral = priv;
 
-	if (rule.rolebtns)
-		message.components = [{
-			components: rule.rolebtns.map(([roleId, txt]) => ({
+	if (rule.rolebtns) {
+		const rows = [],
+			copy = [...rule.rolebtns];
+
+		while (copy.length) rows.push(copy.splice(0, 5));
+
+		message.components = rows.map(btns => ({
+			components: btns.map(([roleId, txt]) => ({
 				label: txt, customId: 'toggle-role-' + roleId,
 				type: 2, style: 2
 			})),
 			type: 1
-		}]
+		}))
+	}
 
 	if (priv)
 		interaction.reply(message);
