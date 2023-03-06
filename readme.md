@@ -1,6 +1,24 @@
-# KonkenBoten
+<style>
+h1 { border-bottom: 0; margin-bottom: -.25em; }
+hr { margin-bottom: 2em; }
+ol { margin-left: -2ch; }
+</style>
 
-https://bot.konkenbonken.se/
+# **KonkenBoten**
+
+The Ultimate Discord Bot
+
+---
+
+## **Start using the bot**
+
+1. Go to [bot.konkenbonken.se](https://bot.konkenbonken.se/)
+1. [Login](https://bot.konkenbonken.se/oauth) with your Discord account
+1. Start customize KonkenBoten hundreds of options just as your server needs it
+
+---
+
+## **Features**
 
 ### Dynamic Voice Channels
 
