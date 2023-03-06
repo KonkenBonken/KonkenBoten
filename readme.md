@@ -1,12 +1,5 @@
-<style>
-h1 { border-bottom: 0; margin-bottom: -.25em; }
-hr { margin-bottom: 2em; }
-ol { margin-left: -2ch; }
-</style>
-
-# **KonkenBoten**
-
-The Ultimate Discord Bot
+## **KonkenBoten**
+###### The Ultimate Discord Bot
 
 ---
 
