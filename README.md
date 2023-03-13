@@ -7,7 +7,7 @@
 
 1. Go to [bot.konkenbonken.se](https://bot.konkenbonken.se/)
 1. [Login](https://bot.konkenbonken.se/oauth) with your Discord account
-1. Start customizeing **KonkenBoten**'s hundreds of options just as your server needs it
+1. Start customizing **KonkenBoten**'s hundreds of options just as your server needs it
 
 ---
 
