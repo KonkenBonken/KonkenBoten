@@ -2299,7 +2299,7 @@ const AllMessages = channel => new Promise(async resolver => {
 						);
 					// console.log(channels.map(c => c.name));
 					return Promise.all(channels.map(channel =>
-						'messages' in channel ?
+						channel.isText() ?
 						channel.permissionOverwrites.create(role, { SEND_MESSAGES: false }, 'Muted Role Setup') :
 						channel.permissionOverwrites.create(role, { SPEAK: false }, 'Muted Role Setup')
 						// channel.permissionOverwrites.create(role, { CONNECT: false }, 'Muted Role Setup')
