@@ -2446,7 +2446,7 @@ console.timeEnd('Consts');
 //end of Const
 let MaybeGuild, SupportServer, idleTimer;
 
-Object.defineProperty(Array.prototype, 'filterX', { get: () => this.filter(Boolean) });
+Object.defineProperty(Array.prototype, 'filterX', { get: function () { return this.filter(Boolean) } });
 Object.prototype.isEmpty = function () {
 	return !Object.keys(this).length || Object.values(this).every(x => x === undefined)
 }
