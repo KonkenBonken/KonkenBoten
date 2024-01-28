@@ -31,6 +31,12 @@ console.time('Consts');
 
 const fs = fsSync.promises;
 
+let mainCounter = 0,
+	reconnectCounter = 0;
+
+function main() {
+	console.time('Main');
+
 const intents = new Discord.Intents( // https://discord.com/developers/docs/topics/gateway#list-of-intents
 		(1 << 0) + //GUILDS
 		(1 << 1) + //GUILD_MEMBERS
@@ -4042,6 +4048,18 @@ client.on('interactionCreate', async interaction => {
 
 client.on("guildScheduledEventCreate", console.log)
 
+	client.on("shardReconnecting", () => {
+		if (++reconnectCounter >= 100) {
+			reconnectCounter = 0;
+
+			client.destroy();
+			server.close();
+			io.close();
+
+			setTimeout(() => main(), 2 * 60 * 1000);
+		}
+	})
+
 // Express - app
 
 app.use(cookieParser());
@@ -4474,6 +4492,11 @@ const sendError = async (message = '', err) => {
 		`${err}\n		${message}`
 	)
 };
+
+	console.log(`Main ran for the ${++mainCounter} time`);
+	console.timeEnd('Main');
+}
+
 process.on('uncaughtException', async err => {
 	console.log(
 		'\n\nUncaught error:\n',
