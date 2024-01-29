@@ -4493,10 +4493,6 @@ const sendError = async (message = '', err) => {
 	)
 };
 
-	console.log(`Main ran for the ${++mainCounter} time`);
-	console.timeEnd('Main');
-}
-
 process.on('uncaughtException', async err => {
 	console.log(
 		'\n\nUncaught error:\n',
@@ -4505,6 +4501,10 @@ process.on('uncaughtException', async err => {
 		'\n\n'
 	);
 	await sendError(err.stack.split('\n').find(s => s.includes('KonkenBoten/script.js')), err);
+});
 
-})
+	console.log(`Main ran for the ${++mainCounter} time`);
+	console.timeEnd('Main');
+}
+
 console.timeEnd('Load');
