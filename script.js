@@ -4507,4 +4507,5 @@ process.on('uncaughtException', async err => {
 	console.timeEnd('Main');
 }
 
+main();
 console.timeEnd('Load');
