@@ -4287,14 +4287,14 @@ app.get('/oauth', async (req, res) => {
 	if (req.query.code) {
 		let scope = ["identify", "guilds"];
 
-		let { access_token } = await oauth.tokenRequest({
+		let accessToken = await oauth.tokenRequest({
 			code: req.query.code,
 			scope,
 			grantType: "authorization_code",
-		}).catch(e => fail() && {});
+		}).then(res => res.access_token).catch(e => fail());
 
-		if (!access_token) return fail();
-		var [user, guilds] = await Promise.all([oauth.getUser(access_token), oauth.getUserGuilds(access_token)]);
+		if (!accessToken) return fail();
+		var [user, guilds] = await Promise.all([oauth.getUser(accessToken), oauth.getUserGuilds(accessToken)]);
 		if (!user || !guilds) return fail();
 
 		const LoginExpire = 864e5 * 4, //4d
