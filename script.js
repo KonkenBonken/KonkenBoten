@@ -31,30 +31,24 @@ console.time('Consts');
 
 const fs = fsSync.promises;
 
-let mainCounter = 0,
-	reconnectCounter = 0;
-
-function main() {
-	console.time('Main');
-
 const intents = new Discord.Intents( // https://discord.com/developers/docs/topics/gateway#list-of-intents
-		(1 << 0) + //GUILDS
-		(1 << 1) + //GUILD_MEMBERS
-		(1 << 2) + //GUILD_BANS
-		(1 << 3) + //GUILD_EMOJIS_AND_STICKERS
-		// (1 << 4)+//GUILD_INTEGRATIONS
-		// (1 << 5)+//GUILD_WEBHOOKS
-		(1 << 6) + //GUILD_INVITES
-		(1 << 7) + //GUILD_VOICE_STATES
-		//	(1 << 8) + //GUILD_PRESENCES
-		(1 << 9) + //GUILD_MESSAGES
-		(1 << 10) + //GUILD_MESSAGE_REACTIONS
-		// (1 << 11)+//GUILD_MESSAGE_TYPING
-		(1 << 12) + //DIRECT_MESSAGES
-		// (1 << 13)+//DIRECT_MESSAGE_REACTIONS
-		// (1 << 14)+//DIRECT_MESSAGE_TYPING
-		(1 << 16) //GUILD_SCHEDULED_EVENTS
-	),
+	(1 << 0) + //GUILDS
+	(1 << 1) + //GUILD_MEMBERS
+	(1 << 2) + //GUILD_BANS
+	(1 << 3) + //GUILD_EMOJIS_AND_STICKERS
+	// (1 << 4)+//GUILD_INTEGRATIONS
+	// (1 << 5)+//GUILD_WEBHOOKS
+	(1 << 6) + //GUILD_INVITES
+	(1 << 7) + //GUILD_VOICE_STATES
+	//	(1 << 8) + //GUILD_PRESENCES
+	(1 << 9) + //GUILD_MESSAGES
+	(1 << 10) + //GUILD_MESSAGE_REACTIONS
+	// (1 << 11)+//GUILD_MESSAGE_TYPING
+	(1 << 12) + //DIRECT_MESSAGES
+	// (1 << 13)+//DIRECT_MESSAGE_REACTIONS
+	// (1 << 14)+//DIRECT_MESSAGE_TYPING
+	(1 << 16) //GUILD_SCHEDULED_EVENTS
+),
 	client = new Discord.Client({
 		intents,
 		waitGuildTimeout: 5e3
@@ -72,9 +66,9 @@ const app = express(),
 	port = 80,
 	PageTitle = 'KonkenBoten - The Ultimate Discord Bot',
 	DataBase = JSON.parse(fsSync.readFileSync('DataBase.json', 'utf8').trim().replace(/Ã¤/g, 'ä').replace(/Ã¥/g, 'å').replace(/Ã¶/g, 'ö')),
-	topggApi = new(Import_topGgSdk.Api)('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMzgwMzU3NTI2NDAxODQzMyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4NjYzNDU4fQ.gqGp-wnvzaFk69HGOohqYPlJ2J4bEjL7RRAvWFCroMQ'),
+	topggApi = new (Import_topGgSdk.Api)('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxMzgwMzU3NTI2NDAxODQzMyIsImJvdCI6dHJ1ZSwiaWF0IjoxNjE4NjYzNDU4fQ.gqGp-wnvzaFk69HGOohqYPlJ2J4bEjL7RRAvWFCroMQ'),
 	TopggSend = () => topggApi.postStats({ serverCount: client.guilds.cache.size }),
-	Cache = new(Import_nodeCache)();
+	Cache = new (Import_nodeCache)();
 
 const NewGuildSubrcibers = [],
 	ClientID = '813803575264018433',
@@ -84,7 +78,7 @@ const NewGuildSubrcibers = [],
 		bot: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&permissions=8&scope=bot%20applications.commands`,
 		botRedirect: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&redirect_uri=${RedirectTo.en}&permissions=8&scope=bot%20applications.commands&response_type=code`
 	},
-	oauth = new(Import_discordOauth2)({
+	oauth = new (Import_discordOauth2)({
 		clientId: ClientID,
 		clientSecret: process.env.OAUTH,
 		redirectUri: RedirectTo.de
@@ -118,7 +112,7 @@ const NewGuildSubrcibers = [],
 		return el;
 	},
 	infoPopup = txt =>
-	newDiv('i', 'info').Append(newDiv('div').Append(newDiv('div').Html(txt))),
+		newDiv('i', 'info').Append(newDiv('div').Append(newDiv('div').Html(txt))),
 
 	newToggle = (on, ...classList) => {
 		let toggle = newDiv('label', ...classList),
@@ -129,7 +123,7 @@ const NewGuildSubrcibers = [],
 		return toggle;
 	},
 	newRange = (min, max, value, ...classList) =>
-	newDiv('input', ...classList).Type('range').Attribute('min', min).Attribute('max', max).Value(value),
+		newDiv('input', ...classList).Type('range').Attribute('min', min).Attribute('max', max).Value(value),
 
 	Select = {
 		Channel: ({ cls = 'channelSelect', voice = false, set, hint, guild }) => {
@@ -177,17 +171,17 @@ const NewGuildSubrcibers = [],
 	Multiple = {
 		String: ({ cls, set, csv = false }) =>
 			newDiv('div', 'multiple', 'string', cls)
-			.Append(set && newDiv().Attribute('list', set))
-			.Append(newDiv('input'))
-			.ToggleAttribute('csv', csv),
+				.Append(set && newDiv().Attribute('list', set))
+				.Append(newDiv('input'))
+				.ToggleAttribute('csv', csv),
 		Channel: ({ cls, set, guild }) =>
 			newDiv('div', 'multiple', 'channel', cls)
-			.Append(set && newDiv().Attribute('list', set))
-			.Append(Select.Channel({ guild })),
+				.Append(set && newDiv().Attribute('list', set))
+				.Append(Select.Channel({ guild })),
 		Role: ({ cls, set, guild }) =>
 			newDiv('div', 'multiple', 'role', cls)
-			.Append(set && newDiv().Attribute('list', set))
-			.Append(Select.Role({ guild }))
+				.Append(set && newDiv().Attribute('list', set))
+				.Append(Select.Role({ guild }))
 	};
 
 const RandomUser = () => 'User#' + Math.floor(Math.random() * 8999 + 1000),
@@ -202,10 +196,10 @@ const RandomUser = () => 'User#' + Math.floor(Math.random() * 8999 + 1000),
 		}
 	};
 let prefetchs = [...[
-		...['logo', 'commands', 'voice', 'moderation', 'suggestions', 'support', 'sort', 'reply', 'arrow', 'discord'].map(x => `src/icon/${x}`),
-		'src/client.js', 'src/client.css', 'src/error.css', 'src/background' //, 'socket.io/socket.io.js',    // ,...["1cbd08c76f8af6dddce02c5138971129","6debd47ed13483642cf09e832ed0bc1b","dd4dbc0016779df1378e7812eabaa04d","322c936a8c8be1b803cd94861bdfa868"].map(x=>`https://discordapp.com/assets/${x}.png`)
-		, ...EmojiList.split(';').map(s => s.split(',')).slice(0, 40).map(([n, id]) => `https://twemoji.maxcdn.com/v/latest/72x72/${id}.png`)
-	].map(url => `<${url}>; rel="prefetch"`),
+	...['logo', 'commands', 'voice', 'moderation', 'suggestions', 'support', 'sort', 'reply', 'arrow', 'discord'].map(x => `src/icon/${x}`),
+	'src/client.js', 'src/client.css', 'src/error.css', 'src/background' //, 'socket.io/socket.io.js',    // ,...["1cbd08c76f8af6dddce02c5138971129","6debd47ed13483642cf09e832ed0bc1b","dd4dbc0016779df1378e7812eabaa04d","322c936a8c8be1b803cd94861bdfa868"].map(x=>`https://discordapp.com/assets/${x}.png`)
+	, ...EmojiList.split(';').map(s => s.split(',')).slice(0, 40).map(([n, id]) => `https://twemoji.maxcdn.com/v/latest/72x72/${id}.png`)
+].map(url => `<${url}>; rel="prefetch"`),
 	'<oauth>; rel="prerender"', '<https://discord.com>; rel="preconnect"',
 	'</>; rel="canonical"', '<https://top.gg/bot/813803575264018433/vote>; rel="prerender"',
 
@@ -328,15 +322,15 @@ const ParseModLogs = (logs, guild, targetMember, targetStaff) => Object.entries(
 	})
 
 const basePage = options => new Promise(async resolver => {
-		let page = newDiv('page');
-		if (options.id) page.id = options.id;
-		if (options.title) {
-			let title = newDiv('h1');
-			title.innerHTML = options.title;
-			page.append(title);
-		}
-		resolver(page);
-	}),
+	let page = newDiv('page');
+	if (options.id) page.id = options.id;
+	if (options.title) {
+		let title = newDiv('h1');
+		title.innerHTML = options.title;
+		page.append(title);
+	}
+	resolver(page);
+}),
 	capital = s => s[0].toUpperCase() + s.slice(1).toLowerCase(),
 	CssColors = {
 		gray: '747f8d',
@@ -761,7 +755,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						let e = m.embeds[0];
 						content = e.title ? `**${e.title}**` : '';
 						content += e.description ? `\n**${e.description}**` : '';
-						content += e.description ? `\n${e.fields.map(f=>`**${f.name}**\n${f.value}`)}` : '';
+						content += e.description ? `\n${e.fields.map(f => `**${f.name}**\n${f.value}`)}` : '';
 						content += e.footer ? `\n\`${e.footer}\`` : '';
 						content = content.replace(/\n\n+/g, '\n').trim();
 					}
@@ -794,7 +788,7 @@ const capitalType = s => capital(s.split('_').pop()),
 						let e = m.embeds[0];
 						content = e.title ? `**${e.title}**` : '';
 						content += e.description ? `\n**${e.description}**` : '';
-						content += e.description ? `\n${e.fields.map(f=>`**${f.name}**\n${f.value}`)}` : '';
+						content += e.description ? `\n${e.fields.map(f => `**${f.name}**\n${f.value}`)}` : '';
 						content += e.footer ? `\n\`${e.footer}\`` : '';
 						content = content.replace(/\n\n+/g, '\n').trim();
 					}
@@ -834,7 +828,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Messages Cleared',
 			decription: 'Emits whenever messages is deleted using the $clear command',
 			color: CssColors.red,
-			function: async ([amt, c, m] /*,audit*/ ) => {
+			function: async ([amt, c, m] /*,audit*/) => {
 				return {
 					author: `Messages cleared`,
 					fields: [
@@ -981,7 +975,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Support Claimed',
 			decription: 'Emits whenever a moderator claims a Support Channel',
 			color: CssColors.green,
-			function: ([channel, user] /*,audit*/ ) => ({
+			function: ([channel, user] /*,audit*/) => ({
 				author: 'Support channel claimed',
 				fields: [
 					['Executor:', user, true],
@@ -993,7 +987,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Support Claim Invite',
 			decription: 'Emits whenever a moderator adds another moderator to a claimed Support Channel',
 			color: CssColors.green,
-			function: ([channel, user, ids] /*,audit*/ ) => ({
+			function: ([channel, user, ids] /*,audit*/) => ({
 				author: 'Support channel claimed',
 				fields: [
 					['Executor:', user, true],
@@ -1006,7 +1000,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Support Unlaimed',
 			decription: 'Emits whenever a moderator unclaims a Support Channel',
 			color: CssColors.red,
-			function: ([channel, user] /*,audit*/ ) => ({
+			function: ([channel, user] /*,audit*/) => ({
 				author: 'Support channel unclaimed',
 				fields: [
 					['Executor:', user, true],
@@ -1032,7 +1026,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Member Connect',
 			decription: 'Emits whenever a member connects to a Voice Channel',
 			color: CssColors.green,
-			function: async ([newState] /*,audit*/ ) => {
+			function: async ([newState] /*,audit*/) => {
 				return {
 					author: `Member joined a voice channel`,
 					fields: [
@@ -1086,7 +1080,7 @@ const capitalType = s => capital(s.split('_').pop()),
 				if (audit) audit = AuditLog(newState.guild, 24, newState.member.id);
 
 				return {
-					author: `Member server ${newState.serverMute?'':'un'}muted`,
+					author: `Member server ${newState.serverMute ? '' : 'un'}muted`,
 					fields: [
 						['Member:', newState.member],
 						['Channel:', newState.channel]
@@ -1105,7 +1099,7 @@ const capitalType = s => capital(s.split('_').pop()),
 				if (audit) audit = AuditLog(newState.guild, 24, newState.member.id);
 
 				return {
-					author: `Member server ${newState.serverDeaf?'':'un'}deafened`,
+					author: `Member server ${newState.serverDeaf ? '' : 'un'}deafened`,
 					fields: [
 						['Member:', newState.member],
 						['Channel:', newState.channel]
@@ -1290,7 +1284,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Thread Members',
 			decription: 'Emits whenever a member is added to or removed from a thread',
 			color: CssColors.yellow,
-			function: async ([oldM, newM] /*,audit*/ ) => {
+			function: async ([oldM, newM] /*,audit*/) => {
 				newM.filter(([...args]) => console.log({ args }));
 				const t = newM.thred,
 					addedMembers = newM.filter(m => !oldM.has(m.id) && m.user).map(m => m.user.toString()).join(',\n'),
@@ -1311,7 +1305,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Event Created',
 			decription: 'Emits whenever a new event is scheduled',
 			color: CssColors.green,
-			function: async ([e] /*,audit*/ ) => {
+			function: async ([e] /*,audit*/) => {
 				return {
 					author: `Event created: ${e.name}`,
 					fields: [
@@ -1370,7 +1364,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Event Member Added',
 			decription: 'Emits whenever an member subscribes to an event',
 			color: CssColors.green,
-			function: async ([e, u] /*,audit*/ ) => {
+			function: async ([e, u] /*,audit*/) => {
 				return {
 					author: `Event member added: ${e.name}`,
 					fields: [
@@ -1387,7 +1381,7 @@ const capitalType = s => capital(s.split('_').pop()),
 			cleanName: 'Event Member Removed',
 			decription: 'Emits whenever an member unsubscribes to an event',
 			color: CssColors.red,
-			function: async ([e, u] /*,audit*/ ) => {
+			function: async ([e, u] /*,audit*/) => {
 				return {
 					author: `Event member removed: ${e.name}`,
 					fields: [
@@ -1402,775 +1396,775 @@ const capitalType = s => capital(s.split('_').pop()),
 		}
 	};
 const Page = {
-		commands: (guild, title, id) => new Promise(async resolver => {
-			let dataBaseGuild = DataBase.guilds[guild.id] || {};
-			dataBaseGuild.TextCommandRules = dataBaseGuild.TextCommandRules || [];
-			dataBaseGuild.TextCommandRules = dataBaseGuild.TextCommandRules.filter(r => r.command && r.content);
-			let page = await basePage({ id, title }),
-				rules = newDiv('rules'),
-				create = newDiv('create');
+	commands: (guild, title, id) => new Promise(async resolver => {
+		let dataBaseGuild = DataBase.guilds[guild.id] || {};
+		dataBaseGuild.TextCommandRules = dataBaseGuild.TextCommandRules || [];
+		dataBaseGuild.TextCommandRules = dataBaseGuild.TextCommandRules.filter(r => r.command && r.content);
+		let page = await basePage({ id, title }),
+			rules = newDiv('rules'),
+			create = newDiv('create');
 
-			const rulesTitle = newDiv('h2');
-			rulesTitle.innerHTML = 'Custom Commands';
+		const rulesTitle = newDiv('h2');
+		rulesTitle.innerHTML = 'Custom Commands';
 
-			create.innerHTML = 'Add a Custom Command';
+		create.innerHTML = 'Add a Custom Command';
 
-			if (dataBaseGuild.TextCommandRules.length)
-				rules.append(...dataBaseGuild.TextCommandRules.map(({ command, content, embed }) =>
-					newDiv('rule').Append(
-						newDiv('h1').Html(command),
-						newDiv('h2').Html((embed ? [content.ttl, content.desc, content.ftr?.nm].filter(x => x).join(' - ') : content).substr(0, 90)),
-						newDiv('edit'), newDiv('remove')
-					)
-				));
-			rules.append(newDiv('empty'));
-			// TextCommandRules = {
-			// 	embed: false,
-			// 	// action:'role',
-			// 	command: 'ping',
-			// 	content: 'pong',
-			// 	content: { athr: { img: 'url', nm: '' }, ttl: '', desc: '', clr: 'ff00ff', thmb: 'url', img: 'url', ftr: { img: 'url', nm: '' } }, //if embed
-			// 	roles: ['9764897', '925646'],
-			//  rolebtns: [['9764897','txt'],['925646','Event']]
-			// 	// 	disabled: false,
-			// 	planned: [{ c: '934787687', d: 1625590757 }] //sec | Math.floor(Date.now()/6e4)
-			// }
+		if (dataBaseGuild.TextCommandRules.length)
+			rules.append(...dataBaseGuild.TextCommandRules.map(({ command, content, embed }) =>
+				newDiv('rule').Append(
+					newDiv('h1').Html(command),
+					newDiv('h2').Html((embed ? [content.ttl, content.desc, content.ftr?.nm].filter(x => x).join(' - ') : content).substr(0, 90)),
+					newDiv('edit'), newDiv('remove')
+				)
+			));
+		rules.append(newDiv('empty'));
+		// TextCommandRules = {
+		// 	embed: false,
+		// 	// action:'role',
+		// 	command: 'ping',
+		// 	content: 'pong',
+		// 	content: { athr: { img: 'url', nm: '' }, ttl: '', desc: '', clr: 'ff00ff', thmb: 'url', img: 'url', ftr: { img: 'url', nm: '' } }, //if embed
+		// 	roles: ['9764897', '925646'],
+		//  rolebtns: [['9764897','txt'],['925646','Event']]
+		// 	// 	disabled: false,
+		// 	planned: [{ c: '934787687', d: 1625590757 }] //sec | Math.floor(Date.now()/6e4)
+		// }
 
-			let commandSettings = newDiv('commandSettings'),
-				commandsTitle = newDiv('h2'),
-				commandList = newDiv('div', 'commandList');
-			commandsTitle.innerHTML = 'Commands';
-			commandSettings.append(commandList);
+		let commandSettings = newDiv('commandSettings'),
+			commandsTitle = newDiv('h2'),
+			commandList = newDiv('div', 'commandList');
+		commandsTitle.innerHTML = 'Commands';
+		commandSettings.append(commandList);
 
-			commandList.append(...commands.map(({ com, des, /*beUsed,*/ format = '' }) => {
-				let commandsItem = newDiv(),
-					span = newDiv('span'),
-					details = newDiv('details'),
-					sum = newDiv('summary');
-				commandsItem.id = com;
-				span.innerHTML = com;
-				[commandsItem, sum].map(e => e.setAttribute('prefix', ''));
-				commandsItem.append(span);
+		commandList.append(...commands.map(({ com, des, /*beUsed,*/ format = '' }) => {
+			let commandsItem = newDiv(),
+				span = newDiv('span'),
+				details = newDiv('details'),
+				sum = newDiv('summary');
+			commandsItem.id = com;
+			span.innerHTML = com;
+			[commandsItem, sum].map(e => e.setAttribute('prefix', ''));
+			commandsItem.append(span);
 
-				if (des) commandsItem.append(details);
-				sum.innerHTML = `${com} ${format}`.trim();
-				details.append(sum, des);
+			if (des) commandsItem.append(details);
+			sum.innerHTML = `${com} ${format}`.trim();
+			details.append(sum, des);
 
-				return commandsItem;
-			}));
+			return commandsItem;
+		}));
 
-			if (!dataBaseGuild.Reactions) dataBaseGuild.Reactions = {};
-			let reactions = dataBaseGuild.Reactions;
-			// reactions = [{e: '😃🎃',c: '92348',f: 1 /*undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/}, {	e: '🎃',c: '92348',	f: 'u708576015315632168' /* undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/}];
-			const reactTitle = newDiv('h2', 'reactTitle'),
-				reactDiv = newDiv('reaction'),
-				reactList = newDiv('rules'),
-				reactData = newDiv('div', 'hide', 'reactiondata');
-			reactTitle.innerHTML = 'Auto Reaction';
-			reactData.innerHTML = Object.entries(reactions).filter(x => x[1]).map(([c, r]) => [r.e.join('.'), c, r.f].join(',')).join(';');
-			reactDiv.append(reactList, reactData);
+		if (!dataBaseGuild.Reactions) dataBaseGuild.Reactions = {};
+		let reactions = dataBaseGuild.Reactions;
+		// reactions = [{e: '😃🎃',c: '92348',f: 1 /*undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/}, {	e: '🎃',c: '92348',	f: 'u708576015315632168' /* undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/}];
+		const reactTitle = newDiv('h2', 'reactTitle'),
+			reactDiv = newDiv('reaction'),
+			reactList = newDiv('rules'),
+			reactData = newDiv('div', 'hide', 'reactiondata');
+		reactTitle.innerHTML = 'Auto Reaction';
+		reactData.innerHTML = Object.entries(reactions).filter(x => x[1]).map(([c, r]) => [r.e.join('.'), c, r.f].join(',')).join(';');
+		reactDiv.append(reactList, reactData);
 
-			if (dataBaseGuild.Reactions.isEmpty()) dataBaseGuild.Reactions = undefined;
+		if (dataBaseGuild.Reactions.isEmpty()) dataBaseGuild.Reactions = undefined;
 
-			// Reactions = {
-			// '92348': {
-			// 	e: ['😃','🎃'],
-			// 	f: 1 // undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role
-			// }}
+		// Reactions = {
+		// '92348': {
+		// 	e: ['😃','🎃'],
+		// 	f: 1 // undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role
+		// }}
 
-			page.append(
-				reactTitle, reactDiv,
-				commandsTitle, commandSettings,
-				rulesTitle, rules, create
-			);
+		page.append(
+			reactTitle, reactDiv,
+			commandsTitle, commandSettings,
+			rulesTitle, rules, create
+		);
 
-			resolver([page, title, id, 'commands']);
-		}),
-		support: (guild, title, id) => new Promise(async resolver => {
-			let dataBaseGuild = DataBase.guilds[guild.id] || {};
-			if (!dataBaseGuild.Tickets) dataBaseGuild.Tickets = {};
-			let page = await basePage({ id, title }),
-				ticketTitle = newDiv('h2'),
-				ticketSettings = newDiv('ticketSettings', 'inputField'),
-				onoff = newToggle(dataBaseGuild.Tickets?.enabled),
-				ticketDiv = newDiv('div'),
-				ticketH6 = newDiv('h5'),
-				channelSelect = Select.Channel({ set: dataBaseGuild.Tickets.channel, hint: ['support', 'ticket'], guild }),
-				staffSelect = newDiv('select', 'staffSelect'),
-				parentSelect = newDiv('select', 'parentSelect'),
-				ticketName = newDiv('input', 'ticketName'),
-				set = newDiv('div', 'set');
+		resolver([page, title, id, 'commands']);
+	}),
+	support: (guild, title, id) => new Promise(async resolver => {
+		let dataBaseGuild = DataBase.guilds[guild.id] || {};
+		if (!dataBaseGuild.Tickets) dataBaseGuild.Tickets = {};
+		let page = await basePage({ id, title }),
+			ticketTitle = newDiv('h2'),
+			ticketSettings = newDiv('ticketSettings', 'inputField'),
+			onoff = newToggle(dataBaseGuild.Tickets?.enabled),
+			ticketDiv = newDiv('div'),
+			ticketH6 = newDiv('h5'),
+			channelSelect = Select.Channel({ set: dataBaseGuild.Tickets.channel, hint: ['support', 'ticket'], guild }),
+			staffSelect = newDiv('select', 'staffSelect'),
+			parentSelect = newDiv('select', 'parentSelect'),
+			ticketName = newDiv('input', 'ticketName'),
+			set = newDiv('div', 'set');
 
-			if (dataBaseGuild.Tickets?.enabled)
-				ticketSettings.setAttribute('show', '');
+		if (dataBaseGuild.Tickets?.enabled)
+			ticketSettings.setAttribute('show', '');
 
-			ticketSettings.append(onoff);
+		ticketSettings.append(onoff);
 
-			ticketH6.innerHTML = 'Toggle Support Channels';
-			ticketTitle.innerHTML = 'Support Channels';
-			ticketName.setAttribute('value', 'support-{u}');
-			ticketName.setAttribute('autocomplete', 'off');
-			channelSelect.name = 'channel';
-			staffSelect.name = 'staff';
-			parentSelect.name = 'parent';
-			ticketName.name = 'name';
+		ticketH6.innerHTML = 'Toggle Support Channels';
+		ticketTitle.innerHTML = 'Support Channels';
+		ticketName.setAttribute('value', 'support-{u}');
+		ticketName.setAttribute('autocomplete', 'off');
+		channelSelect.name = 'channel';
+		staffSelect.name = 'staff';
+		parentSelect.name = 'parent';
+		ticketName.name = 'name';
 
-			page.append(ticketTitle, ticketSettings);
-			ticketSettings.append(ticketH6, ticketDiv);
+		page.append(ticketTitle, ticketSettings);
+		ticketSettings.append(ticketH6, ticketDiv);
 
-			ticketDiv.append(
-				h6('Support Team Role', 'The role that will be able to read and write in the support channel and will be pinged when a support channel is created'),
-				staffSelect,
-				h6('Support Channel', 'The channel where the members will be able to open a new support channel'),
-				channelSelect,
-				h6('Parent Category', 'This is where the created support channel will be put'),
-				parentSelect,
-				h6("Channel Name<i>Use <code>{u}</code> for the members's username</i>", 'The name the created channel will be given'),
-				ticketName,
-				h6("Claimable Channels", 'If enabled, moderators will be able to claim a support channel. Then no other moderators will be able to write in the channel. The moderator is able to unclaim the channel and admins will always be able to write'),
-				newToggle(dataBaseGuild.Tickets.claim, 'claim', 'toggle'),
-				h6("Unlisted Transcripts", 'If enabled, everyone with the url will be able to access and read the saved transcripts of closed support channels'),
-				newToggle(dataBaseGuild.Tickets.unlisted, 'unlisted', 'toggle')
-			);
+		ticketDiv.append(
+			h6('Support Team Role', 'The role that will be able to read and write in the support channel and will be pinged when a support channel is created'),
+			staffSelect,
+			h6('Support Channel', 'The channel where the members will be able to open a new support channel'),
+			channelSelect,
+			h6('Parent Category', 'This is where the created support channel will be put'),
+			parentSelect,
+			h6("Channel Name<i>Use <code>{u}</code> for the members's username</i>", 'The name the created channel will be given'),
+			ticketName,
+			h6("Claimable Channels", 'If enabled, moderators will be able to claim a support channel. Then no other moderators will be able to write in the channel. The moderator is able to unclaim the channel and admins will always be able to write'),
+			newToggle(dataBaseGuild.Tickets.claim, 'claim', 'toggle'),
+			h6("Unlisted Transcripts", 'If enabled, everyone with the url will be able to access and read the saved transcripts of closed support channels'),
+			newToggle(dataBaseGuild.Tickets.unlisted, 'unlisted', 'toggle')
+		);
 
-			let selected = false;
-			parentSelect.innerHTML = '<option class="global" value="0">Global</option>';
-			[...guild.channels.cache.values()].filter(c => c.type == 'GUILD_CATEGORY').sort((a, b) => a.rawPosition - b.rawPosition).forEach(c => {
-				let option = newDiv('option');
-				option.value = c.id;
-				option.innerHTML = c.name;
+		let selected = false;
+		parentSelect.innerHTML = '<option class="global" value="0">Global</option>';
+		[...guild.channels.cache.values()].filter(c => c.type == 'GUILD_CATEGORY').sort((a, b) => a.rawPosition - b.rawPosition).forEach(c => {
+			let option = newDiv('option');
+			option.value = c.id;
+			option.innerHTML = c.name;
 
-				if (dataBaseGuild.Tickets.parent) {
-					if (c.id == dataBaseGuild.Tickets.parent) option.setAttribute('selected', '');
-				} else if (!selected && c.name.toLowerCase().includes('support')) {
-					option.setAttribute('selected', '');
-					selected = true
-				}
-				parentSelect.append(option);
-			});
+			if (dataBaseGuild.Tickets.parent) {
+				if (c.id == dataBaseGuild.Tickets.parent) option.setAttribute('selected', '');
+			} else if (!selected && c.name.toLowerCase().includes('support')) {
+				option.setAttribute('selected', '');
+				selected = true
+			}
+			parentSelect.append(option);
+		});
 
-			selected = false;
-			[...guild.roles.cache.values()].sort((a, b) => b.position - a.position).forEach(r => {
-				let option = newDiv('option');
-				option.value = r.id;
-				option.innerHTML = r.name;
-				if (r.color) option.style.color = r.hexColor;
-				if (dataBaseGuild.Tickets.staff) {
-					if (r.id == dataBaseGuild.Tickets.staff) option.setAttribute('selected', '');
-				} else if (!selected && r.name.toLowerCase().includes('staff') || r.name.toLowerCase().includes('support')) {
-					option.setAttribute('selected', '');
-					selected = true
-				}
-				staffSelect.append(option);
-			});
+		selected = false;
+		[...guild.roles.cache.values()].sort((a, b) => b.position - a.position).forEach(r => {
+			let option = newDiv('option');
+			option.value = r.id;
+			option.innerHTML = r.name;
+			if (r.color) option.style.color = r.hexColor;
+			if (dataBaseGuild.Tickets.staff) {
+				if (r.id == dataBaseGuild.Tickets.staff) option.setAttribute('selected', '');
+			} else if (!selected && r.name.toLowerCase().includes('staff') || r.name.toLowerCase().includes('support')) {
+				option.setAttribute('selected', '');
+				selected = true
+			}
+			staffSelect.append(option);
+		});
 
-			let embed = newDiv('div', 'embed', 'first'),
-				author = newDiv('div', 'author'),
-				content = newDiv('div', 'content'),
-				reaction = newDiv('div', 'reaction'),
-				colorDiv = newDiv('div', 'color'),
-				color = newDiv('input'),
-				emoji = newDiv('div', 'emoji');
+		let embed = newDiv('div', 'embed', 'first'),
+			author = newDiv('div', 'author'),
+			content = newDiv('div', 'content'),
+			reaction = newDiv('div', 'reaction'),
+			colorDiv = newDiv('div', 'color'),
+			color = newDiv('input'),
+			emoji = newDiv('div', 'emoji');
 
-			author.textContent = dataBaseGuild.Tickets.author || 'Support';
-			content.textContent = dataBaseGuild.Tickets.content || 'By clicking 💬 you can open a private text channel with only you and the staff team,\nyou can do this to report an error or a person or if you just want to ask a question';
-			emoji.innerHTML = dataBaseGuild.Tickets.emoji || '💬';
-			if (dataBaseGuild.Tickets.color) embed.style.borderColor = dataBaseGuild.Tickets.color;
+		author.textContent = dataBaseGuild.Tickets.author || 'Support';
+		content.textContent = dataBaseGuild.Tickets.content || 'By clicking 💬 you can open a private text channel with only you and the staff team,\nyou can do this to report an error or a person or if you just want to ask a question';
+		emoji.innerHTML = dataBaseGuild.Tickets.emoji || '💬';
+		if (dataBaseGuild.Tickets.color) embed.style.borderColor = dataBaseGuild.Tickets.color;
 
-			color.setAttribute('type', 'color');
-			if (dataBaseGuild.Tickets.color) color.setAttribute('value', dataBaseGuild.Tickets.color);
-			author.setAttribute('contentEditable', '');
-			content.setAttribute('contentEditable', '');
+		color.setAttribute('type', 'color');
+		if (dataBaseGuild.Tickets.color) color.setAttribute('value', dataBaseGuild.Tickets.color);
+		author.setAttribute('contentEditable', '');
+		content.setAttribute('contentEditable', '');
 
-			embed.append(author, content, reaction, colorDiv);
-			reaction.append(emoji);
-			colorDiv.append(color);
+		embed.append(author, content, reaction, colorDiv);
+		reaction.append(emoji);
+		colorDiv.append(color);
 
-			ticketDiv.append(
-				h6('Custom Message', ('This embeded message will be sent in your chosen support channel. Your members can then react with your chosen emoji to open a new support channel. Discord formatting does apply')),
-				embed);
+		ticketDiv.append(
+			h6('Custom Message', ('This embeded message will be sent in your chosen support channel. Your members can then react with your chosen emoji to open a new support channel. Discord formatting does apply')),
+			embed);
 
-			let advanced = newDiv('div', 'advanced'),
-				advancedH5 = newDiv('h5'),
-				footer = newDiv('div', 'footer');
-			embed = newDiv('div', 'embed', 'start'), author = newDiv('div', 'author'), content = newDiv('div', 'content');
+		let advanced = newDiv('div', 'advanced'),
+			advancedH5 = newDiv('h5'),
+			footer = newDiv('div', 'footer');
+		embed = newDiv('div', 'embed', 'start'), author = newDiv('div', 'author'), content = newDiv('div', 'content');
 
-			advanced.append(
-				advancedH5,
-				h6('Custom Opening Message', ('This embeded message will be sent in the support channel as soon as the channel is opened. Anyone can then react to this message with ❌ to close it. Discord formatting does apply')),
-				embed);
-			embed.append(author, content, footer);
+		advanced.append(
+			advancedH5,
+			h6('Custom Opening Message', ('This embeded message will be sent in the support channel as soon as the channel is opened. Anyone can then react to this message with ❌ to close it. Discord formatting does apply')),
+			embed);
+		embed.append(author, content, footer);
 
-			content.setAttribute('contentEditable', ''), footer.setAttribute('contentEditable', '');
+		content.setAttribute('contentEditable', ''), footer.setAttribute('contentEditable', '');
 
-			author.textContent = dataBaseGuild.Tickets.author || 'Support';
-			content.textContent = dataBaseGuild.Tickets.messages?.start?.content || `Welcome to ${guild.name}'s Support\nOnly you and the Support Team can see, read and write in this channel`;
-			footer.textContent = dataBaseGuild.Tickets.messages?.start?.footer || `Press ❌ to close this support channel`;
+		author.textContent = dataBaseGuild.Tickets.author || 'Support';
+		content.textContent = dataBaseGuild.Tickets.messages?.start?.content || `Welcome to ${guild.name}'s Support\nOnly you and the Support Team can see, read and write in this channel`;
+		footer.textContent = dataBaseGuild.Tickets.messages?.start?.footer || `Press ❌ to close this support channel`;
 
-			embed = newDiv('div', 'embed', 'end'), author = newDiv('div', 'author'), content = newDiv('div', 'content');
+		embed = newDiv('div', 'embed', 'end'), author = newDiv('div', 'author'), content = newDiv('div', 'content');
 
-			advanced.append(h6('Custom Closing Message', ('This embeded message will be sent in the support channel when someone press ❌. Discord formatting does apply')),
-				embed);
-			embed.append(author, content);
-			content.setAttribute('contentEditable', '');
+		advanced.append(h6('Custom Closing Message', ('This embeded message will be sent in the support channel when someone press ❌. Discord formatting does apply')),
+			embed);
+		embed.append(author, content);
+		content.setAttribute('contentEditable', '');
 
-			author.textContent = dataBaseGuild.Tickets.author || 'Support';
-			content.textContent = dataBaseGuild.Tickets.messages?.end || `**Are you sure you want to close this support channel?**\nYes, I want to close: ✔️\nNo, I want to continue: ❌`;
+		author.textContent = dataBaseGuild.Tickets.author || 'Support';
+		content.textContent = dataBaseGuild.Tickets.messages?.end || `**Are you sure you want to close this support channel?**\nYes, I want to close: ✔️\nNo, I want to continue: ❌`;
 
-			embed = newDiv('div', 'embed', 'save'), author = newDiv('div', 'author'), content = newDiv('div', 'content');
-			let saveOption = newDiv('input', 'saveOption');
-			saveOption.setAttribute('type', 'range'), saveOption.setAttribute('min', '0'), saveOption.setAttribute('max', '2');
-			let val = ['always', 'ask', 'never'].indexOf(dataBaseGuild.Tickets.save);
-			saveOption.setAttribute('value', val == -1 ? 1 : val);
-			// ['always', 'ask', 'never'] - Default = 'ask'
+		embed = newDiv('div', 'embed', 'save'), author = newDiv('div', 'author'), content = newDiv('div', 'content');
+		let saveOption = newDiv('input', 'saveOption');
+		saveOption.setAttribute('type', 'range'), saveOption.setAttribute('min', '0'), saveOption.setAttribute('max', '2');
+		let val = ['always', 'ask', 'never'].indexOf(dataBaseGuild.Tickets.save);
+		saveOption.setAttribute('value', val == -1 ? 1 : val);
+		// ['always', 'ask', 'never'] - Default = 'ask'
 
-			advanced.append(h6('Custom Confirm Message', ('This embeded message will ask you if you want to save the transcript of the channel or if you want to close it. Discord formatting does apply')),
-				saveOption, embed);
-			embed.append(author, content);
-			content.setAttribute('contentEditable', '');
+		advanced.append(h6('Custom Confirm Message', ('This embeded message will ask you if you want to save the transcript of the channel or if you want to close it. Discord formatting does apply')),
+			saveOption, embed);
+		embed.append(author, content);
+		content.setAttribute('contentEditable', '');
 
-			author.textContent = dataBaseGuild.Tickets.author || 'Support';
-			content.textContent = dataBaseGuild.Tickets.messages?.save || `**The member can no longer see this channel and the channel is about to close**\nDon't save the transcript: ❌\nSave the transcript: ✔️`;
+		author.textContent = dataBaseGuild.Tickets.author || 'Support';
+		content.textContent = dataBaseGuild.Tickets.messages?.save || `**The member can no longer see this channel and the channel is about to close**\nDon't save the transcript: ❌\nSave the transcript: ✔️`;
 
-			ticketDiv.append(advanced, set);
-			if (dataBaseGuild.Tickets.isEmpty()) dataBaseGuild.Tickets = undefined;
+		ticketDiv.append(advanced, set);
+		if (dataBaseGuild.Tickets.isEmpty()) dataBaseGuild.Tickets = undefined;
 
-			resolver([page, title, id, 'support']);
-		}),
-		voice: (guild, title, id) => new Promise(async resolver => {
-			let dataBaseGuild = DataBase.guilds[guild.id] || {};
-			dataBaseGuild.VoiceRules = dataBaseGuild.VoiceRules || [];
-			dataBaseGuild.VoiceRules = dataBaseGuild.VoiceRules.filter(r => r.channel && r.channelname);
-			let page = await basePage({ id, title }),
-				rules = newDiv('rules'),
-				create = newDiv('create');
-			create.innerHTML = 'Add a Dynamic Voice Channel';
+		resolver([page, title, id, 'support']);
+	}),
+	voice: (guild, title, id) => new Promise(async resolver => {
+		let dataBaseGuild = DataBase.guilds[guild.id] || {};
+		dataBaseGuild.VoiceRules = dataBaseGuild.VoiceRules || [];
+		dataBaseGuild.VoiceRules = dataBaseGuild.VoiceRules.filter(r => r.channel && r.channelname);
+		let page = await basePage({ id, title }),
+			rules = newDiv('rules'),
+			create = newDiv('create');
+		create.innerHTML = 'Add a Dynamic Voice Channel';
 
-			if (dataBaseGuild.VoiceRules.length)
-				rules.append(...dataBaseGuild.VoiceRules.map(rule => {
-					let { channelname, channel, disabled } = rule,
+		if (dataBaseGuild.VoiceRules.length)
+			rules.append(...dataBaseGuild.VoiceRules.map(rule => {
+				let { channelname, channel, disabled } = rule,
 					ruleDiv = newDiv('rule'),
-						nameDiv = newDiv('h1'),
-						idDiv = newDiv('h2'),
-						edit = newDiv('edit'),
-						remove = newDiv('remove'),
-						toggle = newToggle(!disabled);
+					nameDiv = newDiv('h1'),
+					idDiv = newDiv('h2'),
+					edit = newDiv('edit'),
+					remove = newDiv('remove'),
+					toggle = newToggle(!disabled);
 
-					ruleDiv.append(nameDiv, idDiv, toggle, edit, remove);
-					nameDiv.innerHTML = channelname;
-					idDiv.innerHTML = channel;
-					return ruleDiv;
-				}));
-			rules.append(newDiv('empty'));
+				ruleDiv.append(nameDiv, idDiv, toggle, edit, remove);
+				nameDiv.innerHTML = channelname;
+				idDiv.innerHTML = channel;
+				return ruleDiv;
+			}));
+		rules.append(newDiv('empty'));
 
 
-			// ({
-			// 	members: { // disabled if undefined
-			// 		format: 'Members: {m}'
-			// 	},
-			// 	bots: {
-			// 		format: 'Bots: {m}'
-			// 	},
-			// 	// countdown: {
-			// 	// 	format: 'Minecraft: {m}'
-			// 	// },
-			// 	minecraft: {
-			// 		format: 'Minecraft: {m}'
-			// 	},
-			// })
-			// const serverstatsSettings = newDiv('serverstatssettings'),
-			// 	serverstatsTitle = newDiv('h2', 'tempserverstats').Html('Auto Moderation');
-			//
-			// try {
-			// 	serverstatsSettings.append(
-			// 		newDiv('serverstats', 'words').Append(
-			// 			h6('Word Filter', 'Detect blacklisted words'),
-			// 			newToggle(Rule.words),
-			// 			h6('Words', 'The words that will be blacklisted'),
-			// 			Multiple.String({ set: Rule.words?.words, guild }),
-			// 			...lastOptions(Rule.words, 'words')
-			// 		)
-			// 	)
-			// } catch (e) { console.log(e); };
+		// ({
+		// 	members: { // disabled if undefined
+		// 		format: 'Members: {m}'
+		// 	},
+		// 	bots: {
+		// 		format: 'Bots: {m}'
+		// 	},
+		// 	// countdown: {
+		// 	// 	format: 'Minecraft: {m}'
+		// 	// },
+		// 	minecraft: {
+		// 		format: 'Minecraft: {m}'
+		// 	},
+		// })
+		// const serverstatsSettings = newDiv('serverstatssettings'),
+		// 	serverstatsTitle = newDiv('h2', 'tempserverstats').Html('Auto Moderation');
+		//
+		// try {
+		// 	serverstatsSettings.append(
+		// 		newDiv('serverstats', 'words').Append(
+		// 			h6('Word Filter', 'Detect blacklisted words'),
+		// 			newToggle(Rule.words),
+		// 			h6('Words', 'The words that will be blacklisted'),
+		// 			Multiple.String({ set: Rule.words?.words, guild }),
+		// 			...lastOptions(Rule.words, 'words')
+		// 		)
+		// 	)
+		// } catch (e) { console.log(e); };
 
-			page.append(create, rules);
+		page.append(create, rules);
 
-			resolver([page, title, id, 'voice']);
+		resolver([page, title, id, 'voice']);
 
-			dataBaseGuild.VoiceRules = dataBaseGuild.VoiceRules.filter(async rule => await client.channels.fetch(rule.channel).catch(e => false))
-		}),
-		moderation: (guild, title, id) => new Promise(async resolver => {
-			let dataBaseGuild = DataBase.guilds[guild.id] || {};
-			if (!dataBaseGuild.logs) dataBaseGuild.logs = {};
-			if (!dataBaseGuild.logs.enabled) dataBaseGuild.logs.enabled = [];
-			let page = await basePage({ id, title }),
-				logSetting = newDiv('logSettings'),
-				logsTitle = newDiv('h2').Html('Logs'),
-				channelSelect = newDiv('select', 'channelSelect'),
-				logList = newDiv('div', 'logList'),
-				toggle = newToggle(dataBaseGuild.logs.on, 'toggle'),
-				auditToggle = newToggle(dataBaseGuild.logs.audit, 'toggle', 'audit');
+		dataBaseGuild.VoiceRules = dataBaseGuild.VoiceRules.filter(async rule => await client.channels.fetch(rule.channel).catch(e => false))
+	}),
+	moderation: (guild, title, id) => new Promise(async resolver => {
+		let dataBaseGuild = DataBase.guilds[guild.id] || {};
+		if (!dataBaseGuild.logs) dataBaseGuild.logs = {};
+		if (!dataBaseGuild.logs.enabled) dataBaseGuild.logs.enabled = [];
+		let page = await basePage({ id, title }),
+			logSetting = newDiv('logSettings'),
+			logsTitle = newDiv('h2').Html('Logs'),
+			channelSelect = newDiv('select', 'channelSelect'),
+			logList = newDiv('div', 'logList'),
+			toggle = newToggle(dataBaseGuild.logs.on, 'toggle'),
+			auditToggle = newToggle(dataBaseGuild.logs.audit, 'toggle', 'audit');
 
-			let selected = false;
-			[...guild.channels.cache.values()].filter(c => ['GUILD_TEXT', 'GUILD_NEWS'].includes(c.type)).sort((a, b) => a.rawPosition - b.rawPosition).forEach(c => {
-				let option = newDiv('option');
-				option.value = c.id;
-				option.innerHTML = c.name;
+		let selected = false;
+		[...guild.channels.cache.values()].filter(c => ['GUILD_TEXT', 'GUILD_NEWS'].includes(c.type)).sort((a, b) => a.rawPosition - b.rawPosition).forEach(c => {
+			let option = newDiv('option');
+			option.value = c.id;
+			option.innerHTML = c.name;
 
-				if (dataBaseGuild.logs.channel) {
-					if (c.id == dataBaseGuild.logs.channel) option.setAttribute('selected', '')
-				} else if (!selected && c.name.toLowerCase().includes('logs')) {
-					option.setAttribute('selected', '');
-					selected = true
-				}
-				channelSelect.append(option);
-			});
+			if (dataBaseGuild.logs.channel) {
+				if (c.id == dataBaseGuild.logs.channel) option.setAttribute('selected', '')
+			} else if (!selected && c.name.toLowerCase().includes('logs')) {
+				option.setAttribute('selected', '');
+				selected = true
+			}
+			channelSelect.append(option);
+		});
 
-			logSetting.append(
-				h6('Toggle Logging', ("Toggle the whole log system")),
-				toggle,
-				h6('Log Channel', ("This is where the logs will be sent")),
-				channelSelect, newDiv('div', 'set'),
-				h6('Audit Logs', ("Toggle whether the bot should log senistive information, such as who it was that did something or what invite a member joined with")),
-				auditToggle,
-				// h6('Embed Color', infoPopup("This is the color that will be displayed on the log message's left border<div class='embed' style='border-color:#dbad11'>This border:<br>&lt; &lt; &lt;</div>")),
-				// colorDiv, newDiv('div', 'set'),
-				h6('Toggle', ("Toggle what you want to be logged")),
-				logList
-			);
+		logSetting.append(
+			h6('Toggle Logging', ("Toggle the whole log system")),
+			toggle,
+			h6('Log Channel', ("This is where the logs will be sent")),
+			channelSelect, newDiv('div', 'set'),
+			h6('Audit Logs', ("Toggle whether the bot should log senistive information, such as who it was that did something or what invite a member joined with")),
+			auditToggle,
+			// h6('Embed Color', infoPopup("This is the color that will be displayed on the log message's left border<div class='embed' style='border-color:#dbad11'>This border:<br>&lt; &lt; &lt;</div>")),
+			// colorDiv, newDiv('div', 'set'),
+			h6('Toggle', ("Toggle what you want to be logged")),
+			logList
+		);
 
-			Object.entries(LogRules).forEach(([Rule, { cleanName, decription }]) => {
-				let logItem = newDiv('div'),
-					title = newDiv('h1'),
-					des = newDiv('details'),
-					sum = newDiv('summary'),
-					codename = newDiv('h3'),
-					toggle = newToggle(dataBaseGuild.logs.enabled.includes(Rule));
+		Object.entries(LogRules).forEach(([Rule, { cleanName, decription }]) => {
+			let logItem = newDiv('div'),
+				title = newDiv('h1'),
+				des = newDiv('details'),
+				sum = newDiv('summary'),
+				codename = newDiv('h3'),
+				toggle = newToggle(dataBaseGuild.logs.enabled.includes(Rule));
 
-				logItem.append(title, codename);
-				if (decription) logItem.append(des);
-				logItem.append(toggle);
-				logList.append(logItem);
+			logItem.append(title, codename);
+			if (decription) logItem.append(des);
+			logItem.append(toggle);
+			logList.append(logItem);
 
-				title.innerHTML = cleanName;
-				codename.innerHTML = Rule;
-				sum.innerHTML = 'Description';
-				des.innerHTML = decription.replace(/\n/g, '<br>');
-				des.append(sum);
-			}); //		{ logs: {
-			// 					color: '#ffffff',
-			// 					channel: 'ChannelID',
-			// 					enabled: ['guildMemberAdd', 'inviteDelete', 'messageDelete'],
-			// 					on: true    	}}
+			title.innerHTML = cleanName;
+			codename.innerHTML = Rule;
+			sum.innerHTML = 'Description';
+			des.innerHTML = decription.replace(/\n/g, '<br>');
+			des.append(sum);
+		}); //		{ logs: {
+		// 					color: '#ffffff',
+		// 					channel: 'ChannelID',
+		// 					enabled: ['guildMemberAdd', 'inviteDelete', 'messageDelete'],
+		// 					on: true    	}}
 
-			if (dataBaseGuild.logs.isEmpty()) dataBaseGuild.logs = undefined;
+		if (dataBaseGuild.logs.isEmpty()) dataBaseGuild.logs = undefined;
 
-			// previous commandSettings
+		// previous commandSettings
 
-			// ModCommands
+		// ModCommands
 
-			// if (!dataBaseGuild.Moderation) dataBaseGuild.Moderation = {};
+		// if (!dataBaseGuild.Moderation) dataBaseGuild.Moderation = {};
 
-			let modSettings = newDiv('modsettings'),
-				modTitle = newDiv('h2');
+		let modSettings = newDiv('modsettings'),
+			modTitle = newDiv('h2');
 
-			{
-				let Rule = dataBaseGuild.Moderation || {},
-					mutedDisplay = newDiv('div', 'role'),
-					messageFrom = newDiv('input', 'messagefrom'),
-					banMessage = newDiv('textarea', 'banmessage');
+		{
+			let Rule = dataBaseGuild.Moderation || {},
+				mutedDisplay = newDiv('div', 'role'),
+				messageFrom = newDiv('input', 'messagefrom'),
+				banMessage = newDiv('textarea', 'banmessage');
 
-				messageFrom.setAttribute('value', Rule.text?.messageFrom || `Message from ${guild.name}:`);
-				messageFrom.placeholder = `Message from ${guild.name}:`;
+			messageFrom.setAttribute('value', Rule.text?.messageFrom || `Message from ${guild.name}:`);
+			messageFrom.placeholder = `Message from ${guild.name}:`;
 
-				// toggle,logToggle,dmToggle,inviteToggle,channelSelect,
+			// toggle,logToggle,dmToggle,inviteToggle,channelSelect,
 
-				modTitle.innerHTML = 'Moderation';
+			modTitle.innerHTML = 'Moderation';
 
-				if (Rule.muted) mutedDisplay.setAttribute('ttl', mutedDisplay.id = Rule.muted)
-				else mutedDisplay.setAttribute('ttl', 'This role will be created by the bot the first time someone is muted on your server');
-				mutedDisplay.innerHTML = `@${(await guild.roles.fetch(Rule.muted).catch(e => undefined))?.name || 'Muted'}`
+			if (Rule.muted) mutedDisplay.setAttribute('ttl', mutedDisplay.id = Rule.muted)
+			else mutedDisplay.setAttribute('ttl', 'This role will be created by the bot the first time someone is muted on your server');
+			mutedDisplay.innerHTML = `@${(await guild.roles.fetch(Rule.muted).catch(e => undefined))?.name || 'Muted'}`
 
-				const embed = newDiv('div', 'embed'),
-					author = newDiv('div', 'author'),
-					hasBeen = newDiv('input', 'author', 'hasbeen'),
-					byInput = newDiv('input', 'author', 'by'),
-					reason = newDiv('input', 'reasonFrom'),
-					duration = newDiv('input', 'duration'),
-					footer = newDiv('div', 'footer'),
-					until = newDiv('input', 'until'),
-					content = newDiv('div', 'content'),
-					durationContent = newDiv('div', 'content'),
-					colorDiv = newDiv('div', 'color'),
-					color = newDiv('input');
-				colorDiv.append(color);
-				embed.append(author, reason, content, duration, durationContent, footer, colorDiv);
+			const embed = newDiv('div', 'embed'),
+				author = newDiv('div', 'author'),
+				hasBeen = newDiv('input', 'author', 'hasbeen'),
+				byInput = newDiv('input', 'author', 'by'),
+				reason = newDiv('input', 'reasonFrom'),
+				duration = newDiv('input', 'duration'),
+				footer = newDiv('div', 'footer'),
+				until = newDiv('input', 'until'),
+				content = newDiv('div', 'content'),
+				durationContent = newDiv('div', 'content'),
+				colorDiv = newDiv('div', 'color'),
+				color = newDiv('input');
+			colorDiv.append(color);
+			embed.append(author, reason, content, duration, durationContent, footer, colorDiv);
 
-				author.append(RandomUser(), hasBeen, newDiv('span'), byInput, RandomUser());
-				footer.append(newDiv('span'), until, moment().format("[ • Today at] h:m"));
+			author.append(RandomUser(), hasBeen, newDiv('span'), byInput, RandomUser());
+			footer.append(newDiv('span'), until, moment().format("[ • Today at] h:m"));
 
-				color.setAttribute('value', `#${Rule.text?.color || 'dbad11'}`);
-				color.type = 'color';
+			color.setAttribute('value', `#${Rule.text?.color || 'dbad11'}`);
+			color.type = 'color';
 
-				content.innerHTML = 'Broke rule #1.1: Do not brake our rules'
-				durationContent.innerHTML = ['2h30m', '1h15m', '4h', '1d', '2w'][Math.floor(Math.random() * 5)]
+			content.innerHTML = 'Broke rule #1.1: Do not brake our rules'
+			durationContent.innerHTML = ['2h30m', '1h15m', '4h', '1d', '2w'][Math.floor(Math.random() * 5)]
 
-				hasBeen.setAttribute('value', Rule.text?.hasBeen || 'has been');
-				hasBeen.placeholder = 'has been';
-				byInput.setAttribute('value', Rule.text?.by || 'by');
-				byInput.placeholder = 'by';
-				reason.setAttribute('value', Rule.text?.reason || 'Reason:');
-				reason.placeholder = 'Reason:';
-				duration.setAttribute('value', Rule.text?.duration || 'Duration:');
-				duration.placeholder = 'Duration:';
-				until.setAttribute('value', Rule.text?.until || 'until');
-				until.placeholder = 'until';
+			hasBeen.setAttribute('value', Rule.text?.hasBeen || 'has been');
+			hasBeen.placeholder = 'has been';
+			byInput.setAttribute('value', Rule.text?.by || 'by');
+			byInput.placeholder = 'by';
+			reason.setAttribute('value', Rule.text?.reason || 'Reason:');
+			reason.placeholder = 'Reason:';
+			duration.setAttribute('value', Rule.text?.duration || 'Duration:');
+			duration.placeholder = 'Duration:';
+			until.setAttribute('value', Rule.text?.until || 'until');
+			until.placeholder = 'until';
 
-				if (Rule.banMessage) banMessage.innerHTML = Rule.banMessage;
-				banMessage.setAttribute('maxlength', 4096);
+			if (Rule.banMessage) banMessage.innerHTML = Rule.banMessage;
+			banMessage.setAttribute('maxlength', 4096);
 
-				const comSettings = newDiv('div', 'comsettings').Attribute('shw', 1)
-					.Append(...['warn', 'kick', 'ban', 'unban', 'tempban', 'mute', 'unmute', 'tempmute'].map(x => {
-						let defaultObj = commands.find(c => c.com == x),
-							commandObj = ObjectMerge(defaultObj, (Rule.coms && Rule.coms[x]) || {});
+			const comSettings = newDiv('div', 'comsettings').Attribute('shw', 1)
+				.Append(...['warn', 'kick', 'ban', 'unban', 'tempban', 'mute', 'unmute', 'tempmute'].map(x => {
+					let defaultObj = commands.find(c => c.com == x),
+						commandObj = ObjectMerge(defaultObj, (Rule.coms && Rule.coms[x]) || {});
 
-						return
-						newDiv('div', 'comsetting').Attribute('shw', defaultObj.txt1).Attribute('prefix').Id(x)
-							.Append(
-								newDiv('div', 'command').Html(x),
-								newDiv('div', 'doc').Attribute('prefix').Html(`<span>${x}</span> ${commandObj.format}`),
-								newDiv('div', 'txt').Append(
-									RandomUser(),
-									hasBeen.cloneNode(),
-									newDiv('input', 'txtinput').Attribute('value', commandObj.txt).Attribute('placeholder', defaultObj.txt)
-								));
-					}))
+					return
+					newDiv('div', 'comsetting').Attribute('shw', defaultObj.txt1).Attribute('prefix').Id(x)
+						.Append(
+							newDiv('div', 'command').Html(x),
+							newDiv('div', 'doc').Attribute('prefix').Html(`<span>${x}</span> ${commandObj.format}`),
+							newDiv('div', 'txt').Append(
+								RandomUser(),
+								hasBeen.cloneNode(),
+								newDiv('input', 'txtinput').Attribute('value', commandObj.txt).Attribute('placeholder', defaultObj.txt)
+							));
+				}))
 
-				let scrollbar = newDiv('div', 'scrollbar'),
-					scrollItems = ['warn', 'kick', 'ban', 'un ban', 'temp ban', 'mute', 'un mute', 'temp mute'].map(x => {
-						let div = newDiv();
-						x = x.replace(' ', '&#8203;')
-						div.innerHTML = x;
+			let scrollbar = newDiv('div', 'scrollbar'),
+				scrollItems = ['warn', 'kick', 'ban', 'un ban', 'temp ban', 'mute', 'un mute', 'temp mute'].map(x => {
+					let div = newDiv();
+					x = x.replace(' ', '&#8203;')
+					div.innerHTML = x;
 
-						return div;
-					});
-				scrollbar.append(
-					newDiv('div', 'scrollarrow'),
-					...scrollItems,
-					newDiv('div', 'scrollarrow')
-				)
-
-				modSettings.append(
-					h6('Toggle Moderation Commands', ("Toggle all moderation commands")),
-					newToggle(Rule.enabled),
-
-					h6('Records Channel', ("The channel where all penalties will be displayed")),
-					Select.Channel({ set: Rule.channel, hint: ['crime', 'regist', 'penalt', 'straff', 'brott'], guild }),
-
-					h6('Toggle Moderation Logs', ("If enabled, the bot will log every moderation action and show it here on the website")),
-					newToggle(Rule.logsEnabled, 'toggle', 'log'),
-
-					h6('Ban-Message', ("Whenever a user is banned, this message will be sent as a description in an embeded direct message after the messege containing the reason. Tip: This can be used to send out a form that a banned user can fill in if they think they were banned wrongly. Discord formatting does apply")),
-					messageFrom,
-					banMessage,
-
-					h6('Dm Everytime', ("If enabled, the bot will send the Ban-Message to the punished/warned member no matter what penalty they recived. If disabled, the bot will only send a direct message to the member if they've been banned or temporarily banned")),
-					newToggle(Rule.dmAll, 'toggle', 'dm'),
-
-					h6('Dm Server Invite', ("If enabled, the bot will send a server invite to the punished member if they were temporarily banned, kicked or unbanned. The bot will create the invite directing to the selected channel or use an already existing invite created by the bot")),
-					newToggle(Rule.dmInvite, 'toggle', 'invite'),
-
-					h6('Tell Who Issued The Penalty', ("If enabled, the bot will tell the member which moderator issued the penalty")),
-					newToggle(Rule.tellWho, 'toggle', 'tellwho'),
-
-					h6('Muted Role', ("The role muted people will get. This role were created by the bot the first time someone is muted on your server. This role will have the <code>Send messages</code> permission disabled in every text channel except Support Channels")),
-					mutedDisplay,
-
-					h6('Use Timeout', ("Use Discord native timeouts instead of the bot's <code>Muted Role</code>. Timouts will mute the member in all channels, including support channels, and is limited to max 28 days. If toggled, <code>$mute</code> command will mute the member for 28 days instead of unlimited time. When toggled, an existing <code>Muted Role</code> will be removed. All current mutes using the <code>Muted Role</code> will be removed when the role is.")),
-					newToggle(Rule.timeout, 'toggle', 'timeout'),
-
-					h6('Penalty Message', ("This embeded message will be sent in you chosen Records Channel. Every<y>yellow</y>field is customizeble")),
-					embed,
-
-					comSettings,
-					scrollbar,
-
-					newDiv('div', 'set')
-					// auto: contentFilter, caps, spam, emoji
-				)
-			};
-
-			// ({
-			// 	words: { // disabled if undefined
-			// 		words: ['ord', 'ord'],
-			// 		pnsh: 2, // 0/undef:none, 1:delete, 2:warn, 3:warn&delete
-			// 		rsn: 'Used a bad word', //reason if warn
-			// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
-			// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
-			// 	},
-			// 	links: {
-			// 		ignDom: ['google.se', 'mcfkg.eu'],
-			// 		inv: 0, //* 0/undef:Ignore, 1:Catch, 2:Only Catch*/
-			// 		pnsh: 2,
-			// 		rsn: 'Sent a link',
-			// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
-			// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
-			// 	},
-			// 	spam: {
-			// 		num: 4, //number of same messages in a row
-			// 		pnsh: 2,
-			// 		rsn: 'Sent too many indentical messages',
-			// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
-			// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
-			// 	},
-			// 	caps: {
-			// 		num: 70, //percentage of letters that is caps
-			// 		pnsh: 2,
-			// 		rsn: 'Sent too many capital letters',
-			// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
-			// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
-			// 	},
-			// 	// emojis: {
-			// 	// 	num: 3, //number of emojis in 1 message
-			// 	// 	pnsh: 2,
-			// 	//  rsn:'Sent too many emojis',
-			// 	// 	ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
-			// 	// 	ignChn: ['rÑ00', 'ÓȈß¾ǭ']
-			// 	// },
-			// 	mentions: {
-			// 		num: 4, //number of mentions in 1 message
-			// 		pnsh: 2,
-			// 		rsn: 'Sent too many mentions',
-			// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
-			// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
-			// 	},
-			// 	zalgo: { //hasZalgo = txt => /%CC%/g.test(encodeURIComponent(txt));
-			// 		pnsh: 2,
-			// 		rsn: 'Used zalgo',
-			// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
-			// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
-			// 	}
-			// })
-
-			const automodSettings = newDiv('automodsettings'),
-				automodTitle = newDiv('h2', 'tempautomod').Html('Auto Moderation');
-
-			const Rule = dataBaseGuild.Moderation?.automod || {},
-				lastOptions = (properties = {}, type) => {
-					const { pnsh = 0, ignChn, ignRls, rsn } = properties;
-					return [
-						h6('Ignored Channels', 'Word use in these channels will be ignored'),
-						Multiple.Channel({ set: ignChn?.map(Snowflake.decode), guild }),
-						h6('Ignored Roles', 'Word use by users with one or more of these roles will be ignored'),
-						Multiple.Role({ set: ignRls?.map(Snowflake.decode), guild }),
-						h6('Action', 'What the bot should do when finding a message containing a foul'),
-						newRange(1, 3, +pnsh, 'action'),
-						h6('Reason', 'The reason to be provided when warning the member and to be sent in the current channel'),
-						newDiv('input', 'reason').Value(rsn || defaultReasons[type])
-					]
-				};
-
-			automodSettings.append(
-				newDiv('automod', 'words').Append(
-					h6('Word Filter', 'Detect blacklisted words'),
-					newToggle(Rule.words),
-					h6('Words', 'The words that will be blacklisted, You can add multiple words at a time by seperating them by a comma(<code>,</code>)'),
-					Multiple.String({ set: Rule.words?.words, guild, csv: true }),
-					...lastOptions(Rule.words, 'words')
-				),
-				newDiv('automod', 'links').Append(
-					h6('Link Filter', 'Detect links in messages'),
-					newToggle(Rule.links),
-					h6('Ignore Url', 'Ignore any link that starts with any of these urls. Example: <code>https://discord.com/</code> or <code>bot.konkenbonken.com/Guild/</code>'),
-					Multiple.String({ set: Rule.links?.ignDom, guild }).Attribute('url'),
-					h6('Ignore Message Links', 'Ignore links starting with <code>https://discord.com/channels/</code>'),
-					newToggle(Rule.links?.ignMsg, 'ignmsg'),
-					...lastOptions(Rule.links, 'links')
-				),
-				newDiv('automod', 'invites').Append(
-					h6('Invite Filter', 'Detect links starting with <code>https://discord.gg/</code> or <code>https://discord.com/invite/</code>'),
-					newToggle(Rule.invites),
-					...lastOptions(Rule.invites, 'invites')
-				),
-				newDiv('automod', 'spam').Append(
-					h6('Spam Filter', 'Detect repeating of identical messages in a row by the same user'),
-					newToggle(Rule.spam),
-					h6('Amount', 'The amount of messages needed'),
-					newRange(2, 10, Rule.spam?.num || 4),
-					...lastOptions(Rule.spam, 'spam')
-				),
-				newDiv('automod', 'caps').Append(
-					h6('Caps Filter', 'Detect usage of capital letters; only for messages longer than 4 letters'),
-					newToggle(Rule.caps),
-					h6('Amount', 'The percentage of messege that needs to be in upper case'),
-					newRange(20, 100, Rule.caps?.num || 70, 'percent'),
-					...lastOptions(Rule.caps, 'caps')
-				),
-				newDiv('automod', 'mentions').Append(
-					h6('Mentions Filter', 'Detect repeating of user mentions in one message'),
-					newToggle(Rule.mentions),
-					h6('Amount', 'The amount of mentions needed'),
-					newRange(2, 20, Rule.mentions?.num || 4),
-					...lastOptions(Rule.mentions, 'mentions')
-				),
-				newDiv('automod', 'zalgo').Append(
-					h6('Zalgo Filter', 'Detect any usage of z̴͕̮̣͔͊͂̔̈́͝a̴͖̩̣̙̬͑͗͑̐l̴̟̼͔̹̝̆ǵ̸̡̢̳̮͈͆̈́͒̇o̸̬̬͍͛'),
-					newToggle(Rule.zalgo),
-					...lastOptions(Rule.zalgo, 'zalgo')
-				)
+					return div;
+				});
+			scrollbar.append(
+				newDiv('div', 'scrollarrow'),
+				...scrollItems,
+				newDiv('div', 'scrollarrow')
 			)
 
-			page.append(
-				modTitle, modSettings,
-				automodTitle, automodSettings,
-				logsTitle, logSetting,
-				/* ModLogs; läggs till client-side */
-			);
+			modSettings.append(
+				h6('Toggle Moderation Commands', ("Toggle all moderation commands")),
+				newToggle(Rule.enabled),
 
-			resolver([page, title, id, 'moderation']);
-		}),
-		suggestions: (guild, title, id, user) => new Promise(async resolver => {
-			let dataBaseGuild = DataBase.guilds[guild.id] || {};
-			if (!dataBaseGuild.Suggestions) dataBaseGuild.Suggestions = {};
-			let Rule = dataBaseGuild.Suggestions,
-				page = await basePage({ id, title }),
-				setupTitle = newDiv('h2'),
-				innerSettings = newDiv(),
-				suggestSettings = newDiv('suggestSettings'),
-				toggleTitle = newDiv('h5'),
-				onoff = newToggle(Rule.enabled);
-			// checkbox = newDiv('input');
-			Rule.embed = Rule.embed || { colors: {} };
+				h6('Records Channel', ("The channel where all penalties will be displayed")),
+				Select.Channel({ set: Rule.channel, hint: ['crime', 'regist', 'penalt', 'straff', 'brott'], guild }),
 
-			page.append(setupTitle, suggestSettings)
+				h6('Toggle Moderation Logs', ("If enabled, the bot will log every moderation action and show it here on the website")),
+				newToggle(Rule.logsEnabled, 'toggle', 'log'),
 
-			setupTitle.innerHTML = 'Suggestions';
-			toggleTitle.innerHTML = 'Toggle Suggestions';
+				h6('Ban-Message', ("Whenever a user is banned, this message will be sent as a description in an embeded direct message after the messege containing the reason. Tip: This can be used to send out a form that a banned user can fill in if they think they were banned wrongly. Discord formatting does apply")),
+				messageFrom,
+				banMessage,
 
-			if (Rule.enabled)
-				suggestSettings.setAttribute('show', '');
+				h6('Dm Everytime', ("If enabled, the bot will send the Ban-Message to the punished/warned member no matter what penalty they recived. If disabled, the bot will only send a direct message to the member if they've been banned or temporarily banned")),
+				newToggle(Rule.dmAll, 'toggle', 'dm'),
 
-			suggestSettings.append(toggleTitle, onoff, innerSettings);
+				h6('Dm Server Invite', ("If enabled, the bot will send a server invite to the punished member if they were temporarily banned, kicked or unbanned. The bot will create the invite directing to the selected channel or use an already existing invite created by the bot")),
+				newToggle(Rule.dmInvite, 'toggle', 'invite'),
 
-			let suggestChannelSelect = newDiv('select'),
-				responseChannelSelect = newDiv('select');
+				h6('Tell Who Issued The Penalty', ("If enabled, the bot will tell the member which moderator issued the penalty")),
+				newToggle(Rule.tellWho, 'toggle', 'tellwho'),
 
-			let selected = false,
-				channels = channel => [...guild.channels.cache.values()].filter(c => ['GUILD_TEXT', 'GUILD_NEWS'].includes(c.type)).sort((a, b) => a.rawPosition - b.rawPosition).map(c => {
-					let option = newDiv('option');
-					option.value = c.id;
-					option.innerHTML = c.name;
+				h6('Muted Role', ("The role muted people will get. This role were created by the bot the first time someone is muted on your server. This role will have the <code>Send messages</code> permission disabled in every text channel except Support Channels")),
+				mutedDisplay,
 
-					if (Rule.channels && Rule.channels[channel]) {
-						if (c.id == Rule.channels[channel]) option.setAttribute('selected', '')
-					} else if (!selected && c.name.toLowerCase().includes('suggest') || c.name.toLowerCase().includes(channel)) {
-						option.setAttribute('selected', '');
-						selected = true
-					}
-					return option
-				});
-			suggestChannelSelect.append(...channels('suggest'));
-			responseChannelSelect.append(...channels('response'));
+				h6('Use Timeout', ("Use Discord native timeouts instead of the bot's <code>Muted Role</code>. Timouts will mute the member in all channels, including support channels, and is limited to max 28 days. If toggled, <code>$mute</code> command will mute the member for 28 days instead of unlimited time. When toggled, an existing <code>Muted Role</code> will be removed. All current mutes using the <code>Muted Role</code> will be removed when the role is.")),
+				newToggle(Rule.timeout, 'toggle', 'timeout'),
 
-			suggestChannelSelect.name = 'suggestChannel';
-			responseChannelSelect.name = 'responseChannel';
+				h6('Penalty Message', ("This embeded message will be sent in you chosen Records Channel. Every<y>yellow</y>field is customizeble")),
+				embed,
 
-			let embeds = newDiv('div', 'embeds');
-			embeds.append(...Array(4).fill().map((x, i) => {
-				let status = ['pending', 'approve', 'deny', 'consider'][i],
-					embed = newDiv('div', 'embed', status),
-					author = newDiv('div', 'author'),
-					title = newDiv('input', 'title'),
-					content = newDiv('div', 'content'),
-					colorDiv = newDiv('div', 'color'),
-					color = newDiv('input'),
-					reactions, statusName;
+				comSettings,
+				scrollbar,
 
-				embed.setAttribute('status', capital(status));
-				author.innerHTML = RandomUser();
-
-				title.setAttribute('value', Rule.embed.suggestion || 'Suggestion');
-				title.placeholder = 'Suggestion';
-
-				content.innerHTML = "<i>I really think you should add KonkenBoten to your server<br>It's a really good discord bot that's easy to use and completely free!</i>";
-				if (!i) { //pending
-					let reaction = newDiv('div', 'reaction'),
-						emoji = newDiv('div', 'emoji');
-					reactions = [reaction];
-					emoji.innerHTML = Rule.embed?.up || '⬆️';
-					reaction.append(emoji);
-
-					reaction = newDiv('div', 'reaction'),
-						emoji = newDiv('div', 'emoji');
-					emoji.innerHTML = Rule.embed?.down || '⬇️';
-					reaction.append(emoji);
-					reactions.push(reaction);
-				} else {
-					statusName = newDiv('input', 'statusname');
-					let statusNameDeafult = ['Approved', 'Denied', 'Considered'][i - 1];
-					statusName.setAttribute('value', Rule.embed[status] || statusNameDeafult);
-					statusName.placeholder = statusNameDeafult;
-
-					let reasonFrom = newDiv('input', 'reasonFrom');
-					reasonFrom.setAttribute('value', Rule.embed?.reasonFrom || 'Reason from');
-					reasonFrom.placeholder = 'Reason from';
-					content.append(reasonFrom);
-					let reason = ["Yes! Of course. I love that bot :)", "No, I don't like that bot :(", "Hmm... I'll think on that one. Maybe later :|"][i - 1];
-					content.innerHTML += `<b>: ${user.tag}:<span>${reason}</span></b>`;
-				}
-
-				let hexColor = `#${Rule.embed?.colors[status] || ['747f8d', '43b581', 'f04747', 'faa61a'][i]}`;
-				embed.style.borderColor = hexColor;
-				color.type = 'color';
-				color.setAttribute('value', hexColor);
-
-				colorDiv.append(color);
-
-				embed.append(author, title);
-				if (statusName) embed.append(statusName);
-				embed.append(content, colorDiv);
-				if (reactions) embed.append(...reactions);
-
-				return embed
-			}));
-
-			innerSettings.append(
-				h6('Suggest Channel', ('The channel where the members will be able to submit their suggestions. This is also where members will be able to vote on what suggestions they think should be approved')),
-				suggestChannelSelect,
-				h6('Respond Channel', ('The channel where the Support Team will be able to submit their responds. This is where the Support Team\'s responses will be sent')),
-				responseChannelSelect,
-				h6('Embed Config', ('Customize how you want the embeded messages to look like. Every<y>yellow</y>field is customizeble')),
-				embeds,
 				newDiv('div', 'set')
-			);
+				// auto: contentFilter, caps, spam, emoji
+			)
+		};
 
-			// x = {
-			// 	enabled: true,
-			// 	embed: {
-			// 		suggestion: 'Suggestion',
-			// 		reasonFrom: 'Reason from',
-			// 		approve: 'Approved',
-			// 		deny: 'Denied',
-			// 		consider: 'Considered',
-			// 		up: '⬆️', //upvote
-			// 		down: '⬇️', //downvote
-			// 		// colors: {
-			// 		// 	pending: '747f8d',
-			// 		// 	approve: '43b581',
-			// 		// 	deny: 'f04747',
-			// 		// 	consider: 'faa61a'
-			// 		// }
-			// 	}
-			// 	// channels: {
-			// 	// 	suggest: '83730873837',
-			// 	// 	response: '83730873874'
-			// 	// }
-			// }
-			if (dataBaseGuild.Suggestions.isEmpty()) dataBaseGuild.Suggestions = undefined;
+		// ({
+		// 	words: { // disabled if undefined
+		// 		words: ['ord', 'ord'],
+		// 		pnsh: 2, // 0/undef:none, 1:delete, 2:warn, 3:warn&delete
+		// 		rsn: 'Used a bad word', //reason if warn
+		// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
+		// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
+		// 	},
+		// 	links: {
+		// 		ignDom: ['google.se', 'mcfkg.eu'],
+		// 		inv: 0, //* 0/undef:Ignore, 1:Catch, 2:Only Catch*/
+		// 		pnsh: 2,
+		// 		rsn: 'Sent a link',
+		// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
+		// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
+		// 	},
+		// 	spam: {
+		// 		num: 4, //number of same messages in a row
+		// 		pnsh: 2,
+		// 		rsn: 'Sent too many indentical messages',
+		// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
+		// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
+		// 	},
+		// 	caps: {
+		// 		num: 70, //percentage of letters that is caps
+		// 		pnsh: 2,
+		// 		rsn: 'Sent too many capital letters',
+		// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
+		// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
+		// 	},
+		// 	// emojis: {
+		// 	// 	num: 3, //number of emojis in 1 message
+		// 	// 	pnsh: 2,
+		// 	//  rsn:'Sent too many emojis',
+		// 	// 	ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
+		// 	// 	ignChn: ['rÑ00', 'ÓȈß¾ǭ']
+		// 	// },
+		// 	mentions: {
+		// 		num: 4, //number of mentions in 1 message
+		// 		pnsh: 2,
+		// 		rsn: 'Sent too many mentions',
+		// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
+		// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
+		// 	},
+		// 	zalgo: { //hasZalgo = txt => /%CC%/g.test(encodeURIComponent(txt));
+		// 		pnsh: 2,
+		// 		rsn: 'Used zalgo',
+		// 		ignRls: ['ƚȰơǜȩy', 'ƣǺXVȄ'],
+		// 		ignChn: ['rÑ00', 'ÓȈß¾ǭ']
+		// 	}
+		// })
 
-			resolver([page, title, id, 'suggestions']);
-		})
-	},
+		const automodSettings = newDiv('automodsettings'),
+			automodTitle = newDiv('h2', 'tempautomod').Html('Auto Moderation');
+
+		const Rule = dataBaseGuild.Moderation?.automod || {},
+			lastOptions = (properties = {}, type) => {
+				const { pnsh = 0, ignChn, ignRls, rsn } = properties;
+				return [
+					h6('Ignored Channels', 'Word use in these channels will be ignored'),
+					Multiple.Channel({ set: ignChn?.map(Snowflake.decode), guild }),
+					h6('Ignored Roles', 'Word use by users with one or more of these roles will be ignored'),
+					Multiple.Role({ set: ignRls?.map(Snowflake.decode), guild }),
+					h6('Action', 'What the bot should do when finding a message containing a foul'),
+					newRange(1, 3, +pnsh, 'action'),
+					h6('Reason', 'The reason to be provided when warning the member and to be sent in the current channel'),
+					newDiv('input', 'reason').Value(rsn || defaultReasons[type])
+				]
+			};
+
+		automodSettings.append(
+			newDiv('automod', 'words').Append(
+				h6('Word Filter', 'Detect blacklisted words'),
+				newToggle(Rule.words),
+				h6('Words', 'The words that will be blacklisted, You can add multiple words at a time by seperating them by a comma(<code>,</code>)'),
+				Multiple.String({ set: Rule.words?.words, guild, csv: true }),
+				...lastOptions(Rule.words, 'words')
+			),
+			newDiv('automod', 'links').Append(
+				h6('Link Filter', 'Detect links in messages'),
+				newToggle(Rule.links),
+				h6('Ignore Url', 'Ignore any link that starts with any of these urls. Example: <code>https://discord.com/</code> or <code>bot.konkenbonken.com/Guild/</code>'),
+				Multiple.String({ set: Rule.links?.ignDom, guild }).Attribute('url'),
+				h6('Ignore Message Links', 'Ignore links starting with <code>https://discord.com/channels/</code>'),
+				newToggle(Rule.links?.ignMsg, 'ignmsg'),
+				...lastOptions(Rule.links, 'links')
+			),
+			newDiv('automod', 'invites').Append(
+				h6('Invite Filter', 'Detect links starting with <code>https://discord.gg/</code> or <code>https://discord.com/invite/</code>'),
+				newToggle(Rule.invites),
+				...lastOptions(Rule.invites, 'invites')
+			),
+			newDiv('automod', 'spam').Append(
+				h6('Spam Filter', 'Detect repeating of identical messages in a row by the same user'),
+				newToggle(Rule.spam),
+				h6('Amount', 'The amount of messages needed'),
+				newRange(2, 10, Rule.spam?.num || 4),
+				...lastOptions(Rule.spam, 'spam')
+			),
+			newDiv('automod', 'caps').Append(
+				h6('Caps Filter', 'Detect usage of capital letters; only for messages longer than 4 letters'),
+				newToggle(Rule.caps),
+				h6('Amount', 'The percentage of messege that needs to be in upper case'),
+				newRange(20, 100, Rule.caps?.num || 70, 'percent'),
+				...lastOptions(Rule.caps, 'caps')
+			),
+			newDiv('automod', 'mentions').Append(
+				h6('Mentions Filter', 'Detect repeating of user mentions in one message'),
+				newToggle(Rule.mentions),
+				h6('Amount', 'The amount of mentions needed'),
+				newRange(2, 20, Rule.mentions?.num || 4),
+				...lastOptions(Rule.mentions, 'mentions')
+			),
+			newDiv('automod', 'zalgo').Append(
+				h6('Zalgo Filter', 'Detect any usage of z̴͕̮̣͔͊͂̔̈́͝a̴͖̩̣̙̬͑͗͑̐l̴̟̼͔̹̝̆ǵ̸̡̢̳̮͈͆̈́͒̇o̸̬̬͍͛'),
+				newToggle(Rule.zalgo),
+				...lastOptions(Rule.zalgo, 'zalgo')
+			)
+		)
+
+		page.append(
+			modTitle, modSettings,
+			automodTitle, automodSettings,
+			logsTitle, logSetting,
+			/* ModLogs; läggs till client-side */
+		);
+
+		resolver([page, title, id, 'moderation']);
+	}),
+	suggestions: (guild, title, id, user) => new Promise(async resolver => {
+		let dataBaseGuild = DataBase.guilds[guild.id] || {};
+		if (!dataBaseGuild.Suggestions) dataBaseGuild.Suggestions = {};
+		let Rule = dataBaseGuild.Suggestions,
+			page = await basePage({ id, title }),
+			setupTitle = newDiv('h2'),
+			innerSettings = newDiv(),
+			suggestSettings = newDiv('suggestSettings'),
+			toggleTitle = newDiv('h5'),
+			onoff = newToggle(Rule.enabled);
+		// checkbox = newDiv('input');
+		Rule.embed = Rule.embed || { colors: {} };
+
+		page.append(setupTitle, suggestSettings)
+
+		setupTitle.innerHTML = 'Suggestions';
+		toggleTitle.innerHTML = 'Toggle Suggestions';
+
+		if (Rule.enabled)
+			suggestSettings.setAttribute('show', '');
+
+		suggestSettings.append(toggleTitle, onoff, innerSettings);
+
+		let suggestChannelSelect = newDiv('select'),
+			responseChannelSelect = newDiv('select');
+
+		let selected = false,
+			channels = channel => [...guild.channels.cache.values()].filter(c => ['GUILD_TEXT', 'GUILD_NEWS'].includes(c.type)).sort((a, b) => a.rawPosition - b.rawPosition).map(c => {
+				let option = newDiv('option');
+				option.value = c.id;
+				option.innerHTML = c.name;
+
+				if (Rule.channels && Rule.channels[channel]) {
+					if (c.id == Rule.channels[channel]) option.setAttribute('selected', '')
+				} else if (!selected && c.name.toLowerCase().includes('suggest') || c.name.toLowerCase().includes(channel)) {
+					option.setAttribute('selected', '');
+					selected = true
+				}
+				return option
+			});
+		suggestChannelSelect.append(...channels('suggest'));
+		responseChannelSelect.append(...channels('response'));
+
+		suggestChannelSelect.name = 'suggestChannel';
+		responseChannelSelect.name = 'responseChannel';
+
+		let embeds = newDiv('div', 'embeds');
+		embeds.append(...Array(4).fill().map((x, i) => {
+			let status = ['pending', 'approve', 'deny', 'consider'][i],
+				embed = newDiv('div', 'embed', status),
+				author = newDiv('div', 'author'),
+				title = newDiv('input', 'title'),
+				content = newDiv('div', 'content'),
+				colorDiv = newDiv('div', 'color'),
+				color = newDiv('input'),
+				reactions, statusName;
+
+			embed.setAttribute('status', capital(status));
+			author.innerHTML = RandomUser();
+
+			title.setAttribute('value', Rule.embed.suggestion || 'Suggestion');
+			title.placeholder = 'Suggestion';
+
+			content.innerHTML = "<i>I really think you should add KonkenBoten to your server<br>It's a really good discord bot that's easy to use and completely free!</i>";
+			if (!i) { //pending
+				let reaction = newDiv('div', 'reaction'),
+					emoji = newDiv('div', 'emoji');
+				reactions = [reaction];
+				emoji.innerHTML = Rule.embed?.up || '⬆️';
+				reaction.append(emoji);
+
+				reaction = newDiv('div', 'reaction'),
+					emoji = newDiv('div', 'emoji');
+				emoji.innerHTML = Rule.embed?.down || '⬇️';
+				reaction.append(emoji);
+				reactions.push(reaction);
+			} else {
+				statusName = newDiv('input', 'statusname');
+				let statusNameDeafult = ['Approved', 'Denied', 'Considered'][i - 1];
+				statusName.setAttribute('value', Rule.embed[status] || statusNameDeafult);
+				statusName.placeholder = statusNameDeafult;
+
+				let reasonFrom = newDiv('input', 'reasonFrom');
+				reasonFrom.setAttribute('value', Rule.embed?.reasonFrom || 'Reason from');
+				reasonFrom.placeholder = 'Reason from';
+				content.append(reasonFrom);
+				let reason = ["Yes! Of course. I love that bot :)", "No, I don't like that bot :(", "Hmm... I'll think on that one. Maybe later :|"][i - 1];
+				content.innerHTML += `<b>: ${user.tag}:<span>${reason}</span></b>`;
+			}
+
+			let hexColor = `#${Rule.embed?.colors[status] || ['747f8d', '43b581', 'f04747', 'faa61a'][i]}`;
+			embed.style.borderColor = hexColor;
+			color.type = 'color';
+			color.setAttribute('value', hexColor);
+
+			colorDiv.append(color);
+
+			embed.append(author, title);
+			if (statusName) embed.append(statusName);
+			embed.append(content, colorDiv);
+			if (reactions) embed.append(...reactions);
+
+			return embed
+		}));
+
+		innerSettings.append(
+			h6('Suggest Channel', ('The channel where the members will be able to submit their suggestions. This is also where members will be able to vote on what suggestions they think should be approved')),
+			suggestChannelSelect,
+			h6('Respond Channel', ('The channel where the Support Team will be able to submit their responds. This is where the Support Team\'s responses will be sent')),
+			responseChannelSelect,
+			h6('Embed Config', ('Customize how you want the embeded messages to look like. Every<y>yellow</y>field is customizeble')),
+			embeds,
+			newDiv('div', 'set')
+		);
+
+		// x = {
+		// 	enabled: true,
+		// 	embed: {
+		// 		suggestion: 'Suggestion',
+		// 		reasonFrom: 'Reason from',
+		// 		approve: 'Approved',
+		// 		deny: 'Denied',
+		// 		consider: 'Considered',
+		// 		up: '⬆️', //upvote
+		// 		down: '⬇️', //downvote
+		// 		// colors: {
+		// 		// 	pending: '747f8d',
+		// 		// 	approve: '43b581',
+		// 		// 	deny: 'f04747',
+		// 		// 	consider: 'faa61a'
+		// 		// }
+		// 	}
+		// 	// channels: {
+		// 	// 	suggest: '83730873837',
+		// 	// 	response: '83730873874'
+		// 	// }
+		// }
+		if (dataBaseGuild.Suggestions.isEmpty()) dataBaseGuild.Suggestions = undefined;
+
+		resolver([page, title, id, 'suggestions']);
+	})
+},
 	encodeT = n => Math.round((n || Date.now()) / 6e4 - 271e5), // Date ->  T
 	decodeT = (n, parse = false, guild) => { // T   -> Date
 		n = new Date((n + 271e5) * 6e4);
@@ -2186,116 +2180,116 @@ const Page = {
 	decryptString = s => nextChar(s, -3);
 
 const AllMessages = channel => new Promise(async resolver => {
-		try {
-			let messages = [],
-				temp;
-			do {
-				let last = messages.map(x => x).reverse()[0]?.id;
-				temp = [...(await channel.messages.fetch({ before: last, limit: 100 }).catch(e => null))?.values()];
-				if (temp) messages.push(...temp);
-			} while (temp?.length == 100);
-			resolver(messages)
-		} catch (e) {
-			console.error(e);
-			resolver([])
-		}
-	}),
+	try {
+		let messages = [],
+			temp;
+		do {
+			let last = messages.map(x => x).reverse()[0]?.id;
+			temp = [...(await channel.messages.fetch({ before: last, limit: 100 }).catch(e => null))?.values()];
+			if (temp) messages.push(...temp);
+		} while (temp?.length == 100);
+		resolver(messages)
+	} catch (e) {
+		console.error(e);
+		resolver([])
+	}
+}),
 
 	TicketSetup = async (guildID, oldChannelId) => {
-			let DataBaseGuild = DataBase.guilds[guildID],
-				Rule = DataBaseGuild.Tickets;
-			try {
-				var guild = await client.guilds.fetch(guildID),
-					oldChannel = oldChannelId && await client.channels.fetch(oldChannelId).catch(x => false),
-					channel = await client.channels.fetch(Rule.channel);
-			} catch { return }
-			let reactMessage = Rule.existingMessage ? await (oldChannel || channel).messages.fetch(Rule.existingMessage).catch(x => false) : false,
-				// reactFilter = e => ({ filter: (r, u) => !u.bot && [...e].includes(r.emoji.name) }),
-				reactMessageObj = {
-					embeds: [{
-						color: parseInt(Rule.color?.slice(1), 16) || 14396689,
-						author: { name: Rule.author || 'Support' },
-						description: Rule.content || 'By clicking 💬 you can open a private text channel with only you and the staff team,\nyou can do this to report an error or a person or if you just want to ask a question'
-					}],
-					components: [{
-						components: [{ emoji: Rule.emoji || '💬', customId: 'ticket-start', type: 2, style: 1 }],
-						type: 1
-					}]
-				};
-
-			if (reactMessage) {
-				if (Rule.channel == reactMessage.channel.id)
-					reactMessage.edit(reactMessageObj);
-				else {
-					reactMessage.delete();
-					reactMessage = await channel.send(reactMessageObj);
-				}
-			} else reactMessage = await channel.send(reactMessageObj).catch(() => undefined);
-			DataBaseGuild.Tickets.existingMessage = reactMessage?.id;
-
-			WriteDataBase();
-			// "enabled": true,"channel": "798590264511037450","staff": "825378302579048448","author": "tesst au2","content": "By clicking 💬 tesst3","emoji": "","color": "#5dac79","existingMessage": "827248807896809542"
-		}, //TicketSetup
-
-		SuggestRespond = (guild, user, reason, index, responseType) => new Promise(async (resolver, reject) => {
-			//responseType == 'approve'|'deny'|'consider'
-			if (!(guild && user && reason && +index && responseType)) return reject('Unknown error');
-			let Rule = DataBase.guilds[guild.id].Suggestions,
-				suggestion = Rule.suggestions[index];
-			if (!suggestion) return reject('Suggestion not found');
-
-			let channel = await client.channels.fetch(Rule.channels.response).catch(() => false),
-				member = await guild.members.fetch(suggestion.user).catch(() => false);
-
-			if (!channel) return reject('Response Channel not found');
-			if (!member) return reject('Member not found');
-
-			reason = reason.substr(0, 1024);
-
-			let [msg, suggestChannel] = await Promise.all([channel.send({
-						embeds: [{
-							color: parseInt(Rule.embed.colors[responseType], 16),
-							author: {
-								iconURL: member.displayAvatarURL(),
-								name: member.user.tag
-							},
-							title: `${Rule.embed.suggestion} #${index} ${Rule.embed[responseType]}`,
-							description: suggestion.suggestion,
-							fields: [{
-								name: `${Rule.embed.reasonFrom} ${user.tag}:`,
-								value: reason,
-							}]
-						}]
-					}).catch(e => false),
-					client.channels.fetch(Rule.channels.suggest).catch(e => false)
-				]),
-				suggestionMsg = await suggestChannel.messages.fetch(suggestion.msg).catch(e => false);
-
-			if (!msg) return reject('Could not send message');
-			if (!suggestChannel) return reject('Suggestion Channel not found');
-
-			suggestChannel.messages.edit(suggestionMsg, {
+		let DataBaseGuild = DataBase.guilds[guildID],
+			Rule = DataBaseGuild.Tickets;
+		try {
+			var guild = await client.guilds.fetch(guildID),
+				oldChannel = oldChannelId && await client.channels.fetch(oldChannelId).catch(x => false),
+				channel = await client.channels.fetch(Rule.channel);
+		} catch { return }
+		let reactMessage = Rule.existingMessage ? await (oldChannel || channel).messages.fetch(Rule.existingMessage).catch(x => false) : false,
+			// reactFilter = e => ({ filter: (r, u) => !u.bot && [...e].includes(r.emoji.name) }),
+			reactMessageObj = {
 				embeds: [{
-					...suggestionMsg.embeds[0].toJSON(),
-					color: parseInt(Rule.embed.colors[responseType], 16)
+					color: parseInt(Rule.color?.slice(1), 16) || 14396689,
+					author: { name: Rule.author || 'Support' },
+					description: Rule.content || 'By clicking 💬 you can open a private text channel with only you and the staff team,\nyou can do this to report an error or a person or if you just want to ask a question'
+				}],
+				components: [{
+					components: [{ emoji: Rule.emoji || '💬', customId: 'ticket-start', type: 2, style: 1 }],
+					type: 1
 				}]
-			}).catch(() => false);
+			};
 
-			suggestion.answer = {
-				type: responseType,
-				user: user.id,
-				reason
+		if (reactMessage) {
+			if (Rule.channel == reactMessage.channel.id)
+				reactMessage.edit(reactMessageObj);
+			else {
+				reactMessage.delete();
+				reactMessage = await channel.send(reactMessageObj);
 			}
+		} else reactMessage = await channel.send(reactMessageObj).catch(() => undefined);
+		DataBaseGuild.Tickets.existingMessage = reactMessage?.id;
 
-			resolver(msg);
-			WriteDataBase();
-		}),
-		MutedPermissions = async role => {
-			try {
-				if (role && role instanceof Discord.Role) {
-					let { guild } = role,
+		WriteDataBase();
+		// "enabled": true,"channel": "798590264511037450","staff": "825378302579048448","author": "tesst au2","content": "By clicking 💬 tesst3","emoji": "","color": "#5dac79","existingMessage": "827248807896809542"
+	}, //TicketSetup
+
+	SuggestRespond = (guild, user, reason, index, responseType) => new Promise(async (resolver, reject) => {
+		//responseType == 'approve'|'deny'|'consider'
+		if (!(guild && user && reason && +index && responseType)) return reject('Unknown error');
+		let Rule = DataBase.guilds[guild.id].Suggestions,
+			suggestion = Rule.suggestions[index];
+		if (!suggestion) return reject('Suggestion not found');
+
+		let channel = await client.channels.fetch(Rule.channels.response).catch(() => false),
+			member = await guild.members.fetch(suggestion.user).catch(() => false);
+
+		if (!channel) return reject('Response Channel not found');
+		if (!member) return reject('Member not found');
+
+		reason = reason.substr(0, 1024);
+
+		let [msg, suggestChannel] = await Promise.all([channel.send({
+			embeds: [{
+				color: parseInt(Rule.embed.colors[responseType], 16),
+				author: {
+					iconURL: member.displayAvatarURL(),
+					name: member.user.tag
+				},
+				title: `${Rule.embed.suggestion} #${index} ${Rule.embed[responseType]}`,
+				description: suggestion.suggestion,
+				fields: [{
+					name: `${Rule.embed.reasonFrom} ${user.tag}:`,
+					value: reason,
+				}]
+			}]
+		}).catch(e => false),
+		client.channels.fetch(Rule.channels.suggest).catch(e => false)
+		]),
+			suggestionMsg = await suggestChannel.messages.fetch(suggestion.msg).catch(e => false);
+
+		if (!msg) return reject('Could not send message');
+		if (!suggestChannel) return reject('Suggestion Channel not found');
+
+		suggestChannel.messages.edit(suggestionMsg, {
+			embeds: [{
+				...suggestionMsg.embeds[0].toJSON(),
+				color: parseInt(Rule.embed.colors[responseType], 16)
+			}]
+		}).catch(() => false);
+
+		suggestion.answer = {
+			type: responseType,
+			user: user.id,
+			reason
+		}
+
+		resolver(msg);
+		WriteDataBase();
+	}),
+	MutedPermissions = async role => {
+		try {
+			if (role && role instanceof Discord.Role) {
+				let { guild } = role,
 					DataBaseGuild = DataBase.guilds[guild.id],
-						channels = [...guild.channels.cache.values()]
+					channels = [...guild.channels.cache.values()]
 						.filter(c => //&&c.permissionsFor(role).bitfield    // ['GUILD_TEXT', 'GUILD_PRIVATE_THREAD', 'GUILD_PUBLIC_THREAD'].includes(c.type )
 							c.type != 'GUILD_CATEGORY' &&
 							c.permissionOverwrites &&
@@ -2303,72 +2297,72 @@ const AllMessages = channel => new Promise(async resolver => {
 							//  &&c.messages && !c.messages.fetch().then(messages => { console.log(messages); return messages.values().find(m => m.author.id == ClientID && m.components[0].components[0].customId == 'ticket-close') })
 							/*&& !DataBaseGuild.Tickets.ticketsCreated.includes(c.id)*/
 						);
-					// console.log(channels.map(c => c.name));
-					return Promise.all(channels.map(channel =>
-						channel.isText() ?
+				// console.log(channels.map(c => c.name));
+				return Promise.all(channels.map(channel =>
+					channel.isText() ?
 						channel.permissionOverwrites.create(role, { SEND_MESSAGES: false }, 'Muted Role Setup') :
 						channel.permissionOverwrites.create(role, { SPEAK: false }, 'Muted Role Setup')
-						// channel.permissionOverwrites.create(role, { CONNECT: false }, 'Muted Role Setup')
-					));
-				}
-			} catch (e) { console.log(e) }
-		};
+					// channel.permissionOverwrites.create(role, { CONNECT: false }, 'Muted Role Setup')
+				));
+			}
+		} catch (e) { console.log(e) }
+	};
 const ReactionFilters = {
-		/*undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/
-		0: () => true,
-		1: m => m.author.bot,
-		2: m => !m.author.bot,
-		3: m => !!m.embeds.length,
-		4: (m, id) => m.author.id == id,
-		5: (m, id) => m.member.roles.cache.has(id),
-	},
+	/*undef:all; 1:only bots; 2:not bots; 3:only embeds; 'u92635':only user; 'r92635':only role*/
+	0: () => true,
+	1: m => m.author.bot,
+	2: m => !m.author.bot,
+	3: m => !!m.embeds.length,
+	4: (m, id) => m.author.id == id,
+	5: (m, id) => m.member.roles.cache.has(id),
+},
 	idleFunctionsQueue = [];
 const TranscriptMsgsToHtml = (msgs, guild) => Promise.all(msgs.map(async ({ a, c, t, f }, i) => {
-		// if (!i || i == msgs.length - 1) newFromto.push(decodeT(t));
-		let div = newDiv('msg'),
-			author = newDiv('div', 'user'),
-			content = newDiv('div', 'content'),
-			time = newDiv('div', 'time'),
-			files = newDiv('div', 'files');
+	// if (!i || i == msgs.length - 1) newFromto.push(decodeT(t));
+	let div = newDiv('msg'),
+		author = newDiv('div', 'user'),
+		content = newDiv('div', 'content'),
+		time = newDiv('div', 'time'),
+		files = newDiv('div', 'files');
 
-		div.append(author, content);
-		time.innerHTML = decodeT(t, true, guild);
-		if (f) files.innerHTML = f.map(([n, u]) => `<a href="${u}">${n}</a>`).join('', div.append(files));
+	div.append(author, content);
+	time.innerHTML = decodeT(t, true, guild);
+	if (f) files.innerHTML = f.map(([n, u]) => `<a href="${u}">${n}</a>`).join('', div.append(files));
 
-		div.append(time);
+	div.append(time);
 
-		let member = await guild.members.fetch(a).catch(e => null);
+	let member = await guild.members.fetch(a).catch(e => null);
+	if (member) {
+		author.innerHTML = member.user.tag;
+		author.setAttribute('nm', member.displayName);
+		author.style.setProperty('--uclr', member.displayHexColor);
+		author.style.setProperty('--avtr', `url(${member.user.displayAvatarURL()})`);
+	} else {
+		member = await client.users.fetch(a).catch(e => null);
 		if (member) {
-			author.innerHTML = member.user.tag;
-			author.setAttribute('nm', member.displayName);
-			author.style.setProperty('--uclr', member.displayHexColor);
-			author.style.setProperty('--avtr', `url(${member.user.displayAvatarURL()})`);
+			author.innerHTML = member.tag;
+			author.setAttribute('nm', member.username);
+			author.style.setProperty('--uclr', '#72767d');
+			author.style.setProperty('--avtr', `url(${member.displayAvatarURL()})`);
 		} else {
-			member = await client.users.fetch(a).catch(e => null);
-			if (member) {
-				author.innerHTML = member.tag;
-				author.setAttribute('nm', member.username);
-				author.style.setProperty('--uclr', '#72767d');
-				author.style.setProperty('--avtr', `url(${member.displayAvatarURL()})`);
-			} else {
-				author.setAttribute('nm', 'Unknown');
-				author.innerHTML = a;
-			}
+			author.setAttribute('nm', 'Unknown');
+			author.innerHTML = a;
 		}
+	}
 
-		if (typeof c == 'string') content.innerHTML = decryptString(c)
-		else if (c) {
-			content.classList.add('embed');
-			content.append(...['athr', 'ttl', 'desc', 'ftr'].map((x, i, o) => {
-				if (c[x]) {
-					let el = newDiv('div', ['author', 'title', 'content', 'footer'][i]);
-					el.innerHTML = c[x];
-					return el;
-				}
-			}).filter(x => x));
-		}
-		return div;
-	})),
+	if (typeof c == 'string') content.innerHTML = decryptString(c)
+	else if (c) {
+		content.classList.add('embed');
+		content.append(...['athr', 'ttl', 'desc', 'ftr'].map((x, i, o) => {
+			if (c[x]) {
+				let el = newDiv('div', ['author', 'title', 'content', 'footer'][i]);
+				el.innerHTML = c[x];
+				return el;
+			}
+		}).filter(x => x));
+	}
+	return div;
+})),
 	addGuildIcon = (guild, document) => {
 		if (guild.icon) {
 			let icon = newDiv('icon', 'guildIcon');
@@ -2399,20 +2393,20 @@ const setGuildCustomCommands = (guild, lazy = false) => {
 	}
 
 	return guild.commands.set(TextCommandRules.map(rule => ({
-			name: rule.command.substring(0, 32).toLowerCase(),
-			description: (rule.embed ?
-					rule.content.ttl || rule.content.desc :
-					rule.content.substring(0, 100)) ||
-				'Custom Command',
-			options: [{
-				name: 'private',
-				type: 'BOOLEAN',
-				description: 'Only show output to the executor',
-				required: false
-			}],
-			defaultPermission: false,
-			dm_permission: false
-		})))
+		name: rule.command.substring(0, 32).toLowerCase(),
+		description: (rule.embed ?
+			rule.content.ttl || rule.content.desc :
+			rule.content.substring(0, 100)) ||
+			'Custom Command',
+		options: [{
+			name: 'private',
+			type: 'BOOLEAN',
+			description: 'Only show output to the executor',
+			required: false
+		}],
+		defaultPermission: false,
+		dm_permission: false
+	})))
 		.catch(() => console.log('No commands scope in', guild.name, guild.id))
 };
 
@@ -2461,7 +2455,7 @@ DataBase.loggedIn = DataBase.loggedIn || {};
 // DataBase.loggedIn = {};
 Object.entries(DataBase.loggedIn).forEach(([id, data]) => {
 	const [{ expires }, guilds] = data,
-	duration = expires - Date.now();
+		duration = expires - Date.now();
 	console.log(id, CleanDate(duration / 1000, 'm'));
 
 	if (duration <= 0) return delete DataBase.loggedIn[id]
@@ -2895,17 +2889,17 @@ io.on('connection', async socket => {
 						let member = await socket.Guild.members.fetch(socket.discordID);
 						if (reason && +index && responseType)
 							SuggestRespond(socket.Guild, socket.discord, reason, +index, responseType)
-							.catch(e => fun(null, e))
-							.then(() => fun({
-								reason,
-								index,
-								responseType,
-								name: member.displayName,
-								hex: member.displayHexColor,
-								tag: member.user.tag,
-								avtr: member.user.displayAvatarURL(),
-								clr: `#${Suggestions.embed.colors[responseType]}`
-							}))
+								.catch(e => fun(null, e))
+								.then(() => fun({
+									reason,
+									index,
+									responseType,
+									name: member.displayName,
+									hex: member.displayHexColor,
+									tag: member.user.tag,
+									avtr: member.user.displayAvatarURL(),
+									clr: `#${Suggestions.embed.colors[responseType]}`
+								}))
 						else fun(null, 'Invalid Arguments');
 					}
 				};
@@ -2954,7 +2948,7 @@ io.on('connection', async socket => {
 									if (fromto[1]) to.innerHTML = `<i>Closed:</i><i>${fromto[1]}</i>`;
 								} catch { console.error('fromto Error'); }
 
-								div.append(name, timeDiv, ...await TranscriptMsgsToHtml(msgs, guild) /*,closedBy*/ );
+								div.append(name, timeDiv, ...await TranscriptMsgsToHtml(msgs, guild) /*,closedBy*/);
 
 								return div;
 							})));
@@ -3029,15 +3023,15 @@ io.on('connection', async socket => {
 					getAll: async ([page = 0, filterIndex = 0, filterId]) => {
 						if (!Moderation?.logs) return err('No logs found');
 
-						for (const log of Object.values(Moderation.logs).flat()) 
+						for (const log of Object.values(Moderation.logs).flat())
 							if (typeof log.r !== 'string' || log.r === 'Unknown reason')
 								log.r = undefined;
 
 						const filterFunction = [
-								[],
-								[filterId],
-								[null, filterId]
-							][filterIndex],
+							[],
+							[filterId],
+							[null, filterId]
+						][filterIndex],
 
 							pageLength = 10,
 							guild = socket.Guild,
@@ -3275,7 +3269,7 @@ client.on('ready', async () => {
 	server.listen(port, () => console.log(`listening on ${port} and logged in as ${client.user.username}!`));
 
 	console.log(client.guilds.cache.filter(g => g.available).size, 'available of', client.guilds.cache.size, 'Guilds before fetch');
-	await client.guilds.fetch( /*{ force: true }*/ );
+	await client.guilds.fetch( /*{ force: true }*/);
 	console.log(client.guilds.cache.filter(g => g.available).size, 'available of', client.guilds.cache.size, 'Guilds after fetch');
 	setTimeout(() => {
 		// Promise.all(client.guilds.cache.map(g => g.available || client.guilds.fetch(g.id)))
@@ -3300,15 +3294,15 @@ client.on('ready', async () => {
 		let reason = `Temporarily ${temp.type} expired`,
 
 			fun = temp.type == 'mute' ?
-			() => guild.members.fetch(temp.m).then(m => m.roles.remove(temp.role, reason)) :
-			() => guild.members.unban(temp.m, reason),
+				() => guild.members.fetch(temp.m).then(m => m.roles.remove(temp.role, reason)) :
+				() => guild.members.unban(temp.m, reason),
 
 			prom = x => x
-			.then(() => delete DataBase.temp[i])
-			.catch(e =>
-				setTimeout(
-					() => fun().finally(() => delete DataBase.temp[i]),
-					108e5));
+				.then(() => delete DataBase.temp[i])
+				.catch(e =>
+					setTimeout(
+						() => fun().finally(() => delete DataBase.temp[i]),
+						108e5));
 
 		setTimeout(() => prom(fun()), duration)
 	});
@@ -3329,9 +3323,9 @@ client.on('ready', async () => {
 			if (!transcript) return delete transcripts[i];
 			let { closeAt, channelName, fromto } = transcript;
 			if (!(
-					Math.min(+decodeT(closeAt), +decodeT(fromto[0]) + 2592e6) > //30d
-					Date.now()
-				)) { // if !keep
+				Math.min(+decodeT(closeAt), +decodeT(fromto[0]) + 2592e6) > //30d
+				Date.now()
+			)) { // if !keep
 				delete transcripts[i];
 				DataBase.guilds[guildId].Tickets.transcripts = transcripts.filter(x => x);
 				console.log(`Deleted transcript: "${channelName}" in ${guildId}`);
@@ -3425,7 +3419,7 @@ client.on('messageCreate', async m => { //Not Prefixed
 		return;
 	}
 
-	if (!m.guild || !m.member /*|| m.author.bot*/ ) return;
+	if (!m.guild || !m.member /*|| m.author.bot*/) return;
 
 	const GuildData = DataBase.guilds[m.guild.id] || {};
 
@@ -3534,10 +3528,10 @@ client.on('messageCreate', async m => { //deprecated commands warning
 	const GuildData = DataBase.guilds[m.guild.id] ?? {};
 
 	if (!(
-			[...commands, ...Object.values(GuildData.commands || {})]
+		[...commands, ...Object.values(GuildData.commands || {})]
 			.some(({ com }) => m.content.startsWith((GuildData.prefix || '$') + com)) ||
-			m.content.startsWith('<@813803575264018433>')
-		)) return;
+		m.content.startsWith('<@813803575264018433>')
+	)) return;
 
 	m.reply({
 		embeds: [{
@@ -3599,7 +3593,7 @@ client.on('interactionCreate', async interaction => { // Slash-Commands
 			},
 			thumbnail: { url: rule.content.thmb },
 			image: { url: rule.content.img },
-			color: `#${rule.content.clr||'dbad11'}`
+			color: `#${rule.content.clr || 'dbad11'}`
 		}]
 	};
 	else message = { content: rule.content };
@@ -3655,10 +3649,10 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 				let Rule = Rules[RulesIDs.indexOf(newState.channelId)];
 				if (Rule && !Rule.disabled) {
 					let options = {
-							type: 'GUILD_VOICE',
-							parent: newState.channel.parent,
-							permissionOverwrites: newState.channel.permissionOverwrites.cache
-						},
+						type: 'GUILD_VOICE',
+						parent: newState.channel.parent,
+						permissionOverwrites: newState.channel.permissionOverwrites.cache
+					},
 						index = [...guild.channels.cache.values()].filter(c => Created.includes(c.id) && RegExp(Rule.channelname.replace('{i}', '\\d'), 'g').test(c.name)).length + 1;
 
 					if (Rule.Userlimit) options.userLimit = Rule.Userlimit;
@@ -3700,7 +3694,7 @@ Object.entries(LogRules).forEach(([Event, Rule]) =>
 		if (a[0].author && a[0].author?.id == ClientID) return;
 		let guild = a.find(x => x instanceof Discord.Guild) || a.find(x => x.guild)?.guild || a.find(x => x.message)?.message?.channel?.guild || (a[0].first && a[0].first()?.guild);
 		if (!guild) {
-			if (Event == 'userUpdate')[...client.guilds.cache.values()].filter(g => g.members.cache.has(a[0].id))
+			if (Event == 'userUpdate') [...client.guilds.cache.values()].filter(g => g.members.cache.has(a[0].id))
 				.forEach(g => client.emit('userUpdate', ...a, g));
 			else if (Event != 'messageCreate') console.error('Error - no Guild found', [`Event: ${Event}`, ...a]);
 			return;
@@ -3742,17 +3736,17 @@ Object.entries(LogRules).forEach(([Event, Rule]) =>
 	}));
 
 client.on('interactionCreate', async interaction => {
-	const { customId, guild, channel, user, message /*,component*/ , member } = interaction;
-	if (!(customId && guild && channel && message /*&&component*/ )) return;
+	const { customId, guild, channel, user, message /*,component*/, member } = interaction;
+	if (!(customId && guild && channel && message /*&&component*/)) return;
 
 	if (customId.startsWith('ticket')) {
 		const DataBaseGuild = DataBase.guilds[guild.id],
 			Rule = DataBaseGuild?.Tickets;
 		if (!Rule) return;
 		const embedTemplate = {
-				color: parseInt(Rule.color?.slice(1), 16) || 14396689,
-				author: { name: Rule.author }
-			},
+			color: parseInt(Rule.color?.slice(1), 16) || 14396689,
+			author: { name: Rule.author }
+		},
 			staffRole = await guild.roles.fetch(Rule.staff).catch(e => null);
 		if (!staffRole) return console.log('Error 897', guild.name);
 
@@ -3803,7 +3797,7 @@ client.on('interactionCreate', async interaction => {
 		} // if ticket-start
 		else if (customId == 'ticket-close') {
 			if (interaction.channel?.lastMessageId == message.id) {
-				channel.delete(`Support Channel closed by: ${user.tag||'Unknown'}`);
+				channel.delete(`Support Channel closed by: ${user.tag || 'Unknown'}`);
 				return client.emit('ticketEnd', channel, user, false);
 			}
 
@@ -3890,7 +3884,7 @@ client.on('interactionCreate', async interaction => {
 				ephemeral: false,
 				embeds: [{
 					...embedTemplate,
-					description: `${user} have now added ${interaction.values.map(id=>`<@${id}>`).join(',')} to write in this channel`
+					description: `${user} have now added ${interaction.values.map(id => `<@${id}>`).join(',')} to write in this channel`
 				}]
 			})
 
@@ -3979,7 +3973,7 @@ client.on('interactionCreate', async interaction => {
 					fromto: [encodeT(channel.createdTimestamp), encodeT()]
 				})
 			};
-			channel.delete(`Support Channel closed by: ${user.tag||'Unknown'}`);
+			channel.delete(`Support Channel closed by: ${user.tag || 'Unknown'}`);
 
 			let url = customId.endsWith('Yes') && `https://bot.konkenbonken.se/Guild/${guild.id}/transcript/${id}`;
 			client.emit('ticketEnd', channel, user, customId.endsWith('Yes'), url);
@@ -4001,13 +3995,13 @@ client.on('interactionCreate', async interaction => {
 
 		let embed = {
 			footer: { text: `Requested by: ${user.tag} | ${user.id}` },
-			author: { name: `Permissons for ${object.displayName||object.name}` },
+			author: { name: `Permissons for ${object.displayName || object.name}` },
 			color: object.displayColor || object.color || 'dbad11',
 			fields: [
-					['Permissons:', columns[0]],
-					['⠀', columns[1]],
-					['⠀', columns[2]]
-				].filter(([, value]) => value)
+				['Permissons:', columns[0]],
+				['⠀', columns[1]],
+				['⠀', columns[2]]
+			].filter(([, value]) => value)
 				.map(([name, value]) => ({ name, value: value.toString(), inline: true }))
 
 		};
@@ -4048,18 +4042,6 @@ client.on('interactionCreate', async interaction => {
 
 client.on("guildScheduledEventCreate", console.log)
 
-	client.on("shardReconnecting", () => {
-		if (++reconnectCounter >= 100) {
-			reconnectCounter = 0;
-
-			client.destroy();
-			server.close();
-			io.close();
-
-			setTimeout(() => main(), 2 * 60 * 1000);
-		}
-	})
-
 // Express - app
 
 app.use(cookieParser());
@@ -4075,8 +4057,8 @@ app.use((req, res, next) => {
 			google = /google/i.test(ua);
 		// /*uncommend = log src*/	console.log(`\x1b[3${req.path.startsWith('/src/')?4:google?6:2}m%s\x1b[0m`, `${d.getHours()}:${d.getMinutes()} >> ${req.url} ${google?(ua.includes('compatible;')?ua.match(/compatible; ([^;]+);/)[1]||'':ua):''}`);
 		if (!['src', 'favicon.ico'].includes(req.path.split('/')[1]))
-			console.log(`\x1b[3${google?6:2}m%s\x1b[0m`, `${d.getHours()}:${d.getMinutes()} >> ${req.url} ${google?(ua.includes('compatible;')&&ua.match(/compatible; ([^;]+);/)?ua.match(/compatible; ([^;]+);/)[1]||'':ua):''}`);
-	} catch {}
+			console.log(`\x1b[3${google ? 6 : 2}m%s\x1b[0m`, `${d.getHours()}:${d.getMinutes()} >> ${req.url} ${google ? (ua.includes('compatible;') && ua.match(/compatible; ([^;]+);/) ? ua.match(/compatible; ([^;]+);/)[1] || '' : ua) : ''}`);
+	} catch { }
 	next()
 });
 
@@ -4225,10 +4207,10 @@ app.all(/^\/Guild\/\d{16,19}/i, async (req, res) => {
 });
 app.get('/', async (req, res) => {
 	let document = await baseDoc({
-			css: 'home',
-			js: 'home',
-			html: 'home'
-		}),
+		css: 'home',
+		js: 'home',
+		html: 'home'
+	}),
 		google = /google/i.test(req.headers['user-agent']),
 		user = !google && req.cookies.LoginId && Cache.get(req.cookies.LoginId),
 		header = document.querySelector('header');
@@ -4313,9 +4295,9 @@ app.get('/oauth', async (req, res) => {
 		user = { id: user.id, expires: Date.now() + LoginExpire };
 		console.time('Guild Validation');
 		guilds = (await Promise.all(
-				guilds.filter(({ permissions }) => isAdmin(permissions))
+			guilds.filter(({ permissions }) => isAdmin(permissions))
 				.map(async guild => await client.guilds.fetch(guild.id).catch(() => false) && guild)
-			))
+		))
 			.filter(x => x)
 			.map(({ id, icon, name, permissions }) => ({
 				id,
@@ -4435,7 +4417,7 @@ app.all(/\/src\/icon\/[a-z]+$/i, async (req, res) => {
 });
 
 app.get('/src/background', async (req, res) => {
-	const d = new(Date);
+	const d = new (Date);
 	let secToMidnight = (-d + d.setHours(24, 0)) / 1e3,
 		img = Cache.get('background');
 
@@ -4503,8 +4485,8 @@ process.on('uncaughtException', async err => {
 	await sendError(err.stack.split('\n').find(s => s.includes('KonkenBoten/script.js')), err);
 });
 
-	console.log(`Main ran for the ${++mainCounter} time`);
-	console.timeEnd('Main');
+console.log(`Main ran for the ${++mainCounter} time`);
+console.timeEnd('Main');
 }
 
 console.timeEnd('Load');
