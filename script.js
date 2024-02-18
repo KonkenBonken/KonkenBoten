@@ -4483,10 +4483,6 @@ process.on('uncaughtException', async err => {
 		'\n\n'
 	);
 	await sendError(err.stack.split('\n').find(s => s.includes('KonkenBoten/script.js')), err);
-});
 
-console.log(`Main ran for the ${++mainCounter} time`);
-console.timeEnd('Main');
-}
-
+})
 console.timeEnd('Load');
