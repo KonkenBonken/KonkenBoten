@@ -72,7 +72,7 @@ const app = express(),
 
 const NewGuildSubrcibers = [],
 	ClientID = '813803575264018433',
-	RedirectTo = { de: 'https://bot.konkenbonken.se/oauth', en: 'https%3A%2F%2Fbot.konkenbonken.se%2Foauth' },
+	RedirectTo = { de: 'https://konkenboten.se/oauth', en: 'https%3A%2F%2Fkonkenboten.se%2Foauth' },
 	URLs = {
 		oauth: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&redirect_uri=${RedirectTo.en}&scope=identify%20guilds&response_type=code`,
 		bot: `https://discord.com/api/oauth2/authorize?client_id=${ClientID}&permissions=8&scope=bot%20applications.commands`,
@@ -3395,8 +3395,8 @@ client.on("guildCreate", async guild => {
 			embeds: [{
 				title: `Thank you for adding **KonkenBoten** to ${guild.name}`,
 				color: 14396689,
-				thumbnail: { url: "https://bot.konkenbonken.se/src/icon/logo" },
-				description: `**Go ahead and customize and set the bot up at *[bot.konkenbonken.se](https://bot.konkenbonken.se/Guild/${guild.id})***\n\nJoin our official [Discord Server](https://discord.gg/bMesu8z7n9)! There, you will find the bot's changelog and status updates and you will be able to ask questions and give suggestions to future updates.\n*See you there!*`
+				thumbnail: { url: "https://konkenboten.se/src/icon/logo" },
+				description: `**Go ahead and customize and set the bot up at *[konkenboten.se](https://konkenboten.se/Guild/${guild.id})***\n\nJoin our official [Discord Server](https://discord.gg/bMesu8z7n9)! There, you will find the bot's changelog and status updates and you will be able to ask questions and give suggestions to future updates.\n*See you there!*`
 			}]
 		})).catch(() => null);
 
@@ -3975,7 +3975,7 @@ client.on('interactionCreate', async interaction => {
 			};
 			channel.delete(`Support Channel closed by: ${user.tag || 'Unknown'}`);
 
-			let url = customId.endsWith('Yes') && `https://bot.konkenbonken.se/Guild/${guild.id}/transcript/${id}`;
+			let url = customId.endsWith('Yes') && `https://konkenboten.se/Guild/${guild.id}/transcript/${id}`;
 			client.emit('ticketEnd', channel, user, customId.endsWith('Yes'), url);
 		} // if ticket-save
 	} // if ticket
@@ -4046,9 +4046,9 @@ client.on("guildScheduledEventCreate", console.log)
 
 app.use(cookieParser());
 app.use((req, res, next) => {
-	if (req.hostname != 'bot.konkenbonken.se') {
-		res.append('Link', `<https://bot.konkenbonken.se${req.path}>; rel="canonical"`)
-			.redirect(301, 'https://bot.konkenbonken.se' + req.path);
+	if (req.hostname != 'konkenboten.se') {
+		res.append('Link', `<https://konkenboten.se${req.path}>; rel="canonical"`)
+			.redirect(301, 'https://konkenboten.se' + req.path);
 		return;
 	};
 	try {

@@ -5,8 +5,8 @@
 
 ## **Start using the bot**
 
-1. Go to [bot.konkenbonken.se](https://bot.konkenbonken.se/)
-1. [Login](https://bot.konkenbonken.se/oauth) with your Discord account
+1. Go to [konkenboten.se](https://konkenboten.se/)
+1. [Login](https://konkenboten.se/oauth) with your Discord account
 1. Start customizing **KonkenBoten**'s hundreds of options just as your server needs it
 
 ---
