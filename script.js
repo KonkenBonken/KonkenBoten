@@ -198,7 +198,7 @@ const RandomUser = () => 'User#' + Math.floor(Math.random() * 8999 + 1000),
 let prefetchs = [...[
 	...['logo', 'commands', 'voice', 'moderation', 'suggestions', 'support', 'sort', 'reply', 'arrow', 'discord'].map(x => `src/icon/${x}`),
 	'src/client.js', 'src/client.css', 'src/error.css', 'src/background' //, 'socket.io/socket.io.js',    // ,...["1cbd08c76f8af6dddce02c5138971129","6debd47ed13483642cf09e832ed0bc1b","dd4dbc0016779df1378e7812eabaa04d","322c936a8c8be1b803cd94861bdfa868"].map(x=>`https://discordapp.com/assets/${x}.png`)
-	, ...EmojiList.split(';').map(s => s.split(',')).slice(0, 40).map(([n, id]) => `https://twemoji.maxcdn.com/v/latest/72x72/${id}.png`)
+	, ...EmojiList.split(';').map(s => s.split(',')).slice(0, 40).map(([n, id]) => `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/${id}.png`)
 ].map(url => `<${url}>; rel="prefetch"`),
 	'<oauth>; rel="prerender"', '<https://discord.com>; rel="preconnect"',
 	'</>; rel="canonical"', '<https://top.gg/bot/813803575264018433/vote>; rel="prerender"',

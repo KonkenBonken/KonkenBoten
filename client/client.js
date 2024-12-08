@@ -282,7 +282,7 @@ let DebugTest; {
 			e: utfToEmoji(id),
 			id,
 			n,
-			url: `https://twemoji.maxcdn.com/v/latest/72x72/${id}.png`,
+			url: `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/${id}.png`,
 		}));
 
 		if (guildeRes) GuildEmojis = guildeRes.split(';').map(s => s.split(',')).map(([n, id, gif]) => ({
