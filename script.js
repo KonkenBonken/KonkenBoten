@@ -2370,7 +2370,7 @@ const TranscriptMsgsToHtml = (msgs, guild) => Promise.all(msgs.map(async ({ a, c
 			icon.setAttribute('style', `background-image:radial-gradient(#0000, #34373c 70%),url(https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.webp?size=512)`);
 		}
 	},
-	isAdmin = (permissions) => (new Discord.BitField(permissions)).has(8);
+	isAdmin = (permissions) => !!(BigInt(permissions) & 8n);
 const defaultReasons = {
 	words: 'Used a bad word',
 	links: 'Sent a link',
